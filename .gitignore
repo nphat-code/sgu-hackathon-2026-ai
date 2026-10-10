@@ -1,0 +1,28 @@
+# Environments and secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencies
+node_modules/
+vendor/
+venv/
+.venv/
+__pycache__/
+
+# Build outputs
+dist/
+build/
+out/
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+.idea/
+
+# Keep .vscode/settings.json if customized for the team
+!.vscode/settings.json
