@@ -90,7 +90,7 @@ def create_deck():
     s1_badge.line.color.rgb = C_PRIMARY
     tf = s1_badge.text_frame
     p = tf.paragraphs[0]
-    p.text = "🛡️ HACKATHON SGU 2026 – VÒNG SƠ LOẠI"
+    p.text = "🛡️ SMART CITY EDGE AI SOLUTION"
     p.font.size = Pt(13)
     p.font.bold = True
     p.font.color.rgb = C_PRIMARY
@@ -111,24 +111,24 @@ def create_deck():
     tf = slog_box.text_frame
     tf.word_wrap = True
     p = tf.paragraphs[0]
-    p.text = "Mạng Lưới Thị Giác AI Phân Tán – Giữ An Toàn Từng Góc Phố Sài Gòn"
+    p.text = "Mạng Lưới Thị Giác AI Phân Tán – Giữ An Toàn Từng Góc Phố Đô Thị"
     p.font.size = Pt(20)
     p.font.bold = True
     p.font.color.rgb = C_PRIMARY
     p.alignment = PP_ALIGN.CENTER
 
     p2 = tf.add_paragraph()
-    p2.text = "Bảo vệ sinh viên & người dân trước ngập lụt và tai nạn giao thông bằng Edge AI tiết kiệm chi phí"
+    p2.text = "Bảo vệ cộng đồng trước ngập lụt và tai nạn giao thông bằng Edge AI siêu nhẹ, chi phí 0 đồng"
     p2.font.size = Pt(14)
     p2.font.color.rgb = C_TEXT_MUTED
     p2.alignment = PP_ALIGN.CENTER
 
     # Meta cards at bottom
     meta_items = [
-        ("ĐỘI THI", "SingleNode (Thí sinh độc lập)"),
-        ("TÁC GIẢ", "Nguyễn Phúc Phát (@nphat-code)"),
-        ("TRƯỜNG HỌC", "Trường Đại học Sài Gòn (SGU)"),
-        ("CHỦ ĐỀ", "AI An Toàn Đô Thị & Tiết Kiệm")
+        ("ĐƠN VỊ PHÁT TRIỂN", "SingleNode"),
+        ("KIẾN TRÚC", "Edge AI (YOLOv8n + OpenCV)"),
+        ("HIỆU NĂNG", "~35ms / CPU phổ thông"),
+        ("MỤC TIÊU", "Cảnh Báo Ngập & Cứu Nạn 24/7")
     ]
     for i, (k, v) in enumerate(meta_items):
         x = Inches(0.8 + i * 3.0)
@@ -408,30 +408,30 @@ def create_deck():
         p_desc.font.color.rgb = C_TEXT_MUTED
 
     # ==========================================
-    # SLIDE 7: TÍNH KHẢ THI & KẾ HOẠCH 24H
+    # SLIDE 7: BÀI TOÁN KINH TẾ & KHẢ NĂNG NHÂN RỘNG
     # ==========================================
     s7 = prs.slides.add_slide(blank_layout)
     set_white_bg(s7)
-    add_header(s7, "06. Kế Hoạch Triển Khai", "Lộ Trình Phát Triển Tại Vòng Chung Kết 24 Giờ", "Sẵn sàng thi đấu với nền tảng phần mềm đã chạy thực nghiệm hoàn hảo")
+    add_header(s7, "06. Hiệu Quả & Nhân Rộng", "Bài Toán Kinh Tế & Khả Năng Nhân Rộng Thực Tế", "Tối ưu hóa chi phí đầu tư và năng lực mở rộng hàng nghìn trạm giám sát phân tán")
 
     phases = [
-        ("GIAI ĐOẠN 1: HIỆN TẠI (ĐÃ XONG)", [
-            "Đề án ý tưởng & Kịch bản Pitching hoàn chỉnh.",
-            "Backend FastAPI + YOLOv8n detector chạy mượt 35ms.",
-            "Frontend React + Leaflet Map hiển thị đa trạm thực nghiệm.",
-            "Kiểm thử thành công 2 kịch bản Ngập lụt & SOS ngã xe."
+        ("TỐI ƯU 95% CHI PHÍ TCO", [
+            "Chi phí lắp mới: ~200.000 VNĐ thay vì 25.000.000 VNĐ / camera AI.",
+            "Tái chế phần cứng: Webcam, smartphone cũ, máy tính văn phòng.",
+            "Không tốn chi phí thuê máy chủ GPU đám mây đắt tiền hàng tháng.",
+            "Tiết kiệm hàng tỷ đồng ngân sách cho các khu dân cư đô thị."
         ], C_SUCCESS),
-        ("GIAI ĐOẠN 2: 24H CHUNG KẾT", [
-            "Tích hợp WebRTC truyền luồng hình ảnh trực tiếp không giật lag.",
-            "Thử nghiệm WebGPU chạy suy luận AI trên trình duyệt di động.",
-            "Kết nối trực tiếp Bot Telegram gửi thông báo vào điện thoại BGK.",
-            "Đóng gói 1-Click Docker triển khai tức thì trên máy chấm thi."
+        ("KHẢ NĂNG NHÂN RỘNG (SCALABILITY)", [
+            "Xử lý phân tán tại biên (Edge), không nghẽn băng thông trung tâm.",
+            "Mở rộng từ 1 trạm lên 1.000 trạm mà tải máy chủ không đổi.",
+            "Chỉ phát gói tin Alert Metadata < 5KB khi có ngập hoặc tai nạn.",
+            "Dễ dàng tích hợp vào mọi hệ thống quản lý IOC đô thị sẵn có."
         ], C_PRIMARY),
-        ("GIAI ĐOẠN 3: TƯƠNG LAI DÂN SINH", [
-            "Thí điểm tại các khu dân cư và tuyến phố trũng thấp.",
-            "Mở mã nguồn cho cộng đồng tự triển khai camera an toàn.",
-            "Tích hợp dữ liệu mở cảnh báo ngập vào ứng dụng TP.HCM.",
-            "Nâng cấp mô hình phát hiện trộm cắp và cháy nổ ban đêm."
+        ("PRIVACY-FIRST (BẢO MẬT BIÊN)", [
+            "Hình ảnh được suy luận trực tiếp trong RAM và xóa ngay lập tức.",
+            "Không lưu trữ luồng video công dân, không nhận diện khuôn mặt.",
+            "Tuân thủ tuyệt đối các quy định về an toàn dữ liệu cá nhân.",
+            "Hoạt động độc lập ngay cả khi mất kết nối Internet diện rộng."
         ], C_TEXT_MAIN)
     ]
     for i, (title, points, col) in enumerate(phases):
@@ -467,7 +467,7 @@ def create_deck():
     badge.line.color.rgb = C_SUCCESS
     tf = badge.text_frame
     p = tf.paragraphs[0]
-    p.text = "🤝 KẾT LUẬN & CAM KẾT HÀNH ĐỘNG"
+    p.text = "🤝 KẾT LUẬN & TẦM NHÌN DỰ ÁN"
     p.font.size = Pt(13)
     p.font.bold = True
     p.font.color.rgb = C_SUCCESS
@@ -486,7 +486,7 @@ def create_deck():
     tf = sub_box.text_frame
     tf.word_wrap = True
     p = tf.paragraphs[0]
-    p.text = "UrbanShield Lite chứng minh rằng: AI đỉnh cao không nhất thiết phải xa xỉ nghìn tỷ.\nBằng tư duy tối ưu hóa và tinh thần phụng sự cộng đồng, chúng em mang công nghệ AI bảo vệ từng sinh viên và người dân bình dị nhất."
+    p.text = "UrbanShield Lite chứng minh rằng: AI đỉnh cao không nhất thiết phải xa xỉ nghìn tỷ.\nBằng tư duy tối ưu hóa điện toán biên, công nghệ hoàn toàn có thể phụng sự và bảo vệ từng người dân bình dị nhất."
     p.font.size = Pt(16)
     p.font.color.rgb = C_TEXT_MUTED
     p.alignment = PP_ALIGN.CENTER
@@ -499,14 +499,14 @@ def create_deck():
     tf = foot_card.text_frame
     tf.word_wrap = True
     p = tf.paragraphs[0]
-    p.text = "ĐỘI THI SINGLENODE – HACKATHON SGU 2026"
+    p.text = "HỆ THỐNG GIÁM SÁT AN TOÀN ĐÔ THỊ THÔNG MINH – SINGLENODE"
     p.font.size = Pt(16)
     p.font.bold = True
     p.font.color.rgb = C_PRIMARY
     p.alignment = PP_ALIGN.CENTER
 
     p2 = tf.add_paragraph()
-    p2.text = "Xin chân thành cảm ơn Quý Thầy Cô và Ban Giám Khảo đã lắng nghe!"
+    p2.text = "Xin chân thành cảm ơn Quý vị đã theo dõi và đồng hành!"
     p2.font.size = Pt(14)
     p2.font.color.rgb = C_TEXT_MAIN
     p2.alignment = PP_ALIGN.CENTER

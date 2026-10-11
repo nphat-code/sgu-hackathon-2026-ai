@@ -3,7 +3,7 @@
 
 > **Đơn vị tổ chức:** BCH Đoàn Khoa Công nghệ Thông tin – Trường Đại học Sài Gòn  
 > **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày*  
-> **Tên đội thi:** **SingleNode** (Thí sinh độc lập)  
+> **Tên đội thi:** **SingleNode**  
 > **Tên dự án:** **UrbanShield Lite**  
 > **Khẩu hiệu (Slogan):** *“Mạng lưới thị giác AI phân tán – Giữ an toàn từng góc phố Sài Gòn”*  
 > **Tên file nộp bài:** `SingleNode_UrbanShieldLite.pdf`  

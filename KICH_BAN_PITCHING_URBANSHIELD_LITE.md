@@ -1,6 +1,6 @@
-# 🎙️ KỊCH BẢN THUYẾT TRÌNH (PITCHING SCRIPT) 3 PHÚT
+# 🎙️ KỊCH BẢN THUYẾT TRÌNH GIẢI PHÁP (PITCHING SCRIPT) 3 PHÚT
 # DỰ ÁN: URBANSHIELD LITE – MẠNG LƯỚI THỊ GIÁC AI PHÂN TÁN BẢO VỆ ĐÔ THỊ
-### Đội thi: **SingleNode** | Hackathon SGU 2026 – 2027
+### Đơn vị phát triển: **SingleNode**
 
 ---
 
@@ -19,7 +19,7 @@
 ### 🔴 PHẦN 1: ĐẶT VẤN ĐỀ – ĐÁNH TRÚNG NỖI ĐAU (0:00 - 0:45)
 *(Mở slide 1 & 2: Hình ảnh triều cường ngập sâu trên đường phố và tai nạn ngõ hẻm)*
 
-> *"Kính thưa Ban Giám Khảo và toàn thể các bạn sinh viên,*
+> *"Kính thưa Quý Hội đồng và Quý vị theo dõi,*
 > 
 > *Là người dân và sinh viên sống tại các đô thị lớn, chắc hẳn ai trong chúng ta cũng từng nếm trải cảm giác dắt bộ chiếc xe máy chết máy giữa biển nước ngập trên các trục đường trũng thấp mỗi mùa triều cường hay mưa lớn. Thậm chí đau lòng hơn, những vụ va chạm ngã xe đêm khuya trong các con hẻm vắng bị lỡ mất 'thời gian vàng' cấp cứu vì không ai phát hiện kịp thời.*
 > 
@@ -67,9 +67,9 @@
 ### 🔵 PHẦN 4: KẾT LUẬN & CAM KẾT (2:31 - 3:00)
 *(Chuyển sang slide 6: Thông điệp kết luận)*
 
-> *"UrbanShield Lite không phải là một mô hình AI xa vời trên giấy, mà là công cụ bình dân, sẵn sàng bảo vệ an toàn cho từng bước chân của sinh viên Đại học Sài Gòn và người dân thành phố.*
+> *"UrbanShield Lite chứng minh rằng: AI đỉnh cao không nhất thiết phải xa xỉ nghìn tỷ. Bằng sự tối ưu hóa điện toán biên, công nghệ hoàn toàn có thể phụng sự và bảo vệ từng góc phố, từng người dân một cách thiết thực nhất.*
 > 
-> *Em là thí sinh độc lập đội **SingleNode**, xin cảm ơn Ban Giám Khảo và sẵn sàng lắng nghe câu hỏi phản biện!"*
+> *Đội ngũ **SingleNode** xin chân thành cảm ơn và sẵn sàng giải đáp mọi câu hỏi chuyên sâu về giải pháp!"*
 
 ---
 

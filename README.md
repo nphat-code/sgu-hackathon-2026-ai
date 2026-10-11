@@ -2,7 +2,7 @@
 
 > **Dự án tham dự cuộc thi HACKATHON SGU 2026 – 2027**  
 > **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày.*  
-> **Đội thi:** **SingleNode** (Thí sinh độc lập: [nphat-code](https://github.com/nphat-code))  
+> **Đội ngũ phát triển:** **SingleNode** ([nphat-code](https://github.com/nphat-code))  
 > **Khẩu hiệu:** *“Mạng lưới thị giác AI phân tán – Giữ an toàn từng góc phố Sài Gòn”*  
 > **Repository:** [sgu-hackathon-2026-ai](https://github.com/nphat-code/sgu-hackathon-2026-ai)
 
