@@ -6,11 +6,11 @@
 
 ## ⏱️ BỐ CỤC 3 PHÚT CHUẨN XÁC THEO QUY ĐỊNH (HỘI TRƯỜNG E7 SGU)
 
-* **0:00 - 0:45 (45s):** Vấn đề nhức nhối tại TP.HCM & Nghịch lý chi phí Camera AI.
-* **0:46 - 1:45 (60s):** Live Demo trực tiếp: Phát hiện Ngập lụt & Cảnh báo Tai nạn ngã xe.
-* **1:46 - 2:30 (45s):** Giải pháp Edge AI siêu nhẹ & Bài toán kinh tế tiết kiệm 95%.
-* **2:31 - 3:00 (30s):** Kêu gọi hành động & Kết luận sứ mệnh bảo vệ sinh viên/người dân Sài Gòn.
-* **Sau 3:00:** 2 phút phản biện Q&A trước Hội đồng Ban giám khảo.
+* **0:00 - 0:45 (45s):** Vấn đề thực tiễn tại đô thị & Nghịch lý chi phí Camera AI.
+* **0:46 - 1:45 (60s):** Ý tưởng giải pháp & Cơ chế thị giác AI (Đo ngập & Phát hiện ngã xe).
+* **1:46 - 2:30 (45s):** Bài toán kinh tế, Tái chế phần cứng & Khả năng nhân rộng phân tán.
+* **2:31 - 3:00 (30s):** Tầm nhìn dự án & Lời kết phụng sự cộng đồng.
+* **Sau 3:00:** 2 phút phản biện Q&A trước Hội đồng.
 
 ---
 
@@ -31,23 +31,19 @@
 
 ---
 
-### 🟢 PHẦN 2: LIVE DEMO THỰC TẾ TRÊN SÂN KHẤU (0:46 - 1:45)
-*(Chuyển sang màn hình Live Dashboard tại `http://localhost:5173/`)*
+### 🟢 PHẦN 2: Ý TƯỞNG CỐT LÕI & CƠ CHẾ HOẠT ĐỘNG (0:46 - 1:45)
+*(Trình chiếu Slide 4 & 5: Ý tưởng mô hình Edge AI & Cơ chế hoạt động 2 tình huống)*
 
-> *"Em xin phép trình diễn trực tiếp hệ thống đang chạy thời gian thực trên màn hình:*
+> *"Ý tưởng của UrbanShield Lite giải quyết 2 bài toán nhức nhối bằng 2 cơ chế thị giác máy tính thông minh:
 > 
-> *Hệ thống đang kết nối đa trạm giám sát thực nghiệm đại diện cho các hình thái đô thị.*
+> * **Cơ chế 1: Ý tưởng đo ngập vật lý không cần cảm biến thủy văn.**  
+>   Thay vì cắm que đo dưới cống dễ kẹt rác, mô hình Edge AI phân tích tỷ lệ che khuất bánh xe máy đang lưu thông (vốn có đường kính chuẩn 50cm). Bằng thuật toán Wheel-Occlusion Ratio, hệ thống tính toán chính xác mực nước ngập: 15cm chạm mép pô (Cảnh báo Vàng) hay 26cm vượt nửa bánh xe (Cảnh báo Đỏ nguy cơ chết máy cao). Vị trí ngập lập tức được ghim cảnh báo lên bản đồ số để người dân chủ động chuyển hướng an toàn.
 > 
-> *(Click nút '2. Giả lập Ngập lụt')*
-> * *Tình huống 1: Ngập lụt đô thị.*  
->   *Ngay khi nước ngập dâng lên, mô hình Edge AI phân tích tỷ lệ che khuất bánh xe máy. Trong vòng **35 mili-giây**, hệ thống phát hiện chính xác: **Mực nước ngập 26cm – Vượt nửa bánh xe, nguy cơ chết máy cao**. Lập tức, điểm ngập trên bản đồ số nhấp nháy đèn đỏ báo nguy hiểm tức thời.*
+> * **Cơ chế 2: Ý tưởng phát hiện tai nạn ngã xe đêm khuya và người nằm bất động.**  
+>   Hệ thống theo dõi tỷ lệ khung hình cơ thể (Width / Height > 1.3 khi ngã nằm ngang) kết hợp bộ đếm bất động thông minh (Inactivity Timer > 5 giây) để loại bỏ báo động giả khi người dân chỉ ngồi xổm hoặc nhặt đồ.
 > 
-> *(Click nút '3. Giả lập Xe ngã SOS')*
-> * *Tình huống 2: Tai nạn ngã xe đêm khuya.*  
->   *Khi nhận diện người và xe máy cùng nằm ngang trên mặt đường quá 5 giây mà không đứng dậy, hệ thống lập tức kích hoạt trạng thái **SOS Khẩn cấp**.*
-> 
-> *(Bấm nút Telegram)*  
-> * *Ngay lập tức, một thông báo khẩn cấp kèm ảnh chụp hiện trường và tọa độ GPS được gửi thẳng về bot Telegram của Đội cứu hộ và Tổ dân phố. Tất cả diễn ra tự động, không cần con người ngồi trực màn hình!"*
+> * **Kênh cảnh báo tức thời 0 đồng:**  
+>   Khi phát hiện sự cố, thiết bị biên lập tức gửi một gói tin Alert Metadata siêu nhẹ (< 5KB) kèm ảnh hiện trường và tọa độ GPS về kênh Telegram của Tổ dân phố và Lực lượng cứu hộ chỉ trong 1 giây, giữ trọn 'thời gian vàng' cấp cứu nạn nhân."*
 
 ---
 

@@ -642,13 +642,13 @@
         </div>
       </section>
 
-      <!-- SLIDE 5: KỸ THUẬT & DEMO THỰC TẾ -->
+      <!-- SLIDE 5: CƠ CHẾ Ý TƯỞNG CỐT LÕI -->
       <section class="slide" id="slide-5">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">04. Kỹ Thuật Cốt Lõi</span>
-            <h2 class="slide-title">2 Kịch Bản Giám Sát Đã Chạy Thực Tế (Live Verified)</h2>
-            <p class="slide-subtitle">Không chỉ là ý tưởng trên giấy – Hệ thống đã có mã nguồn hoạt động hoàn chỉnh</p>
+            <span class="slide-badge">04. Cơ Chế Ý Tưởng</span>
+            <h2 class="slide-title">Cơ Chế Thị Giác AI Đo Ngập &amp; Phát Hiện Tai Nạn Khẩn Cấp</h2>
+            <p class="slide-subtitle">Mô hình toán học &amp; thị giác máy tính được thiết kế tối ưu trên vi xử lý phổ thông</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -657,29 +657,31 @@
           <div class="bento-grid grid-2col">
             <div class="card primary">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="card-title" style="color: var(--primary);">🌊 Kịch Bản 1: Giám Sát Điểm Đen Ngập Lụt Đô Thị</h3>
-                <span class="slide-badge" style="background:#DBEAFE;">Active Test</span>
+                <h3 class="card-title" style="color: var(--primary);">🌊 Cơ Chế 1: Đo Ngập Bằng Độ Che Khuất Bánh Xe</h3>
+                <span class="slide-badge" style="background:#DBEAFE;">Cơ Chế Vật Lý</span>
               </div>
-              <div class="metric-value">26 cm</div>
-              <p class="metric-sub">Phát hiện ngập lụt vượt nửa bánh xe – Cảnh báo nguy cơ chết máy</p>
+              <div class="metric-value">Depth = Ratio × 50cm</div>
+              <p class="metric-sub">Thuật toán Optical Wheel-Occlusion Ratio dựa trên kích thước chuẩn bánh xe</p>
               <ul style="margin-top: 16px; font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 18px;">
-                <li>Nhận diện phương tiện xe máy di chuyển qua vũng ngập.</li>
-                <li>Tính tỷ lệ che phủ bánh xe (Occlusion Ratio: <strong>52%</strong>).</li>
-                <li>Gửi cảnh báo tức thời để người dân kịp chuyển hướng sang lộ trình an toàn.</li>
+                <li>Nhận diện phương tiện xe máy di chuyển qua vũng nước.</li>
+                <li>Phân tích tỷ lệ phần dưới bánh xe bị nước che khuất (Occlusion Ratio).</li>
+                <li>Phân cấp mức nguy hiểm: 15cm chạm mép pô (Vàng) | 26cm vượt nửa bánh (Đỏ nguy hiểm).</li>
+                <li>Tự động ghim điểm ngập lên bản đồ số để người dân chủ động chuyển hướng an toàn.</li>
               </ul>
             </div>
 
             <div class="card" style="background: #FEF2F2; border-color: #FECACA;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="card-title" style="color: var(--danger);">🚨 Kịch Bản 2: Phát Hiện Té Xe &amp; SOS Khẩn Cấp</h3>
-                <span class="slide-badge" style="background:#FEE2E2; color: var(--danger); border-color:#FECACA;">Critical SOS</span>
+                <h3 class="card-title" style="color: var(--danger);">🚨 Cơ Chế 2: Phát Hiện Ngã Xe &amp; Nằm Bất Động Đêm Khuya</h3>
+                <span class="slide-badge" style="background:#FEE2E2; color: var(--danger); border-color:#FECACA;">Cơ Chế Cứu Nạn</span>
               </div>
-              <div class="metric-value" style="color: var(--danger);">Aspect &gt; 1.3</div>
-              <p class="metric-sub" style="color: var(--danger);">Phát hiện người nằm bất động trên đường &gt; 5 giây</p>
+              <div class="metric-value" style="color: var(--danger);">Aspect &gt; 1.3 &amp; Timer &gt; 5s</div>
+              <p class="metric-sub" style="color: var(--danger);">Kết hợp tỷ lệ khung hình ngang và bộ đếm bất động thông minh</p>
               <ul style="margin-top: 16px; font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 18px;">
-                <li>Theo dõi tỷ lệ khung hình cơ thể (Width / Height &gt; 1.3).</li>
-                <li>Bộ đếm thời gian bất động (Inactivity Timer &gt; 5.0s) loại bỏ báo động giả.</li>
-                <li>Bắn tin nhắn Telegram SOS khẩn cấp kèm ảnh hiện trường lập tức.</li>
+                <li>Theo dõi tỷ lệ khung hình cơ thể (Width / Height &gt; 1.3 khi ngã nằm ngang).</li>
+                <li>Kích hoạt bộ đếm thời gian bất động (Inactivity Timer &gt; 5.0s) loại trừ báo động giả.</li>
+                <li>Tự động phát gói tin SOS khẩn cấp kèm ảnh hiện trường về lực lượng cứu trợ.</li>
+                <li>Nắm bắt trọn vẹn "thời gian vàng" y tế để cấp cứu nạn nhân kịp thời.</li>
               </ul>
             </div>
           </div>
@@ -690,9 +692,9 @@
       <section class="slide" id="slide-6">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">05. Giao Diện & Vận Hành</span>
-            <h2 class="slide-title">Trung Tâm Giám Sát Dân Sinh & Bản Đồ Số An Toàn Đô Thị</h2>
-            <p class="slide-subtitle">Trực quan, dễ sử dụng cho mọi cán bộ địa phương và người dân</p>
+            <span class="slide-badge">05. Giao Diện &amp; Vận Hành</span>
+            <h2 class="slide-title">Mô Hình Vận Hành &amp; Giao Diện Điều Hành Đề Xuất</h2>
+            <p class="slide-subtitle">Trực quan hóa mạng lưới đa trạm trên nền tảng bản đồ số nguồn mở linh hoạt</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>

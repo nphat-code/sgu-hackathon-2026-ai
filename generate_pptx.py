@@ -303,11 +303,11 @@ def create_deck():
             pi.font.color.rgb = C_TEXT_MUTED
 
     # ==========================================
-    # SLIDE 5: KỸ THUẬT CỐT LÕI & LIVE DEMO
+    # SLIDE 5: CƠ CHẾ Ý TƯỞNG CỐT LÕI
     # ==========================================
     s5 = prs.slides.add_slide(blank_layout)
     set_white_bg(s5)
-    add_header(s5, "04. Kỹ Thuật Cốt Lõi", "Cơ Chế Phát Hiện Thực Tế: Ngập Lụt & Cứu Nạn SOS", "Mã nguồn đã được xác thực hoạt động ổn định trên hệ thống thật")
+    add_header(s5, "04. Cơ Chế Ý Tưởng", "Cơ Chế Thị Giác AI Đo Ngập & Phát Hiện Tai Nạn Khẩn Cấp", "Mô hình toán học & thị giác máy tính được thiết kế tối ưu trên vi xử lý phổ thông")
 
     # Box 1: Ngập lụt
     b1 = s5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(2.2), Inches(5.7), Inches(4.5))
@@ -318,23 +318,23 @@ def create_deck():
     tf1 = b1.text_frame
     tf1.word_wrap = True
     p = tf1.paragraphs[0]
-    p.text = "🌊 KỊCH BẢN 1: ĐO ĐỘ SÂU NGẬP LỤT (35ms)"
-    p.font.size = Pt(16)
+    p.text = "🌊 CƠ CHẾ 1: ĐO NGẬP BẰNG ĐỘ CHE KHUẤT BÁNH XE"
+    p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = C_PRIMARY
 
     metric1 = tf1.add_paragraph()
-    metric1.text = "MỰC NƯỚC: 26 CM (TỶ LỆ 52%)"
-    metric1.font.size = Pt(20)
+    metric1.text = "DEPTH = OCCLUSION_RATIO × 50CM"
+    metric1.font.size = Pt(17)
     metric1.font.bold = True
     metric1.font.color.rgb = C_TEXT_MAIN
 
     bullets_s1 = [
-        "Công thức: Depth (cm) = Occlusion_Ratio × 50cm (Bánh xe chuẩn).",
-        "Khi nước chạm 15cm (ngập mép pô): Cảnh báo mức Vàng (Chú ý).",
-        "Khi nước vượt 25cm (ngập nửa bánh xe): Cảnh báo Đỏ (Nguy hiểm chết máy).",
-        "Tự động vẽ viền Polygon ngập màu đỏ và cảnh báo người lái xe quay đầu.",
-        "Đã thử nghiệm thực tế tại trạm giám sát điểm đen ngập lụt đô thị."
+        "Nhận diện phương tiện xe máy di chuyển qua vũng nước.",
+        "Phân tích tỷ lệ phần dưới bánh xe bị nước che khuất (Occlusion Ratio).",
+        "Phân cấp nguy hiểm: 15cm chạm mép pô (Vàng) | 26cm ngập nửa bánh (Đỏ nguy hiểm).",
+        "Tự động ghim điểm ngập lên bản đồ số để người dân chủ động chuyển hướng.",
+        "Ưu điểm: Không cần mua hay bảo dưỡng cảm biến thủy văn đắt đỏ."
     ]
     for b in bullets_s1:
         pb = tf1.add_paragraph()
@@ -351,23 +351,23 @@ def create_deck():
     tf2 = b2.text_frame
     tf2.word_wrap = True
     p = tf2.paragraphs[0]
-    p.text = "🚨 KỊCH BẢN 2: PHÁT HIỆN TÉ XE & BẤT ĐỘNG SOS"
-    p.font.size = Pt(16)
+    p.text = "🚨 CƠ CHẾ 2: PHÁT HIỆN TÉ XE & NẰM BẤT ĐỘNG ĐÊM KHUYA"
+    p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = C_DANGER
 
     metric2 = tf2.add_paragraph()
-    metric2.text = "TỶ LỆ KHUNG HÌNH W/H > 1.3 & INACTIVITY > 5s"
-    metric2.font.size = Pt(18)
+    metric2.text = "ASPECT RATIO > 1.3 & INACTIVITY TIMER > 5S"
+    metric2.font.size = Pt(17)
     metric2.font.bold = True
     metric2.font.color.rgb = C_TEXT_MAIN
 
     bullets_s2 = [
-        "Người ngã có tỷ lệ khung hình ngang đổi bất thường (Width > Height).",
-        "Bộ đếm thời gian bất động (Inactivity Timer > 5 giây) để chống báo động giả khi người dân chỉ ngồi xổm hoặc nhặt đồ.",
-        "Ngay khi vượt ngưỡng 5s: Kích hoạt còi báo động tại trạm.",
-        "Gửi thông báo SOS đỏ chói về Telegram Tổ cứu hộ kèm tọa độ GPS.",
-        "Giúp rút ngắn thời gian tiếp cận y tế từ 45 phút xuống dưới 3 phút."
+        "Theo dõi tỷ lệ khung hình cơ thể (Width / Height > 1.3 khi ngã nằm ngang).",
+        "Bộ đếm thời gian bất động (Inactivity Timer > 5 giây) loại trừ báo động giả.",
+        "Ngay khi vượt ngưỡng 5s: Tự động phát gói tin SOS khẩn cấp.",
+        "Bắn thông báo Telegram về Đội cứu trợ kèm ảnh hiện trường và tọa độ GPS.",
+        "Nắm bắt trọn vẹn 'thời gian vàng' y tế để sơ cấp cứu nạn nhân kịp thời."
     ]
     for b in bullets_s2:
         pb = tf2.add_paragraph()
@@ -376,11 +376,11 @@ def create_deck():
         pb.font.color.rgb = C_TEXT_MAIN
 
     # ==========================================
-    # SLIDE 6: TRUNG TÂM GIÁM SÁT & BẢN ĐỒ AN TOÀN ĐÔ THỊ
+    # SLIDE 6: MÔ HÌNH VẬN HÀNH & GIAO DIỆN ĐỀ XUẤT
     # ==========================================
     s6 = prs.slides.add_slide(blank_layout)
     set_white_bg(s6)
-    add_header(s6, "05. Giao Diện & Vận Hành", "Trung Tâm Giám Sát Dân Sinh & Bản Đồ Số An Toàn Đô Thị", "Tích hợp bản đồ mã nguồn mở OpenStreetMap trực quan và linh hoạt")
+    add_header(s6, "05. Kiến Trúc Vận Hành", "Mô Hình Vận Hành & Giao Diện Điều Hành Đề Xuất", "Trực quan hóa mạng lưới đa trạm trên nền tảng bản đồ số nguồn mở linh hoạt")
 
     stations = [
         ("📍 TRẠM 01: TUYẾN ĐƯỜNG TRŨNG THẤP", "Điểm đen ngập lụt đô thị mùa triều cường / mưa lớn", "Giám sát ngập lụt thời gian thực & cảnh báo người tham gia giao thông", C_PRIMARY),

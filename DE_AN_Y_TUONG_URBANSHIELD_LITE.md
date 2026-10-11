@@ -84,13 +84,12 @@ graph TD
 
 ---
 
-## 🎬 V. KỊCH BẢN DEMO "GÂY ẤN TƯỢNG MẠNH" TRƯỚC BAN GIÁM KHẢO (3 PHÚT)
+## 🎬 V. KỊCH BẢN THUYẾT TRÌNH Ý TƯỞNG 3 PHÚT (PITCHING OUTLINE)
 
-1. **Phút 0:00 - 0:45 | Giới thiệu nỗi đau:**  
-   Chiếu hình ảnh ngập nước trên các trục đường đô thị trũng thấp và câu chuyện cứu hộ tai nạn chậm trễ. Nêu bật luận điểm: *Tại sao thành phố chưa có hệ thống phủ rộng? Vì camera AI truyền thống quá đắt!*
-2. **Phút 0:46 - 2:00 | Live Demo phân tích trực tiếp:**  
-   - Bật hệ thống UrbanShield Lite kết nối luồng camera/video trực tiếp.
-   - **Tình huống 1 (Ngập lụt):** Chạy đoạn video thực tế đường phố mưa ngập $\rightarrow$ AI lập tức đóng khung bánh xe máy chìm trong nước $\rightarrow$ Đèn đỏ báo động *“Phát hiện ngập 26cm – Vượt ngưỡng an toàn”* $\rightarrow$ Điểm ngập hiện đỏ trên bản đồ Web.
-   - **Tình huống 2 (Tai nạn):** Mô phỏng chiếc xe máy bị đổ và người ngã $\rightarrow$ Đếm ngược 5 giây $\rightarrow$ Chuông cảnh báo kêu $\rightarrow$ Điện thoại rung, bot Telegram báo: *“CẢNH BÁO SOS: Tai nạn tại tọa độ [X, Y], xem ảnh hiện trường đính kèm”*.
-3. **Phút 2:01 - 3:00 | Chứng minh tính khả thi & Bài toán kinh tế:**  
-   Trình bày bảng so sánh chi phí: *Giải pháp truyền thống (15 triệu/camera + server 50 triệu) VS UrbanShield Lite (tận dụng camera 200k + 0đ tiền server nhờ Edge AI)*. Kết luận thông điệp dự án.
+1. **Phút 0:00 - 0:45 | Đặt vấn đề thực tiễn & Nút thắt chi phí:**  
+   Nêu bật thực trạng ngập lụt trũng thấp gây chết máy hàng loạt và các vụ tai nạn ngõ hẻm vắng người bị lỡ "thời gian vàng" cấp cứu. Khẳng định nghịch lý: *Không phải thiếu công nghệ, mà vì camera AI truyền thống quá đắt (30 triệu/mắt + cụm server GPU đồ sộ)*.
+2. **Phút 0:46 - 2:00 | Ý tưởng giải pháp & Cơ chế thị giác AI đột phá:**  
+   - **Đo ngập vật lý không cảm biến:** Phân tích tỷ lệ che khuất bánh xe máy lưu thông (chuẩn 50cm) $\rightarrow$ Tính toán chính xác độ sâu cm nước $\rightarrow$ Ghim cảnh báo lên bản đồ số để người dân chuyển hướng.
+   - **Phát hiện tai nạn ngã xe ban đêm:** Nhận diện tỷ lệ dáng người nằm ngang ($W/H > 1.3$) kết hợp đếm bất động ($> 5s$) để triệt tiêu báo động giả $\rightarrow$ Tự động gửi gói tin SOS kèm ảnh hiện trường qua bot Telegram về lực lượng cứu trợ.
+3. **Phút 2:01 - 3:00 | Bài toán kinh tế & Khả năng nhân rộng phân tán:**  
+   Trình bày so sánh TCO: Tiết kiệm 95% chi phí đầu tư nhờ tái chế phần cứng và tiết kiệm 99% băng thông nhờ điện toán biên (Edge Computing). Kết luận thông điệp: *"Một góc phố, một điểm chạm an toàn"*.
