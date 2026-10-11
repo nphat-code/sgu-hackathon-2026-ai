@@ -2,7 +2,8 @@
 
 > **Dự án tham dự cuộc thi HACKATHON SGU 2026 – 2027**  
 > **Chủ đề:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày.*  
-> **Tác giả:** Solo Developer ([nphat-code](https://github.com/nphat-code))  
+> **Đội thi:** **SingleNode** (Solo Developer - [nphat-code](https://github.com/nphat-code))  
+> **Dự án:** **UrbanShield Lite**  
 > **Repository:** [sgu-hackathon-2026-ai](https://github.com/nphat-code/sgu-hackathon-2026-ai)
 
 ---

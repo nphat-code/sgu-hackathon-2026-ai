@@ -3,8 +3,11 @@
 
 > **Đơn vị tổ chức:** BCH Đoàn Khoa Công nghệ Thông tin – Trường Đại học Sài Gòn  
 > **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày*  
+> **Tên đội thi:** **SingleNode** (Thí sinh độc lập)  
 > **Tên dự án:** **UrbanShield Lite**  
-> **Khẩu hiệu (Slogan):** *“Mắt thần bình dân – Bảo vệ an toàn từng góc phố Sài Gòn”*
+> **Khẩu hiệu (Slogan):** *“Mắt thần bình dân – Bảo vệ an toàn từng góc phố Sài Gòn”*  
+> **Tên file nộp bài:** `SingleNode_UrbanShieldLite.pdf`  
+> **Cú pháp chuyển khoản lệ phí:** `SINGLENODE - NOPLEPHITHIHACKATHON2026`
 
 ---
 
