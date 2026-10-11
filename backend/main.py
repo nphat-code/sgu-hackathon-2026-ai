@@ -1,3 +1,4 @@
+import os
 import cv2
 import time
 import base64
@@ -88,46 +89,44 @@ INCIDENTS = [
     }
 ]
 
-# Web camera capture or synthetic simulator
-webcam_cap = None
-ENABLE_WEBCAM = False  # Mặc định TẮT webcam vật lý để bảo mật & riêng tư
+# Real-world video recording playback engine
+VIDEOS_DIR = os.path.join(os.path.dirname(__file__), "videos")
+os.makedirs(VIDEOS_DIR, exist_ok=True)
+VIDEO_CAPS: Dict[str, Any] = {}
 
-def get_webcam():
-    global webcam_cap, ENABLE_WEBCAM
-    if not ENABLE_WEBCAM:
-        return None
-    if webcam_cap is None:
-        try:
-            webcam_cap = cv2.VideoCapture(0)
-            if not webcam_cap.isOpened():
-                webcam_cap = None
-        except Exception:
-            webcam_cap = None
-    return webcam_cap
+def get_frame_from_video_or_synthetic(scenario: str, tick: int) -> np.ndarray:
+    """
+    Checks for real-world video recordings: backend/videos/{scenario}.mp4
+    If present, reads frame-by-frame and loops seamlessly.
+    Otherwise, falls back to the realistic synthetic frame generator.
+    """
+    video_path = os.path.join(VIDEOS_DIR, f"{scenario}.mp4")
+    if os.path.exists(video_path):
+        cap = VIDEO_CAPS.get(scenario)
+        if cap is None or not cap.isOpened():
+            cap = cv2.VideoCapture(video_path)
+            VIDEO_CAPS[scenario] = cap
+        
+        ret, frame = cap.read()
+        if not ret or frame is None:
+            # Loop video seamlessly when it reaches the end
+            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            ret, frame = cap.read()
+            
+        if ret and frame is not None:
+            if frame.shape[1] != 640 or frame.shape[0] != 480:
+                frame = cv2.resize(frame, (640, 480))
+            return frame
+            
+    return generate_synthetic_frame(scenario, tick)
 
-def release_webcam():
-    global webcam_cap, ENABLE_WEBCAM
-    ENABLE_WEBCAM = False
-    if webcam_cap is not None:
-        try:
-            webcam_cap.release()
-        except Exception:
-            pass
-        webcam_cap = None
-
-@app.get("/api/webcam/status")
-def get_webcam_status():
-    return {"webcam_enabled": ENABLE_WEBCAM}
-
-@app.post("/api/webcam/toggle")
-def toggle_webcam():
-    global ENABLE_WEBCAM
-    if ENABLE_WEBCAM:
-        release_webcam()
-    else:
-        ENABLE_WEBCAM = True
-        get_webcam()
-    return {"webcam_enabled": ENABLE_WEBCAM}
+@app.get("/api/videos/status")
+def get_videos_status():
+    return {
+        "normal": os.path.exists(os.path.join(VIDEOS_DIR, "normal.mp4")),
+        "flood": os.path.exists(os.path.join(VIDEOS_DIR, "flood.mp4")),
+        "accident": os.path.exists(os.path.join(VIDEOS_DIR, "accident.mp4"))
+    }
 
 def generate_synthetic_frame(scenario: str, tick: int) -> np.ndarray:
     """Generates a realistic synthetic road frame with vehicles/people for testing."""
@@ -178,17 +177,8 @@ def stream_generator(node_id: str):
         tick += 1
         scenario = node["scenario"]
 
-        frame = None
-        # If node 1 and scenario normal, try webcam
-        if node_id == "node-sgu-01" and scenario == "normal":
-            cap = get_webcam()
-            if cap is not None and cap.isOpened():
-                ret, cam_frame = cap.read()
-                if ret:
-                    frame = cam_frame
-
-        if frame is None:
-            frame = generate_synthetic_frame(scenario, tick)
+        # Read from real video file (backend/videos/{scenario}.mp4) or fallback to synthetic
+        frame = get_frame_from_video_or_synthetic(scenario, tick)
 
         # Run AI detection
         analysis = detector.analyze_frame(frame, simulate_scenario=scenario)
