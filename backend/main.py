@@ -90,9 +90,12 @@ INCIDENTS = [
 
 # Web camera capture or synthetic simulator
 webcam_cap = None
+ENABLE_WEBCAM = False  # Mặc định TẮT webcam vật lý để bảo mật & riêng tư
 
 def get_webcam():
-    global webcam_cap
+    global webcam_cap, ENABLE_WEBCAM
+    if not ENABLE_WEBCAM:
+        return None
     if webcam_cap is None:
         try:
             webcam_cap = cv2.VideoCapture(0)
@@ -101,6 +104,30 @@ def get_webcam():
         except Exception:
             webcam_cap = None
     return webcam_cap
+
+def release_webcam():
+    global webcam_cap, ENABLE_WEBCAM
+    ENABLE_WEBCAM = False
+    if webcam_cap is not None:
+        try:
+            webcam_cap.release()
+        except Exception:
+            pass
+        webcam_cap = None
+
+@app.get("/api/webcam/status")
+def get_webcam_status():
+    return {"webcam_enabled": ENABLE_WEBCAM}
+
+@app.post("/api/webcam/toggle")
+def toggle_webcam():
+    global ENABLE_WEBCAM
+    if ENABLE_WEBCAM:
+        release_webcam()
+    else:
+        ENABLE_WEBCAM = True
+        get_webcam()
+    return {"webcam_enabled": ENABLE_WEBCAM}
 
 def generate_synthetic_frame(scenario: str, tick: int) -> np.ndarray:
     """Generates a realistic synthetic road frame with vehicles/people for testing."""

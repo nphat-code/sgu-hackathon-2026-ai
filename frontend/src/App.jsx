@@ -11,7 +11,9 @@ import {
   Droplets, 
   Eye,
   Radio,
-  ServerOff
+  ServerOff,
+  Camera,
+  CameraOff
 } from 'lucide-react';
 import MapViewer from './components/MapViewer';
 import './App.css';
@@ -80,6 +82,7 @@ export default function App() {
   const [backendConnected, setBackendConnected] = useState(false);
   const [telegramToast, setTelegramToast] = useState(null);
   const [streamError, setStreamError] = useState(false);
+  const [webcamEnabled, setWebcamEnabled] = useState(false);
 
   // Sync with backend API
   useEffect(() => {
@@ -90,6 +93,11 @@ export default function App() {
           const data = await res.json();
           setNodes(data);
           setBackendConnected(true);
+        }
+        const camRes = await fetch(`${API_BASE}/api/webcam/status`);
+        if (camRes.ok) {
+          const camData = await camRes.json();
+          setWebcamEnabled(camData.webcam_enabled);
         }
       } catch (e) {
         setBackendConnected(false);
@@ -163,6 +171,18 @@ export default function App() {
     } catch (e) {}
   };
 
+  const handleToggleWebcam = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/webcam/toggle`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setWebcamEnabled(data.webcam_enabled);
+        setTelegramToast(data.webcam_enabled ? "📷 Đã BẬT Webcam máy tính để test AI trực tiếp!" : "🔒 Đã TẮT Webcam (Chuyển sang video mô phỏng giao thông)!");
+        setTimeout(() => setTelegramToast(null), 3000);
+      }
+    } catch (e) {}
+  };
+
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
 
   return (
@@ -227,8 +247,30 @@ export default function App() {
               <Video size={18} style={{ color: 'var(--cyan-400)' }} />
               <span>LUỒNG GIÁM SÁT THỜI GIAN THỰC (EDGE NODE)</span>
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-              MODEL: YOLOv8n (CPU Inference)
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button
+                onClick={handleToggleWebcam}
+                style={{
+                  background: webcamEnabled ? 'rgba(239, 68, 68, 0.18)' : 'rgba(56, 189, 248, 0.18)',
+                  border: `1px solid ${webcamEnabled ? 'rgba(239, 68, 68, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`,
+                  color: webcamEnabled ? '#f87171' : 'var(--cyan-400)',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.78rem',
+                  fontWeight: '600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                title="Bật hoặc tắt camera vật lý của laptop"
+              >
+                {webcamEnabled ? <CameraOff size={14} /> : <Camera size={14} />}
+                <span>{webcamEnabled ? 'Tắt Webcam (Đang mở)' : 'Bật Webcam Laptop'}</span>
+              </button>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                MODEL: YOLOv8n (CPU)
+              </div>
             </div>
           </div>
 
