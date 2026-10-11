@@ -6,8 +6,7 @@ import {
   Copy, 
   Check, 
   Terminal, 
-  FileText,
-  RotateCcw
+  FileText
 } from 'lucide-react';
 
 export default function CodeEditorView({ 
@@ -32,25 +31,25 @@ export default function CodeEditorView({
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      background: '#070c18',
+      background: '#ffffff',
       borderRadius: 'var(--radius-lg)',
-      border: '1px solid var(--color-border-subtle)',
-      boxShadow: 'var(--shadow-md)',
+      border: '1px solid var(--slate-200)',
+      boxShadow: 'var(--shadow-card)',
       overflow: 'hidden'
     }}>
-      {/* Editor Top Navigation & Tabs Bar */}
+      {/* Editor Top Navigation & File Tabs Bar */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '8px 14px',
-        background: 'rgba(15, 23, 42, 0.95)',
-        borderBottom: '1px solid var(--color-border-subtle)',
+        padding: '6px 14px',
+        background: '#f1f5f9',
+        borderBottom: '1px solid var(--slate-200)',
         flexWrap: 'wrap',
         gap: '8px'
       }}>
-        {/* Tabs */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        {/* File Tabs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <button
             onClick={() => setActiveTab('solution.cpp')}
             style={{
@@ -58,21 +57,22 @@ export default function CodeEditorView({
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              background: activeTab === 'solution.cpp' ? '#141e34' : 'transparent',
-              border: 'none',
-              borderBottom: activeTab === 'solution.cpp' ? '2px solid var(--cyan-400)' : '2px solid transparent',
-              borderRadius: '4px 4px 0 0',
-              color: activeTab === 'solution.cpp' ? '#fff' : 'var(--slate-400)',
+              background: activeTab === 'solution.cpp' ? '#ffffff' : 'transparent',
+              border: activeTab === 'solution.cpp' ? '1px solid var(--slate-200)' : '1px solid transparent',
+              borderBottom: activeTab === 'solution.cpp' ? '2px solid var(--cobalt-600)' : '1px solid transparent',
+              borderRadius: '6px',
+              color: activeTab === 'solution.cpp' ? 'var(--slate-900)' : 'var(--slate-600)',
               fontSize: '0.8rem',
-              fontWeight: '600',
+              fontWeight: '700',
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer',
+              boxShadow: activeTab === 'solution.cpp' ? '0 1px 2px rgba(0,0,0,0.04)' : 'none',
               transition: 'all 0.15s ease'
             }}
           >
-            <Code2 size={14} style={{ color: 'var(--cyan-400)' }} />
+            <Code2 size={14} style={{ color: 'var(--cobalt-600)' }} />
             <span>solution.cpp</span>
-            <span style={{ fontSize: '0.65rem', background: 'rgba(56, 189, 248, 0.15)', color: 'var(--cyan-400)', padding: '1px 5px', borderRadius: '4px' }}>C++</span>
+            <span style={{ fontSize: '0.65rem', background: '#e0f2fe', color: 'var(--sky-700)', padding: '1px 5px', borderRadius: '4px', fontWeight: '700' }}>C++ 20</span>
           </button>
 
           <button
@@ -82,18 +82,17 @@ export default function CodeEditorView({
               alignItems: 'center',
               gap: '6px',
               padding: '6px 12px',
-              background: activeTab === 'test_input.txt' ? '#141e34' : 'transparent',
-              border: 'none',
-              borderBottom: activeTab === 'test_input.txt' ? '2px solid var(--cyan-400)' : '2px solid transparent',
-              borderRadius: '4px 4px 0 0',
-              color: activeTab === 'test_input.txt' ? '#fff' : 'var(--slate-400)',
+              background: activeTab === 'test_input.txt' ? '#ffffff' : 'transparent',
+              border: activeTab === 'test_input.txt' ? '1px solid var(--slate-200)' : '1px solid transparent',
+              borderRadius: '6px',
+              color: activeTab === 'test_input.txt' ? 'var(--slate-900)' : 'var(--slate-600)',
               fontSize: '0.8rem',
               fontWeight: '600',
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer'
             }}
           >
-            <FileText size={14} />
+            <FileText size={14} style={{ color: 'var(--slate-400)' }} />
             <span>test_input.txt</span>
           </button>
         </div>
@@ -105,17 +104,17 @@ export default function CodeEditorView({
               display: 'flex', 
               alignItems: 'center', 
               gap: '6px', 
-              color: 'var(--emerald-400)',
+              color: 'var(--emerald-700)',
               fontWeight: '700',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.74rem',
-              background: 'rgba(16, 185, 129, 0.12)',
+              background: 'var(--emerald-50)',
               padding: '3px 10px',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(16, 185, 129, 0.35)',
-              boxShadow: 'var(--glow-emerald)'
+              border: '1px solid var(--emerald-100)',
+              boxShadow: '0 1px 3px rgba(5, 150, 105, 0.15)'
             }}>
-              <CheckCircle2 size={13} />
+              <CheckCircle2 size={13} style={{ color: 'var(--emerald-600)' }} />
               <span>ĐÃ TỰ VÁ LỖI THÀNH CÔNG</span>
             </div>
           ) : bugLine ? (
@@ -123,17 +122,16 @@ export default function CodeEditorView({
               display: 'flex', 
               alignItems: 'center', 
               gap: '6px', 
-              color: 'var(--rose-400)',
+              color: 'var(--crimson-700)',
               fontWeight: '700',
               fontFamily: 'var(--font-mono)',
               fontSize: '0.74rem',
-              background: 'rgba(244, 63, 94, 0.12)',
+              background: 'var(--crimson-50)',
               padding: '3px 10px',
               borderRadius: 'var(--radius-full)',
-              border: '1px solid rgba(244, 63, 94, 0.35)',
-              boxShadow: 'var(--glow-rose)'
+              border: '1px solid var(--crimson-100)'
             }}>
-              <AlertCircle size={13} />
+              <AlertCircle size={13} style={{ color: 'var(--crimson-600)' }} />
               <span>BUG TẠI DÒNG {bugLine}: {bugType}</span>
             </div>
           ) : null}
@@ -146,17 +144,19 @@ export default function CodeEditorView({
               display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              padding: '4px 8px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid var(--color-border-subtle)',
+              padding: '4px 9px',
+              background: '#ffffff',
+              border: '1px solid var(--slate-300)',
               borderRadius: 'var(--radius-sm)',
-              color: 'var(--slate-300)',
-              fontSize: '0.72rem',
+              color: 'var(--slate-700)',
+              fontSize: '0.74rem',
               fontFamily: 'var(--font-mono)',
-              cursor: 'pointer'
+              fontWeight: '600',
+              cursor: 'pointer',
+              boxShadow: 'var(--shadow-sm)'
             }}
           >
-            {copied ? <Check size={12} style={{ color: 'var(--emerald-400)' }} /> : <Copy size={12} />}
+            {copied ? <Check size={12} style={{ color: 'var(--emerald-600)' }} /> : <Copy size={12} />}
             <span>{copied ? 'Đã chép' : 'Chép'}</span>
           </button>
         </div>
@@ -167,11 +167,11 @@ export default function CodeEditorView({
         <div style={{
           fontFamily: 'var(--font-mono)',
           fontSize: '0.86rem',
-          lineHeight: '1.65',
+          lineHeight: '1.68',
           padding: '14px 0',
           overflowX: 'auto',
           maxHeight: '380px',
-          background: 'radial-gradient(ellipse at 10% 0%, rgba(14, 165, 233, 0.04) 0%, transparent 60%)'
+          background: '#ffffff'
         }}>
           {lines.map((lineContent, idx) => {
             const lineNum = idx + 1;
@@ -185,16 +185,16 @@ export default function CodeEditorView({
                   display: 'flex',
                   padding: '2px 18px',
                   background: isBuggy 
-                    ? 'rgba(244, 63, 94, 0.16)' 
+                    ? '#fef2f2' 
                     : isFixedLine 
-                    ? 'rgba(16, 185, 129, 0.14)' 
+                    ? '#ecfdf5' 
                     : 'transparent',
                   borderLeft: isBuggy 
-                    ? '4px solid var(--rose-500)' 
+                    ? '4px solid var(--crimson-600)' 
                     : isFixedLine 
-                    ? '4px solid var(--emerald-400)' 
+                    ? '4px solid var(--emerald-600)' 
                     : '4px solid transparent',
-                  transition: 'background 0.2s ease'
+                  transition: 'background 0.15s ease'
                 }}
               >
                 {/* Line Number */}
@@ -202,7 +202,7 @@ export default function CodeEditorView({
                   width: '36px',
                   textAlign: 'right',
                   marginRight: '18px',
-                  color: isBuggy ? 'var(--rose-400)' : isFixedLine ? 'var(--emerald-400)' : 'var(--slate-600)',
+                  color: isBuggy ? 'var(--crimson-600)' : isFixedLine ? 'var(--emerald-600)' : 'var(--slate-400)',
                   userSelect: 'none',
                   fontWeight: (isBuggy || isFixedLine) ? '800' : '500'
                 }}>
@@ -211,7 +211,7 @@ export default function CodeEditorView({
 
                 {/* Code Content */}
                 <span style={{ 
-                  color: isBuggy ? '#fecdd3' : isFixedLine ? '#a7f3d0' : '#f1f5f9',
+                  color: isBuggy ? '#991b1b' : isFixedLine ? '#065f46' : 'var(--slate-900)',
                   fontWeight: (isBuggy || isFixedLine) ? '700' : '400',
                   whiteSpace: 'pre'
                 }}>
@@ -225,12 +225,12 @@ export default function CodeEditorView({
         <div style={{
           fontFamily: 'var(--font-mono)',
           fontSize: '0.85rem',
-          padding: '16px 20px',
-          color: 'var(--slate-400)',
-          background: '#070c18',
+          padding: '18px 24px',
+          color: 'var(--slate-700)',
+          background: '#ffffff',
           minHeight: '200px'
         }}>
-          <div style={{ color: 'var(--cyan-400)', marginBottom: '8px' }}>// Input Test Case 1:</div>
+          <div style={{ color: 'var(--cobalt-600)', fontWeight: '700', marginBottom: '8px' }}>// Input Test Case 1:</div>
           <div>arr = [1, 3, 5, 9, 12]</div>
           <div>n = 5</div>
           <div>target = 7</div>
@@ -246,22 +246,22 @@ export default function CodeEditorView({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 14px',
-        background: 'rgba(15, 23, 42, 0.8)',
-        borderTop: '1px solid var(--color-border-subtle)',
-        fontSize: '0.72rem',
-        color: 'var(--slate-400)',
+        background: '#f8fafc',
+        borderTop: '1px solid var(--slate-200)',
+        fontSize: '0.74rem',
+        color: 'var(--slate-500)',
         fontFamily: 'var(--font-mono)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span>UTF-8</span>
           <span>•</span>
-          <span>C++ 20 (g++ 13.2)</span>
+          <span>C++ 20 (GCC 13.2)</span>
           <span>•</span>
           <span>{lines.length} dòng</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Terminal size={12} style={{ color: 'var(--cyan-400)' }} />
-          <span>AST ASTParser: OK (0 warnings)</span>
+          <Terminal size={12} style={{ color: 'var(--cobalt-600)' }} />
+          <span style={{ fontWeight: '600' }}>AST Parser: Hợp lệ (0 cảnh báo)</span>
         </div>
       </div>
     </div>

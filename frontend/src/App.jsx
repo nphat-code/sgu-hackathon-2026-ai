@@ -349,11 +349,11 @@ export default function App() {
         )}
 
         {activeView === 'comparison' && (
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '14px', color: '#fff', fontFamily: 'var(--font-mono)' }}>
+          <div className="clean-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '14px', color: 'var(--slate-900)', fontFamily: 'var(--font-mono)' }}>
               ĐỐI CHIẾU: TÁC HẠI CHÉP CODE CHATGPT VS GIÁ TRỊ CỦA SOCRATICCODE
             </h3>
-            <p style={{ color: 'var(--slate-400)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--slate-600)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '24px' }}>
               Tại sao Ban giám khảo và Giảng viên Khoa CNTT SGU luôn khuyến cáo sinh viên không nên phụ thuộc vào ChatGPT thường:
             </p>
 
@@ -369,28 +369,28 @@ export default function App() {
                 <tbody>
                   <tr>
                     <td><strong>Hành vi xử lý</strong></td>
-                    <td style={{ color: '#f87171' }}>Viết lại 100% code mới cho sinh viên copy nộp bài</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Từ chối viết code; Đặt 3 câu hỏi gợi mở suy luận</td>
+                    <td style={{ color: 'var(--crimson-700)', fontWeight: '600' }}>Viết lại 100% code mới cho sinh viên copy nộp bài</td>
+                    <td style={{ color: 'var(--emerald-700)', fontWeight: '700' }}>Từ chối viết code; Đặt 3 câu hỏi gợi mở suy luận</td>
                   </tr>
                   <tr>
                     <td><strong>Trực quan hóa</strong></td>
                     <td>Chỉ có văn bản (Text) dài dòng, khó hình dung</td>
-                    <td style={{ color: 'var(--cyan-400)', fontWeight: '700' }}>Vẽ sơ đồ ô nhớ Stack/Heap, biến lặp từng bước</td>
+                    <td style={{ color: 'var(--cobalt-600)', fontWeight: '700' }}>Vẽ sơ đồ ô nhớ Stack/Heap, biến lặp từng bước</td>
                   </tr>
                   <tr>
                     <td><strong>Hiểu bản chất máy tính</strong></td>
-                    <td style={{ color: '#f87171' }}>Không hiểu vì sao con trỏ rác hay vòng lặp kẹt</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Thấy rõ biến left kẹt ở ô 2, con trỏ trỏ vào vùng nhớ đã hủy</td>
+                    <td style={{ color: 'var(--crimson-700)', fontWeight: '600' }}>Không hiểu vì sao con trỏ rác hay vòng lặp kẹt</td>
+                    <td style={{ color: 'var(--emerald-700)', fontWeight: '700' }}>Thấy rõ biến left kẹt ở ô 2, con trỏ trỏ vào vùng nhớ đã hủy</td>
                   </tr>
                   <tr>
                     <td><strong>Kỳ thi viết trên giấy</strong></td>
-                    <td style={{ color: '#f87171' }}>Rớt môn vì khi thi giấy không có AI viết hộ</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Đỗ điểm cao nhờ tự hình thành Mental Model thuật toán</td>
+                    <td style={{ color: 'var(--crimson-700)', fontWeight: '600' }}>Rớt môn vì khi thi giấy không có AI viết hộ</td>
+                    <td style={{ color: 'var(--emerald-700)', fontWeight: '700' }}>Đỗ điểm cao nhờ tự hình thành Mental Model thuật toán</td>
                   </tr>
                   <tr>
                     <td><strong>Chi phí cho nhà trường</strong></td>
                     <td>Mỗi câu hỏi đều tốn token đắt đỏ</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Semantic Cache phục vụ 88% câu hỏi với giá 0 VNĐ</td>
+                    <td style={{ color: 'var(--emerald-700)', fontWeight: '700' }}>Semantic Cache phục vụ 88% câu hỏi với giá 0 VNĐ</td>
                   </tr>
                 </tbody>
               </table>
@@ -399,21 +399,21 @@ export default function App() {
         )}
 
         {activeView === 'economics' && (
-          <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="clean-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '8px', color: '#fff', fontFamily: 'var(--font-mono)' }}>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginBottom: '8px', color: 'var(--slate-900)', fontFamily: 'var(--font-mono)' }}>
                 BÀI TOÁN KINH TẾ: MÔ PHỎNG PHÒNG THỰC HÀNH SGU
               </h3>
-              <p style={{ color: 'var(--slate-400)', fontSize: '0.88rem', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--slate-600)', fontSize: '0.88rem', lineHeight: '1.6' }}>
                 Chứng minh tiêu chí <em>"tiết kiệm chi phí tối đa"</em> của Hackathon SGU 2026 thông qua bộ đệm ngữ nghĩa Semantic Error Cache.
               </p>
             </div>
 
             {/* Interactive Student Count Slider */}
             <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: '#f8fafc',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--color-border-subtle)',
+              border: '1px solid var(--slate-200)',
               padding: '20px 24px',
               display: 'flex',
               flexDirection: 'column',
@@ -421,12 +421,12 @@ export default function App() {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Users size={18} style={{ color: 'var(--cyan-400)' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#fff' }}>
+                  <Users size={18} style={{ color: 'var(--cobalt-600)' }} />
+                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: 'var(--slate-900)' }}>
                     Quy mô sinh viên thực hành trong học kỳ:
                   </span>
                 </div>
-                <span style={{ fontSize: '1.2rem', fontWeight: '800', color: 'var(--cyan-400)', fontFamily: 'var(--font-mono)' }}>
+                <span style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--cobalt-600)', fontFamily: 'var(--font-mono)' }}>
                   {simStudents} sinh viên
                 </span>
               </div>
@@ -440,7 +440,7 @@ export default function App() {
                 onChange={(e) => setSimStudents(Number(e.target.value))}
                 style={{
                   width: '100%',
-                  accentColor: 'var(--cyan-400)',
+                  accentColor: 'var(--cobalt-600)',
                   cursor: 'pointer'
                 }}
               />
@@ -457,35 +457,35 @@ export default function App() {
               <div className="stat-card">
                 <span className="stat-label">Tổng lượt phân tích bug</span>
                 <span className="stat-val">{simTotalQueries.toLocaleString()}</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--slate-500)' }}>4 lượt / sinh viên</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--slate-400)' }}>4 lượt / sinh viên</span>
               </div>
 
               <div className="stat-card">
                 <span className="stat-label">Chi phí LLM thường</span>
-                <span className="stat-val" style={{ color: '#f87171' }}>{simCostWithoutCache.toLocaleString()}đ</span>
-                <span style={{ fontSize: '0.7rem', color: '#fca5a5' }}>Gọi API 100%</span>
+                <span className="stat-val" style={{ color: 'var(--crimson-600)' }}>{simCostWithoutCache.toLocaleString()}đ</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--crimson-600)' }}>Gọi API 100%</span>
               </div>
 
               <div className="stat-card">
                 <span className="stat-label">Chi phí SocraticCode</span>
-                <span className="stat-val" style={{ color: 'var(--emerald-400)' }}>{simCostWithSocratic.toLocaleString()}đ</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--emerald-400)' }}>88% truy vấn 0đ</span>
+                <span className="stat-val" style={{ color: 'var(--emerald-600)' }}>{simCostWithSocratic.toLocaleString()}đ</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--emerald-600)' }}>88% truy vấn 0đ</span>
               </div>
 
               <div className="stat-card">
                 <span className="stat-label">Số tiền tiết kiệm</span>
-                <span className="stat-val" style={{ color: 'var(--cyan-400)' }}>{simVndSaved.toLocaleString()}đ</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--cyan-400)' }}>Giảm {simPctSaved}% chi phí</span>
+                <span className="stat-val" style={{ color: 'var(--cobalt-600)' }}>{simVndSaved.toLocaleString()}đ</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--cobalt-600)' }}>Giảm {simPctSaved}% chi phí</span>
               </div>
             </div>
 
             {/* Semantic Cache Explanation */}
-            <div style={{ padding: '18px 24px', background: 'rgba(56, 189, 248, 0.06)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-              <div style={{ fontWeight: '700', color: '#fff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Zap size={16} style={{ color: 'var(--cyan-400)' }} />
+            <div style={{ padding: '18px 24px', background: '#eff6ff', borderRadius: 'var(--radius-md)', border: '1px solid #bfdbfe' }}>
+              <div style={{ fontWeight: '700', color: 'var(--slate-900)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Zap size={16} style={{ color: 'var(--cobalt-600)' }} />
                 <span>Giải thích cơ chế Semantic Error Cache cho Ban giám khảo:</span>
               </div>
-              <div style={{ fontSize: '0.86rem', color: 'var(--slate-300)', lineHeight: '1.6' }}>
+              <div style={{ fontSize: '0.86rem', color: 'var(--slate-700)', lineHeight: '1.6' }}>
                 Trong các môn Nhập môn lập trình, Kỹ thuật lập trình và Cấu trúc dữ liệu tại SGU, hàng trăm sinh viên thường gặp chung các nhóm lỗi kinh điển. 
                 SocraticCode AI trích xuất cây cú pháp (AST) và tính toán vector embedding cấu trúc lỗi. Khi sinh viên sau gặp lỗi tương đồng, 
                 hệ thống đối soát bộ nhớ đệm và trả về ngay sơ đồ bộ nhớ trong <strong>12ms</strong> với <strong>chi phí đúng 0 đồng</strong>!
