@@ -1,60 +1,83 @@
-# 💻 SocraticCode AI – Trợ Giảng Gợi Mở Tư Duy Lập Trình & Trực Quan Hóa Bộ Nhớ
+# 🛡️ UrbanShield Lite – Hệ Thống Giám Sát Ngập Lụt & An Toàn Đô Thị Bằng Edge AI Tiết Kiệm Chi Phí
 
 > **Dự án tham dự cuộc thi HACKATHON SGU 2026 – 2027**  
-> **Chủ đề:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào học tập, dạy học thông minh.*  
-> **Đội thi:** **SingleNode** (Solo Developer - [nphat-code](https://github.com/nphat-code))  
-> **Dự án:** **SocraticCode AI**  
+> **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày.*  
+> **Đội thi:** **SingleNode** (Thí sinh độc lập: [nphat-code](https://github.com/nphat-code))  
+> **Khẩu hiệu:** *“Mắt thần bình dân – Bảo vệ an toàn từng góc phố Sài Gòn”*  
 > **Repository:** [sgu-hackathon-2026-ai](https://github.com/nphat-code/sgu-hackathon-2026-ai)
 
 ---
 
 ## 📑 Tài liệu dự án
 
-- 📄 **Đề án ý tưởng chi tiết (Nộp Sơ loại):** [DE_AN_Y_TUONG_SOCRATICCODE_AI.md](file:///c:/Competition/HackathonSGU2026/DE_AN_Y_TUONG_SOCRATICCODE_AI.md)
-- 📋 **Thể lệ & Quy chế cuộc thi:** [THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/THE_LE_CUOC_THI.md) | [Google Doc Gốc](https://docs.google.com/document/d/1PgbiUjs3lAx1mC2_aQAIZt3utYWmxBShro1ehpxOYe4/edit?tab=t.0)
+* 📄 **Đề án ý tưởng chính thức (Nộp sơ loại trước 15/10):** [DE_AN_Y_TUONG_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/DE_AN_Y_TUONG_URBANSHIELD_LITE.md)
+* 🎙️ **Kịch bản thuyết trình 3 phút & Bộ 5 câu phản biện Q&A:** [KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
+* 📋 **Thể lệ & Quy chế cuộc thi:** [THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/THE_LE_CUOC_THI.md) | [Google Doc Gốc](https://docs.google.com/document/d/1PgbiUjs3lAx1mC2_aQAIZt3utYWmxBShro1ehpxOYe4/edit?tab=t.0)
 
 ---
 
-## 🎯 Tuyên ngôn giải pháp: "Nói KHÔNG với chép code giải hộ"
+## 💡 Đột phá của giải pháp: "Tiết kiệm chi phí bằng Edge AI"
 
-Khác với ChatGPT hay Copilot làm sinh viên mất dần khả năng tư duy vì copy code sẵn, **SocraticCode AI** đóng vai trò là một **Trợ giảng sư phạm thông minh**:
-1. 🧠 **Phương pháp Socratic (Vấn đáp gợi mở):** Khoanh vùng chính xác dòng code nghi vấn, đặt 3 câu hỏi dẫn dắt để sinh viên tự tìm ra nguyên nhân và tự tay sửa lỗi.
-2. 🔬 **Visual Memory & Execution Trace:** Trực quan hóa sơ đồ các ô nhớ, con trỏ và bảng giá trị biến chạy từng bước (nhìn thấy bug bằng mắt).
-3. 💰 **Semantic Error Caching:** Tái sử dụng phân tích các lỗi lập trình kinh điển trong cùng môn học với chi phí **0 đồng** và độ trễ **15ms**.
-
----
-
-## 📅 Lộ trình tham gia cuộc thi
-
-```mermaid
-timeline
-    title Kế hoạch hành động Hackathon SGU 2026
-    07/10 - 15/10/2026 : Hoàn thiện hồ sơ ý tưởng : Nộp lệ phí dự thi (300.000 VNĐ)
-    17/10/2026 : Vòng Sơ Loại (08:30 - 11:00) : Thuyết trình ý tưởng tại Hội trường Lầu 7 Khu E SGU
-    30/10/2026 : Họp trực tuyến BTC : Nắm vững quy chế kỹ thuật
-    31/10 - 01/11/2026 : Vòng Thử Thách 24H (Tập trung) : Nộp Empty Repo : Code liên tục 24h, Demo & Q&A
-    15/11/2026 : Vòng Chung Kết (Top 10) : Thuyết trình chuyên sâu trước Giám khảo & Doanh nghiệp
-```
+Khác với các hệ thống Smart City đắt đỏ (camera 15-30 triệu, máy chủ GPU đồ sộ, băng thông streaming nặng nề), **UrbanShield Lite** áp dụng mô hình **Trí tuệ nhân tạo biên (Edge AI)**:
+1. 📷 **Tái chế phần cứng bình dân:** Hoạt động trên webcam 200.000 VNĐ, điện thoại thông minh cũ hoặc camera gia đình.
+2. ⚡ **Mô hình siêu nhẹ (YOLOv8-nano ~6MB):** Chạy mượt mà 30 FPS trực tiếp trên CPU laptop/máy tính phổ thông mà không cần GPU rời.
+3. 📉 **Tiết kiệm 99% băng thông:** Thiết bị chỉ xử lý cục bộ; chỉ phát tín hiệu cảnh báo khẩn cấp (Alert Metadata vài KB) khi phát hiện ngập nước hoặc tai nạn.
+4. 🚨 **Cảnh báo tức thời qua Telegram Bot API (0đ chi phí):** Gửi tọa độ GPS + ảnh chụp hiện trường về Tổ dân phố và Đội cứu hộ khẩn cấp trong vòng 1 giây.
+5. 🗺️ **Bản đồ an toàn đô thị nguồn mở (Leaflet/OpenStreetMap):** Định vị trực quan các điểm đen ngập lụt và sự cố quanh khu vực Trường ĐH Sài Gòn (Quận 5).
 
 ---
 
 ## 🛠️ Kiến trúc công nghệ (Tech Stack)
 
 ```
-[ Code C++ / Java / Python của Sinh viên ]
+[ Camera Dân Sinh / Webcam 200k / Phone Cũ ]
                     │
-                    ▼
+                    ▼ (Khung hình cục bộ)
 ┌────────────────────────────────────────────────────────┐
-│                   Python Backend                       │
-│  • AST Code Parser & Logic Bug Detector                │
-│  • Semantic Error Cache (Vector In-Memory)             │
-│  • Socratic Reasoning Engine (Structured JSON)         │
+│               Edge AI Detector (Python)                │
+│  • YOLOv8-nano (Object Detection & Morphology)         │
+│  • Optical Wheel-Occlusion Ratio (Đo mực nước ngập)    │
+│  • Fall Aspect Ratio & Inactivity Timer (SOS ngã xe)   │
 └──────────────────────────┬─────────────────────────────┘
                            │
              ┌─────────────┴─────────────┐
              ▼                           ▼
 ┌─────────────────────────┐ ┌─────────────────────────┐
-│ Code Editor & Visual    │ │ Socratic Guided Q&A     │
-│ Memory/Trace Engine     │ │ Interactive Self-Fix    │
-└─────────────────────────┘ └─────────────────────────┘
+│ FastAPI Gateway         │ │ Telegram Bot Alert API  │
+│ WebSockets / Live Stream│ │ Push thông báo 0đ       │
+└────────────┬────────────┘ └─────────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────────────────────────┐
+│ React Command Center (Vite + Leaflet OpenStreetMap)    │
+│ Trực quan hóa điểm ngập, sự cố & mô phỏng kịch bản     │
+└────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 🚀 Hướng dẫn chạy thử nghiệm PoC nội bộ
+
+### 1. Khởi động Backend (FastAPI + YOLOv8n):
+```bash
+cd backend
+.\venv\Scripts\activate
+python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
+*API Swagger Docs:* `http://127.0.0.1:8000/docs`
+
+### 2. Khởi động Frontend Dashboard (React + Leaflet):
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Truy cập bảng điều khiển:* `http://localhost:5173/`
+
+---
+
+## 📅 Lộ trình các mốc Hackathon SGU 2026
+
+* **15/10/2026 (Hạn chót):** Nộp đề án `SingleNode_UrbanShieldLite.pdf` & Đóng lệ phí 300.000 VNĐ (BIDV `8813272714`).
+* **17/10/2026 (08:30 - 11:00):** Vòng Sơ loại Pitching (Hội trường Lầu 7, Nhà E, ĐH Sài Gòn).
+* **31/10 – 01/11/2026:** Vòng Thử thách 24H (Tập trung tại SGU - khởi tạo Repo trống).

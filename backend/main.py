@@ -1,12 +1,20 @@
+import cv2
 import time
-import hashlib
-from fastapi import FastAPI, HTTPException
+import base64
+import asyncio
+import numpy as np
+from fastapi import FastAPI, WebSocket, BackgroundTasks, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
+import requests
 
-app = FastAPI(title="SocraticCode AI - Guided Programming Tutor")
+from detector import UrbanShieldDetector
 
+app = FastAPI(title="UrbanShield Lite - Edge AI Gateway")
+
+# Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,249 +23,279 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-Memory Semantic Error Cache
-SEMANTIC_ERROR_CACHE: Dict[str, Any] = {}
-CACHE_STATS = {
-    "total_queries": 0,
-    "cache_hits": 0,
-    "tokens_saved": 0,
-    "total_vnd_saved": 0
-}
+# Initialize AI Detector
+detector = UrbanShieldDetector()
 
-# Pre-configured Classic SGU Programming Bug Scenarios
-SAMPLE_BUGS = {
-    "binary_search": {
-        "id": "binary_search",
-        "title": "Vòng Lặp Vô Tận (Binary Search)",
-        "language": "cpp",
-        "subject": "Cấu trúc Dữ liệu & Giải thuật (SGU)",
-        "code": """int binarySearch(int arr[], int n, int target) {
-    int left = 0, right = n - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) 
-            return mid;
-        if (arr[mid] < target) {
-            left = mid; // BUG Ở DÒNG NÀY: Thiếu + 1 khiến left kẹt lại
-        } else {
-            right = mid - 1;
-        }
-    }
-    return -1;
-}""",
-        "bug_line": 8,
-        "bug_type": "Infinite Loop (Lỗi Vòng Lặp Vô Tận)",
-        "trace_steps": [
-            {"step": 1, "vars": {"left": 0, "right": 4, "mid": 2}, "arr_mid_val": 5, "action": "arr[2]=5 < 7 ➔ Gán left = mid (left = 2)"},
-            {"step": 2, "vars": {"left": 2, "right": 4, "mid": 3}, "arr_mid_val": 9, "action": "arr[3]=9 > 7 ➔ Gán right = mid - 1 (right = 2)"},
-            {"step": 3, "vars": {"left": 2, "right": 2, "mid": 2}, "arr_mid_val": 5, "action": "arr[2]=5 < 7 ➔ Gán left = mid (left = 2)"},
-            {"step": 4, "vars": {"left": 2, "right": 2, "mid": 2}, "arr_mid_val": 5, "action": "⚠️ KẸT VÔ TẬN: left và right giữ nguyên giá trị (2), vòng lặp chạy mãi mãi!"}
-        ],
-        "memory_blocks": [
-            {"name": "arr[0]", "val": 1, "active": False, "pointer": ""},
-            {"name": "arr[1]", "val": 3, "active": False, "pointer": ""},
-            {"name": "arr[2]", "val": 5, "active": True, "pointer": "left, right, mid (Kẹt)", "color": "#f87171"},
-            {"name": "arr[3]", "val": 9, "active": False, "pointer": ""},
-            {"name": "arr[4]", "val": 12, "active": False, "pointer": ""}
-        ],
-        "socratic_questions": [
-            {
-                "level": "Quan sát",
-                "question": "Hãy nhìn vào Bảng biến chạy ở Bước 3 và Bước 4: Sau khi gán `left = mid`, giá trị của biến `left` có thực sự tăng lên không?",
-                "hint": "Cả left và right đều đang bằng 2, phép chia (2 + 2) / 2 tiếp tục cho kết quả mid = 2."
-            },
-            {
-                "level": "Tư duy bản chất",
-                "question": "Phần tử ở vị trí `mid` đã được kiểm tra và chắc chắn nhỏ hơn `target`. Vậy tại sao ta vẫn giữ nó trong phạm vi tìm kiếm tiếp theo?",
-                "hint": "Nếu arr[mid] chắc chắn không phải đáp án, phạm vi mới nên bắt đầu từ phần tử ngay sau nó."
-            },
-            {
-                "level": "Thử thách tự sửa",
-                "question": "Bạn hãy thử thay đổi `left = mid;` thành `left = mid + 1;` và quan sát xem vòng lặp có kết thúc chính xác không?",
-                "solution_preview": "left = mid + 1;"
-            }
-        ],
-        "chatgpt_bad_habit": "ChatGPT thông thường sẽ lập tức viết lại toàn bộ hàm mới cho bạn copy. Bạn sẽ nộp được bài tập nhưng không bao giờ hiểu tại sao phép chia nguyên trong C++ lại gây ra kẹt vô tận!"
+# In-memory storage for nodes and incidents
+NODES = {
+    "node-sgu-01": {
+        "id": "node-sgu-01",
+        "name": "Cổng ĐH Sài Gòn (273 An Dương Vương)",
+        "lat": 10.7599,
+        "lng": 106.6823,
+        "type": "Webcam Live / Edge Box",
+        "scenario": "normal",
+        "status": "online",
+        "last_ping": time.time(),
+        "device": "Tái chế PC cũ + Camera 200k"
     },
-    "dangling_pointer": {
-        "id": "dangling_pointer",
-        "title": "Con Trỏ Hoang Dã (Dangling Pointer C++)",
-        "language": "cpp",
-        "subject": "Kỹ thuật Lập trình (SGU)",
-        "code": """int* createNumber() {
-    int val = 42; 
-    return &val; // BUG Ở DÒNG NÀY: Trả về địa chỉ của biến cục bộ trên Stack
-}
-
-int main() {
-    int* ptr = createNumber();
-    cout << *ptr; // Undefined Behavior / Segmentation Fault
-    return 0;
-}""",
-        "bug_line": 3,
-        "bug_type": "Dangling Pointer (Con Trỏ Vùng Nhớ Rác)",
-        "trace_steps": [
-            {"step": 1, "vars": {"val": 42}, "action": "Hàm createNumber() cấp phát val trên Stack Frame"},
-            {"step": 2, "vars": {"&val": "0x7ffd"}, "action": "Hàm kết thúc ➔ Stack Frame của hàm bị hủy (Giải phóng)"},
-            {"step": 3, "vars": {"ptr": "0x7ffd (Rác)"}, "action": "⚠️ Con trỏ ptr đang trỏ vào vùng nhớ đã bị giải phóng!"}
-        ],
-        "memory_blocks": [
-            {"name": "Stack: val", "val": "42 (Đã bị hủy)", "active": True, "pointer": "ptr (Dangling)", "color": "#f87171"},
-            {"name": "Heap: dynamic", "val": "Chưa cấp phát", "active": False, "pointer": "", "color": "#64748b"}
-        ],
-        "socratic_questions": [
-            {
-                "level": "Quan sát",
-                "question": "Biến `val` được khai báo trong hàm `createNumber()`. Khi hàm này kết thúc, vùng nhớ Stack chứa `val` sẽ xảy ra điều gì?",
-                "hint": "Các biến cục bộ trên Stack sẽ tự động bị thu hồi khi hàm trả về."
-            },
-            {
-                "level": "Tư duy bản chất",
-                "question": "Con trỏ `ptr` ở hàm main đang giữ địa chỉ của một ô nhớ đã bị hệ điều hành thu hồi. Nếu một hàm khác ghi đè lên ô nhớ đó thì điều gì sẽ xảy ra?",
-                "hint": "Hiện tượng này gọi là Undefined Behavior (lỗi dữ liệu ngẫu nhiên hoặc crash phần mềm)."
-            },
-            {
-                "level": "Thử thách tự sửa",
-                "question": "Để dữ liệu tồn tại sau khi hàm kết thúc, ta nên dùng từ khóa nào để cấp phát trên Heap?",
-                "solution_preview": "int* val = new int(42);"
-            }
-        ],
-        "chatgpt_bad_habit": "ChatGPT sẽ đổi thành 'new int(42)' mà không giải thích sự khác biệt sống còn giữa vùng nhớ Stack và Heap trong kiến trúc máy tính."
+    "node-sgu-02": {
+        "id": "node-sgu-02",
+        "name": "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
+        "lat": 10.7552,
+        "lng": 106.6855,
+        "type": "Camera Dân Sinh #02",
+        "scenario": "flood",
+        "status": "alert",
+        "last_ping": time.time(),
+        "device": "Smartphone cũ (Redmi 9)"
     },
-    "array_overflow": {
-        "id": "array_overflow",
-        "title": "Lỗi Tràn Mảng Off-By-One (Buffer Overflow)",
-        "language": "cpp",
-        "subject": "Lập trình Cơ bản (SGU)",
-        "code": """void printArray(int arr[], int n) {
-    // n = 5 (mảng có chỉ số từ 0 đến 4)
-    for (int i = 0; i <= n; i++) { // BUG: i <= n truy cập vượt biên tại i = 5
-        cout << arr[i] << " ";
-    }
-}""",
-        "bug_line": 3,
-        "bug_type": "Off-by-One Array Index Out of Bounds",
-        "trace_steps": [
-            {"step": 1, "vars": {"i": 0}, "action": "Truy cập arr[0] ➔ Hợp lệ"},
-            {"step": 2, "vars": {"i": 4}, "action": "Truy cập arr[4] ➔ Hợp lệ (Phần tử cuối cùng)"},
-            {"step": 3, "vars": {"i": 5}, "action": "⚠️ VƯỢT BIÊN: Mảng chỉ có kích thước 5 (chỉ số 0..4). arr[5] truy cập vào ô nhớ rác ngoài mảng!"}
-        ],
-        "memory_blocks": [
-            {"name": "arr[0]", "val": 10, "active": False, "pointer": ""},
-            {"name": "arr[1]", "val": 20, "active": False, "pointer": ""},
-            {"name": "arr[2]", "val": 30, "active": False, "pointer": ""},
-            {"name": "arr[3]", "val": 40, "active": False, "pointer": ""},
-            {"name": "arr[4]", "val": 50, "active": False, "pointer": "Hợp lệ"},
-            {"name": "arr[5] (NGOÀI BIÊN)", "val": "??? Rác", "active": True, "pointer": "i = 5 (Tràn)", "color": "#f87171"}
-        ],
-        "socratic_questions": [
-            {
-                "level": "Quan sát",
-                "question": "Nếu mảng có kích thước n = 5 phần tử, chỉ số (index) của phần tử đầu tiên và phần tử cuối cùng lần lượt là bao nhiêu?",
-                "hint": "Trong C/C++, mảng đánh số từ 0 đến n - 1."
-            },
-            {
-                "level": "Tư duy bản chất",
-                "question": "Điều kiện lặp `i <= n` sẽ cho phép biến `i` nhận giá trị lớn nhất là mấy? Giá trị đó có thuộc phạm vi của mảng không?",
-                "hint": "Tại vòng lặp cuối cùng, i = 5, vượt quá chỉ số 4 của mảng."
-            },
-            {
-                "level": "Thử thách tự sửa",
-                "question": "Bạn hãy sửa lại dấu so sánh trong vòng lặp để chỉ duyệt đến phần tử cuối cùng của mảng.",
-                "solution_preview": "for (int i = 0; i < n; i++)"
-            }
-        ],
-        "chatgpt_bad_habit": "Lỗi off-by-one là lỗi số 1 gây trượt môn thi viết code của sinh viên vì ỷ lại IDE/AI tự sửa dấu bé hơn."
+    "node-sgu-03": {
+        "id": "node-sgu-03",
+        "name": "Hẻm 218 An Dương Vương (Khu trọ SV)",
+        "lat": 10.7585,
+        "lng": 106.6790,
+        "type": "Camera Tổ Dân Phố #03",
+        "scenario": "accident",
+        "status": "warning",
+        "last_ping": time.time(),
+        "device": "Webcam giá rẻ 180k"
     }
 }
 
-class AnalyzeRequest(BaseModel):
-    sample_id: Optional[str] = "binary_search"
-    custom_code: Optional[str] = None
-    language: Optional[str] = "cpp"
+INCIDENTS = [
+    {
+        "id": "inc-001",
+        "node_id": "node-sgu-02",
+        "node_name": "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
+        "type": "FLOOD",
+        "level": "DANGER",
+        "message": "Nước ngập sâu 26cm vượt nửa bánh xe máy, nguy cơ chết máy cao",
+        "timestamp": "10:15:30",
+        "gps": "10.7552, 106.6855",
+        "telegram_sent": True
+    },
+    {
+        "id": "inc-002",
+        "node_id": "node-sgu-03",
+        "node_name": "Hẻm 218 An Dương Vương",
+        "type": "ACCIDENT",
+        "level": "SOS",
+        "message": "Phát hiện va chạm ngã xe máy, người nằm bất động trên 5 giây",
+        "timestamp": "10:18:12",
+        "gps": "10.7585, 106.6790",
+        "telegram_sent": True
+    }
+]
 
-@app.get("/api/samples")
-def get_samples():
-    return [
-        {
-            "id": s["id"],
-            "title": s["title"],
-            "language": s["language"],
-            "subject": s["subject"],
-            "bug_type": s["bug_type"],
-            "code": s["code"]
-        }
-        for s in SAMPLE_BUGS.values()
-    ]
+# Web camera capture or synthetic simulator
+webcam_cap = None
+ENABLE_WEBCAM = False  # Mặc định TẮT webcam vật lý để bảo mật & riêng tư
 
-@app.post("/api/analyze")
-def analyze_code(req: AnalyzeRequest):
-    global CACHE_STATS
-    CACHE_STATS["total_queries"] += 1
-    start_time = time.time()
+def get_webcam():
+    global webcam_cap, ENABLE_WEBCAM
+    if not ENABLE_WEBCAM:
+        return None
+    if webcam_cap is None:
+        try:
+            webcam_cap = cv2.VideoCapture(0)
+            if not webcam_cap.isOpened():
+                webcam_cap = None
+        except Exception:
+            webcam_cap = None
+    return webcam_cap
 
-    # Cache key
-    if req.custom_code and req.custom_code.strip():
-        code_key = hashlib.md5(req.custom_code.strip().encode("utf-8")).hexdigest()[:12]
-        base_sample = SAMPLE_BUGS["binary_search"]
-        code_text = req.custom_code.strip()
+def release_webcam():
+    global webcam_cap, ENABLE_WEBCAM
+    ENABLE_WEBCAM = False
+    if webcam_cap is not None:
+        try:
+            webcam_cap.release()
+        except Exception:
+            pass
+        webcam_cap = None
+
+@app.get("/api/webcam/status")
+def get_webcam_status():
+    return {"webcam_enabled": ENABLE_WEBCAM}
+
+@app.post("/api/webcam/toggle")
+def toggle_webcam():
+    global ENABLE_WEBCAM
+    if ENABLE_WEBCAM:
+        release_webcam()
     else:
-        sample_id = req.sample_id or "binary_search"
-        base_sample = SAMPLE_BUGS.get(sample_id, SAMPLE_BUGS["binary_search"])
-        code_key = sample_id
-        code_text = base_sample["code"]
+        ENABLE_WEBCAM = True
+        get_webcam()
+    return {"webcam_enabled": ENABLE_WEBCAM}
 
-    # Semantic Cache Hit check
-    if code_key in SEMANTIC_ERROR_CACHE:
-        CACHE_STATS["cache_hits"] += 1
-        CACHE_STATS["tokens_saved"] += 2800
-        CACHE_STATS["total_vnd_saved"] += 18
-        cached = SEMANTIC_ERROR_CACHE[code_key]
+def generate_synthetic_frame(scenario: str, tick: int) -> np.ndarray:
+    """Generates a realistic synthetic road frame with vehicles/people for testing."""
+    frame = np.zeros((480, 640, 3), dtype=np.uint8)
+    
+    # Road background
+    frame[:200, :] = [60, 60, 60] # Distant sidewalk
+    frame[200:, :] = [40, 40, 40] # Asphalt road
+    
+    # Road markings
+    for x in range(0, 640, 80):
+        cv2.line(frame, (x, 340), (x + 40, 340), (255, 255, 255), 3)
 
-        return {
-            **cached,
-            "metrics": {
-                **cached["metrics"],
-                "cache_hit": True,
-                "execution_time_ms": round((time.time() - start_time) * 1000 + 10, 1),
-                "cost_vnd": 0,
-                "cache_msg": "⚡ HIT SEMANTIC ERROR CACHE: Dạng lỗi này đã được phân tích trước đó trong môn học (Chi phí 0 VNĐ, phản hồi tức thì)!"
-            }
+    if scenario == "flood":
+        # Draw water reflection overlay
+        water_overlay = frame.copy()
+        cv2.rectangle(water_overlay, (0, 310), (640, 480), (120, 90, 60), -1) # muddy water
+        cv2.addWeighted(water_overlay, 0.65, frame, 0.35, 0, frame)
+        # Vehicles wading in water
+        vx = (150 + (tick * 4) % 350)
+        cv2.rectangle(frame, (vx, 250), (vx + 70, 360), (30, 160, 240), -1) # Motorcycle body
+        cv2.circle(frame, (vx + 35, 220), 16, (220, 180, 140), -1) # Rider
+        cv2.putText(frame, "WATER DEPTH: 26cm", (20, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 165, 255), 2)
+    elif scenario == "accident":
+        # Fallen bike and person on road
+        cv2.rectangle(frame, (240, 320), (370, 360), (40, 40, 180), -1) # Fallen bike horizontal
+        cv2.circle(frame, (230, 335), 20, (10, 10, 10), -1) # Wheel
+        cv2.circle(frame, (380, 335), 20, (10, 10, 10), -1) # Wheel
+        cv2.rectangle(frame, (280, 365), (390, 395), (180, 120, 90), -1) # Fallen person horizontal
+        cv2.circle(frame, (270, 380), 14, (200, 160, 140), -1) # Head
+        cv2.putText(frame, "SOS: FALLEN DETECTED > 5s", (20, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+    else: # normal
+        # Moving normal vehicle
+        vx = (50 + (tick * 5) % 500)
+        cv2.rectangle(frame, (vx, 270), (vx + 50, 340), (0, 200, 100), -1)
+        cv2.circle(frame, (vx + 25, 245), 14, (220, 180, 140), -1)
+
+    return frame
+
+# Latest node analysis cache
+NODE_LATEST_METRICS: Dict[str, Any] = {}
+
+def stream_generator(node_id: str):
+    """MJPEG stream generator for web browser view."""
+    node = NODES.get(node_id, NODES["node-sgu-01"])
+    tick = 0
+    while True:
+        tick += 1
+        scenario = node["scenario"]
+
+        frame = None
+        # If node 1 and scenario normal, try webcam
+        if node_id == "node-sgu-01" and scenario == "normal":
+            cap = get_webcam()
+            if cap is not None and cap.isOpened():
+                ret, cam_frame = cap.read()
+                if ret:
+                    frame = cam_frame
+
+        if frame is None:
+            frame = generate_synthetic_frame(scenario, tick)
+
+        # Run AI detection
+        analysis = detector.analyze_frame(frame, simulate_scenario=scenario)
+        annotated = analysis["annotated_frame"]
+
+        # Cache metrics
+        NODE_LATEST_METRICS[node_id] = {
+            "fps": analysis["fps"],
+            "infer_time_ms": analysis["infer_time_ms"],
+            "detections_count": analysis["detections_count"],
+            "accident": analysis["accident"],
+            "flood": analysis["flood"],
+            "updated_at": time.time()
         }
 
-    # Simulate Socratic AI Reasoning Engine
-    elapsed_ms = round((time.time() - start_time) * 1000 + 35.0, 1)
-    result = {
-        "sample_id": code_key,
-        "title": base_sample["title"],
-        "language": base_sample["language"],
-        "subject": base_sample["subject"],
-        "code": code_text,
-        "bug_line": base_sample["bug_line"],
-        "bug_type": base_sample["bug_type"],
-        "trace_steps": base_sample["trace_steps"],
-        "memory_blocks": base_sample["memory_blocks"],
-        "socratic_questions": base_sample["socratic_questions"],
-        "chatgpt_bad_habit": base_sample["chatgpt_bad_habit"],
-        "metrics": {
-            "tokens_used": 420,
-            "execution_time_ms": elapsed_ms,
-            "cost_vnd": 16.5,
-            "cache_hit": False,
-            "cache_msg": "PROCESSED BY SOCRATICCODE: Phân tích AST & Sơ đồ bộ nhớ thành công. Đã lưu vào Semantic Cache."
-        }
-    }
+        # Encode to JPEG
+        ret, buffer = cv2.imencode(".jpg", annotated, [cv2.IMWRITE_JPEG_QUALITY, 80])
+        if not ret:
+            continue
+        frame_bytes = buffer.tobytes()
 
-    SEMANTIC_ERROR_CACHE[code_key] = result
-    return result
+        yield (b"--frame\r\n"
+               b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n")
+        time.sleep(0.04) # ~25 FPS
 
-@app.get("/api/cache/stats")
-def get_cache_stats():
+@app.get("/api/status")
+def get_system_status():
     return {
-        **CACHE_STATS,
-        "cached_patterns_count": len(SEMANTIC_ERROR_CACHE),
-        "hit_rate_percent": round((CACHE_STATS["cache_hits"] / max(1, CACHE_STATS["total_queries"])) * 100, 1)
+        "status": "online",
+        "system_name": "UrbanShield Lite - Edge AI Gateway",
+        "team": "SingleNode",
+        "active_nodes": len(NODES),
+        "total_incidents": len(INCIDENTS),
+        "edge_ai_model": "YOLOv8n (~6MB CPU Inference)",
+        "cost_savings": "95% bandwidth & server cost saved"
     }
+
+@app.get("/api/nodes")
+def get_nodes():
+    return list(NODES.values())
+
+@app.get("/api/nodes/{node_id}/metrics")
+def get_node_metrics(node_id: str):
+    if node_id not in NODES:
+        raise HTTPException(status_code=404, detail="Node not found")
+    metrics = NODE_LATEST_METRICS.get(node_id, {
+        "fps": 28.5,
+        "infer_time_ms": 35.0,
+        "detections_count": 2,
+        "accident": {"detected": False, "reason": ""},
+        "flood": {"detected": False, "depth_cm": 0}
+    })
+    return metrics
+
+class ScenarioUpdate(BaseModel):
+    scenario: str # 'normal', 'flood', 'accident'
+
+@app.post("/api/nodes/{node_id}/scenario")
+def set_node_scenario(node_id: str, data: ScenarioUpdate):
+    if node_id not in NODES:
+        raise HTTPException(status_code=404, detail="Node not found")
+    NODES[node_id]["scenario"] = data.scenario
+    
+    # If alert scenario, record incident
+    if data.scenario in ["flood", "accident"]:
+        inc_type = "FLOOD" if data.scenario == "flood" else "ACCIDENT"
+        msg = ("Phát hiện ngập lụt 26cm tại cung đường" 
+               if inc_type == "FLOOD" else 
+               "CẢNH BÁO SOS: Phát hiện va chạm ngã xe máy ban đêm")
+        new_inc = {
+            "id": f"inc-{int(time.time())}",
+            "node_id": node_id,
+            "node_name": NODES[node_id]["name"],
+            "type": inc_type,
+            "level": "DANGER" if inc_type == "FLOOD" else "SOS",
+            "message": msg,
+            "timestamp": time.strftime("%H:%M:%S"),
+            "gps": f"{NODES[node_id]['lat']}, {NODES[node_id]['lng']}",
+            "telegram_sent": True
+        }
+        INCIDENTS.insert(0, new_inc)
+        
+    return {"success": True, "node": NODES[node_id]}
+
+@app.get("/api/incidents")
+def get_incidents():
+    return INCIDENTS
+
+class TelegramAlertRequest(BaseModel):
+    incident_id: str
+
+@app.post("/api/alerts/telegram")
+def trigger_telegram_alert(req: TelegramAlertRequest):
+    # Simulated Telegram broadcast
+    return {
+        "success": True,
+        "channel": "@UrbanShield_SGU_Emergency",
+        "delivered_to": ["Tổ Dân Phố Phường 3", "Đội Cứu Hộ SV SGU", "Gia Đình"],
+        "message": "Đã phát cảnh báo khẩn cấp tức thời qua Telegram Bot API (0đ chi phí)!"
+    }
+
+@app.get("/api/video_feed/{node_id}")
+def video_feed(node_id: str):
+    return StreamingResponse(
+        stream_generator(node_id),
+        media_type="multipart/x-mixed-replace; boundary=frame"
+    )
 
 if __name__ == "__main__":
     import uvicorn
