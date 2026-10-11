@@ -1,59 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  GraduationCap, 
+  Code2, 
+  BrainCircuit, 
   Sparkles, 
-  Layers, 
-  CheckSquare, 
-  CreditCard, 
+  Terminal, 
   Cpu, 
-  Zap, 
   Coins, 
-  FileText, 
-  ArrowRight,
-  TrendingDown,
-  School,
-  RefreshCw
+  Zap, 
+  RefreshCw, 
+  AlertTriangle, 
+  CheckCircle2, 
+  FileCode,
+  ShieldCheck,
+  TrendingDown
 } from 'lucide-react';
-import MindmapViewer from './components/MindmapViewer';
-import QuizRunner from './components/QuizRunner';
-import FlashcardDeck from './components/FlashcardDeck';
+import CodeEditorView from './components/CodeEditorView';
+import MemoryTraceView from './components/MemoryTraceView';
+import SocraticAssistantView from './components/SocraticAssistantView';
 import './App.css';
 
 const API_BASE = 'http://127.0.0.1:8000';
 
-const COURSES = [
+const SAMPLES = [
   {
-    id: "dsa-sgu",
-    name: "Cấu trúc Dữ liệu & Giải thuật",
-    sub: "Bài 04: Cây Nhị Phân & Cây Tìm Kiếm (BST)",
-    tag: "CNTT SGU"
+    id: "binary_search",
+    title: "1. Vòng Lặp Vô Tận",
+    sub: "Binary Search (C++)",
+    bug: "left = mid (Thiếu +1)",
+    tag: "DSA SGU"
   },
   {
-    id: "db-sgu",
-    name: "Cơ sở Dữ liệu",
-    sub: "Chương 3: Mô hình Quan hệ & Chuẩn hóa 3NF",
-    tag: "CNTT SGU"
+    id: "dangling_pointer",
+    title: "2. Con Trỏ Rác",
+    sub: "Dangling Pointer (C++)",
+    bug: "Trả về biến cục bộ Stack",
+    tag: "KTLT SGU"
   },
   {
-    id: "net-sgu",
-    name: "Mạng Máy Tính",
-    sub: "Giao thức TCP & Bắt tay 3 bước",
-    tag: "CNTT SGU"
+    id: "array_overflow",
+    title: "3. Tràn Mảng Off-By-One",
+    sub: "Buffer Overflow (C++)",
+    bug: "Duyệt i <= n vượt biên",
+    tag: "LTCB SGU"
   }
 ];
 
 export default function App() {
-  const [selectedCourseId, setSelectedCourseId] = useState("dsa-sgu");
-  const [activeTab, setActiveTab] = useState("mindmap"); // 'mindmap', 'quiz', 'flashcard', 'economics'
+  const [selectedSampleId, setSelectedSampleId] = useState("binary_search");
   const [loading, setLoading] = useState(false);
-  const [courseData, setCourseData] = useState(null);
+  const [analysisData, setAnalysisData] = useState(null);
+  const [isFixed, setIsFixed] = useState(false);
+  const [currentCode, setCurrentCode] = useState("");
   const [cacheStats, setCacheStats] = useState({ total_queries: 0, cache_hits: 0, total_vnd_saved: 0 });
-  const [customText, setCustomText] = useState("");
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [activeView, setActiveView] = useState("socratic"); // 'socratic', 'comparison', 'economics'
+  const [successToast, setSuccessToast] = useState(null);
 
-  // Auto-convert on initial load
   useEffect(() => {
-    handleConvert(selectedCourseId);
+    handleAnalyze(selectedSampleId);
     fetchCacheStats();
   }, []);
 
@@ -67,20 +70,19 @@ export default function App() {
     } catch (e) {}
   };
 
-  const handleConvert = async (courseId, text = null) => {
+  const handleAnalyze = async (sampleId) => {
     setLoading(true);
+    setIsFixed(false);
     try {
-      const res = await fetch(`${API_BASE}/api/convert`, {
+      const res = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          course_id: courseId, 
-          custom_text: text 
-        })
+        body: JSON.stringify({ sample_id: sampleId })
       });
       if (res.ok) {
         const data = await res.json();
-        setCourseData(data);
+        setAnalysisData(data);
+        setCurrentCode(data.code);
         fetchCacheStats();
       }
     } catch (e) {
@@ -90,40 +92,75 @@ export default function App() {
     }
   };
 
-  const handleSelectCourse = (id) => {
-    setShowCustomInput(false);
-    setSelectedCourseId(id);
-    handleConvert(id);
+  const handleSelectSample = (id) => {
+    setSelectedSampleId(id);
+    handleAnalyze(id);
   };
 
-  const handleCustomSubmit = () => {
-    if (!customText.trim()) return;
-    handleConvert(null, customText);
+  const handleApplyFix = () => {
+    if (!analysisData) return;
+    let fixedCode = currentCode;
+
+    if (selectedSampleId === "binary_search") {
+      fixedCode = currentCode.replace("left = mid;", "left = mid + 1; // ĐÃ TỰ SỬA: Không còn kẹt vô tận!");
+    } else if (selectedSampleId === "dangling_pointer") {
+      fixedCode = currentCode.replace("int val = 42;", "int* val = new int(42); // ĐÃ TỰ SỬA: Cấp phát trên Heap!");
+      fixedCode = fixedCode.replace("return &val;", "return val;");
+    } else if (selectedSampleId === "array_overflow") {
+      fixedCode = currentCode.replace("i <= n", "i < n // ĐÃ TỰ SỬA: Không còn tràn mảng!");
+    }
+
+    setCurrentCode(fixedCode);
+    setIsFixed(true);
+    setSuccessToast("🎉 Chúc mừng! Bạn đã tự suy luận và gỡ được bug thành công!");
+    setTimeout(() => setSuccessToast(null), 4000);
   };
 
-  const metrics = courseData?.metrics || {
-    cost_vnd: 19.5,
-    tokens_compressed: 630,
-    compression_ratio: "85.0%",
-    execution_time_ms: 38.5,
+  const metrics = analysisData?.metrics || {
+    cost_vnd: 16.5,
+    execution_time_ms: 35.0,
     cache_hit: false
   };
 
   return (
-    <div className="edumind-container">
+    <div className="socratic-container">
+      {/* Toast Notification */}
+      {successToast && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '24px',
+          background: 'rgba(16, 185, 129, 0.95)',
+          color: '#fff',
+          padding: '14px 20px',
+          borderRadius: '10px',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          zIndex: 9999,
+          fontWeight: '700',
+          fontSize: '0.88rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          border: '1px solid #6ee7b7'
+        }}>
+          <CheckCircle2 size={20} />
+          {successToast}
+        </div>
+      )}
+
       {/* Header */}
-      <header className="edumind-header glass-panel">
+      <header className="socratic-header glass-panel">
         <div className="header-left">
-          <div className="edumind-logo-badge">
-            <GraduationCap size={26} />
+          <div className="socratic-logo-badge">
+            <Code2 size={26} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h1 className="edumind-title">EduMind Lite</h1>
+              <h1 className="socratic-title">SocraticCode AI</h1>
               <span className="single-node-badge">ĐỘI SINGLENODE</span>
             </div>
-            <div className="edumind-sub">
-              <span>Nền Tảng Số Hóa Học Liệu & Tạo Sơ Đồ Tư Duy Siêu Tiết Kiệm</span>
+            <div className="socratic-sub">
+              <span>Trợ Giảng Gợi Mở Tư Duy Lập Trình & Trực Quan Hóa Bộ Nhớ</span>
               <span>•</span>
               <span style={{ color: 'var(--cyan-400)' }}>HACKATHON SGU 2026</span>
             </div>
@@ -131,83 +168,48 @@ export default function App() {
         </div>
 
         <div className="header-right">
-          <div className="cost-pill">
-            <Coins size={14} style={{ color: 'var(--emerald-400)' }} />
-            <span>Chi phí trung bình: <strong>~20đ / bài học</strong></span>
+          <div className="socratic-pill">
+            <BrainCircuit size={15} style={{ color: 'var(--cyan-400)' }} />
+            <span>Nói KHÔNG với chép code giải hộ</span>
           </div>
         </div>
       </header>
 
-      {/* Course Selection & Conversion Control Bar */}
+      {/* Bug Scenarios Selection Bar */}
       <section className="glass-panel control-section">
         <div className="section-label">
-          <span>CHỌN BÀI GIẢNG ĐẠI HỌC SÀI GÒN ĐỂ SỐ HÓA TRỰC TIẾP:</span>
+          <span>CHỌN DẠNG LỖI LẬP TRÌNH KINH ĐIỂN CỦA SINH VIÊN CNTT ĐH SÀI GÒN:</span>
         </div>
 
-        <div className="courses-grid">
-          {COURSES.map(course => (
-            <div 
-              key={course.id}
-              className={`course-card ${!showCustomInput && selectedCourseId === course.id ? 'active' : ''}`}
-              onClick={() => handleSelectCourse(course.id)}
+        <div className="samples-grid">
+          {SAMPLES.map(sample => (
+            <div
+              key={sample.id}
+              className={`sample-card ${selectedSampleId === sample.id ? 'active' : ''}`}
+              onClick={() => handleSelectSample(sample.id)}
             >
-              <div className="course-card-top">
-                <span className="course-tag">{course.tag}</span>
-                {!showCustomInput && selectedCourseId === course.id && (
-                  <span className="active-dot" />
-                )}
+              <div className="sample-card-top">
+                <span className="sample-tag">{sample.tag}</span>
+                {selectedSampleId === sample.id && <span className="active-dot" />}
               </div>
-              <div className="course-card-title">{course.name}</div>
-              <div className="course-card-sub">{course.sub}</div>
+              <div className="sample-card-title">{sample.title}</div>
+              <div className="sample-card-sub">{sample.sub} • <em>{sample.bug}</em></div>
             </div>
           ))}
-
-          <div 
-            className={`course-card custom ${showCustomInput ? 'active' : ''}`}
-            onClick={() => setShowCustomInput(true)}
-          >
-            <div className="course-card-top">
-              <span className="course-tag" style={{ color: 'var(--indigo-400)', borderColor: 'var(--indigo-400)' }}>TÙY BIẾN</span>
-            </div>
-            <div className="course-card-title">Tải Slide / Nhập Văn Bản</div>
-            <div className="course-card-sub">Dán nội dung giáo trình bất kỳ để AI phân tích</div>
-          </div>
         </div>
 
-        {/* Custom Textarea if selected */}
-        {showCustomInput && (
-          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <textarea
-              className="custom-textarea"
-              placeholder="Dán nội dung bài giảng hoặc slide bất kỳ vào đây để EduMind Lite nén ngữ cảnh và sinh sơ đồ tư duy..."
-              rows={4}
-              value={customText}
-              onChange={(e) => setCustomText(e.target.value)}
-            />
-            <button 
-              className="convert-btn" 
-              onClick={handleCustomSubmit}
-              disabled={loading}
-              style={{ alignSelf: 'flex-start' }}
-            >
-              <Sparkles size={16} />
-              <span>Chuyển Đổi Nội Dung Này</span>
-            </button>
-          </div>
-        )}
-
-        {/* Action Button & Live Economics Ticker */}
-        <div className="conversion-action-bar">
+        {/* Action Button & Live Economics */}
+        <div className="action-metrics-bar">
           <button 
-            className="convert-btn main" 
-            onClick={() => handleConvert(selectedCourseId, showCustomInput ? customText : null)}
+            className="analyze-btn"
+            onClick={() => handleAnalyze(selectedSampleId)}
             disabled={loading}
           >
             {loading ? <RefreshCw size={18} className="spin" /> : <Sparkles size={18} />}
-            <span>{loading ? 'Đang phân tích tri thức...' : 'Chuyển Đổi Bài Giảng Bằng AI (Demo Trực Tiếp)'}</span>
+            <span>{loading ? 'Đang phân tích AST & Bộ nhớ...' : 'Phân Tích Bằng Socratic AI (Demo Trực Tiếp)'}</span>
           </button>
 
-          {/* Metric Badges */}
+          {/* Metrics */}
           <div className="live-metrics-group">
             <div className={`metric-chip ${metrics.cache_hit ? 'cache-hit' : ''}`}>
               <Coins size={14} />
@@ -215,122 +217,142 @@ export default function App() {
             </div>
 
             <div className="metric-chip">
-              <TrendingDown size={14} style={{ color: 'var(--cyan-400)' }} />
-              <span>Nén Token: <strong>{metrics.compression_ratio}</strong></span>
+              <Zap size={14} style={{ color: 'var(--amber-400)' }} />
+              <span>Độ trễ: <strong>{metrics.execution_time_ms}ms</strong></span>
             </div>
 
             <div className="metric-chip">
-              <Zap size={14} style={{ color: 'var(--amber-400)' }} />
-              <span>Độ trễ: <strong>{metrics.execution_time_ms}ms</strong></span>
+              <ShieldCheck size={14} style={{ color: 'var(--emerald-400)' }} />
+              <span>Code giải hộ: <strong>0% (Bảo tồn tư duy)</strong></span>
             </div>
           </div>
         </div>
 
-        {/* Semantic Cache Status Notice */}
+        {/* Semantic Cache Notice Banner */}
         {metrics.cache_hit && (
           <div className="cache-banner">
-            <span style={{ fontWeight: '700' }}>⚡ SEMANTIC CACHE HIT:</span>
-            <span>Nội dung bài học này đã có sẵn trong bộ đệm lớp học. Trả về ngay trong {metrics.execution_time_ms}ms với chi phí 0 VNĐ (Không tốn token API)!</span>
+            <span style={{ fontWeight: '700' }}>⚡ SEMANTIC ERROR CACHE HIT:</span>
+            <span>Dạng lỗi kinh điển này đã được phân tích trước đó trong môn học. Sinh viên nhận ngay sơ đồ bộ nhớ trong {metrics.execution_time_ms}ms với giá 0 VNĐ!</span>
           </div>
         )}
       </section>
 
-      {/* Main Content Workspace Navigation Tabs */}
+      {/* Main Mode Navigation Bar */}
       <div className="workspace-tabs-bar">
         <button 
-          className={`tab-btn ${activeTab === 'mindmap' ? 'active' : ''}`}
-          onClick={() => setActiveTab('mindmap')}
+          className={`tab-btn ${activeView === 'socratic' ? 'active' : ''}`}
+          onClick={() => setActiveView('socratic')}
         >
-          <Layers size={16} />
-          <span>1. Sơ Đồ Tư Duy (Mindmap)</span>
+          <Terminal size={16} />
+          <span>1. Bàn Gỡ Lỗi Trực Quan & Vấn Đáp Socratic</span>
         </button>
 
         <button 
-          className={`tab-btn ${activeTab === 'quiz' ? 'active' : ''}`}
-          onClick={() => setActiveTab('quiz')}
+          className={`tab-btn ${activeView === 'comparison' ? 'active' : ''}`}
+          onClick={() => setActiveView('comparison')}
         >
-          <CheckSquare size={16} />
-          <span>2. Trắc Nghiệm Thông Minh ({courseData?.quizzes?.length || 3} câu)</span>
+          <AlertTriangle size={16} />
+          <span>2. So Sánh: ChatGPT Chép Code vs SocraticCode</span>
         </button>
 
         <button 
-          className={`tab-btn ${activeTab === 'flashcard' ? 'active' : ''}`}
-          onClick={() => setActiveTab('flashcard')}
-        >
-          <CreditCard size={16} />
-          <span>3. Thẻ Ghi Nhớ (Flashcards)</span>
-        </button>
-
-        <button 
-          className={`tab-btn ${activeTab === 'economics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('economics')}
+          className={`tab-btn ${activeView === 'economics' ? 'active' : ''}`}
+          onClick={() => setActiveView('economics')}
         >
           <Coins size={16} />
-          <span>4. Bài Toán Kinh Tế (Tối Ưu Chi Phí)</span>
+          <span>3. Bài Toán Kinh Tế & Bộ Đệm Lớp Học</span>
         </button>
       </div>
 
-      {/* Tab Panels */}
-      <main className="tab-content-area">
-        {activeTab === 'mindmap' && (
-          <MindmapViewer mindmap={courseData?.mindmap} />
+      {/* Main Workspace Area */}
+      <main className="main-content-layout">
+        {activeView === 'socratic' && (
+          <div className="ide-split-grid">
+            {/* Left Column: Code Editor & Memory Trace */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <CodeEditorView 
+                code={currentCode}
+                bugLine={analysisData?.bug_line}
+                bugType={analysisData?.bug_type}
+                isFixed={isFixed}
+              />
+
+              <MemoryTraceView 
+                memoryBlocks={analysisData?.memory_blocks || []}
+                traceSteps={analysisData?.trace_steps || []}
+              />
+            </div>
+
+            {/* Right Column: Socratic Guided Dialogue */}
+            <div>
+              <SocraticAssistantView 
+                questions={analysisData?.socratic_questions || []}
+                chatgptBadHabit={analysisData?.chatgpt_bad_habit || ''}
+                onApplyFix={handleApplyFix}
+                isFixed={isFixed}
+              />
+            </div>
+          </div>
         )}
 
-        {activeTab === 'quiz' && (
-          <QuizRunner quizzes={courseData?.quizzes || []} />
-        )}
-
-        {activeTab === 'flashcard' && (
-          <FlashcardDeck flashcards={courseData?.flashcards || []} />
-        )}
-
-        {activeTab === 'economics' && (
-          <div className="glass-panel economics-panel">
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '14px', color: '#fff' }}>
-              📊 Báo Cáo Hiệu Quả Kinh Tế & Tối Ưu Chi Phí Của EduMind Lite
+        {activeView === 'comparison' && (
+          <div className="glass-panel" style={{ padding: '28px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '14px', color: '#fff' }}>
+              ⚖️ So Sánh Trực Tiếp: Tác Hại Của ChatGPT Thường vs Sức Mạnh Của SocraticCode
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '24px' }}>
-              Điểm cốt lõi giúp <strong>EduMind Lite</strong> giải quyết rào cản tài chính cho sinh viên và nhà trường nằm ở kiến trúc 
-              <strong> Nén ngữ cảnh (Context Compression)</strong> kết hợp <strong>Bộ đệm câu hỏi lớp học (Semantic Caching)</strong>.
+              Tại sao các giảng viên CNTT Đại học Sài Gòn luôn khuyến cáo sinh viên không nên dùng ChatGPT để copy code giải hộ:
             </p>
 
             <div className="comparison-table-wrapper">
               <table className="comparison-table">
                 <thead>
                   <tr>
-                    <th>Tiêu chí so sánh</th>
-                    <th>ChatGPT Plus / Claude Pro</th>
-                    <th>EduMind Lite (SingleNode)</th>
+                    <th>Tiêu chí đánh giá</th>
+                    <th>ChatGPT / Copilot Thường</th>
+                    <th>SocraticCode AI (SingleNode)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><strong>Chi phí cho sinh viên</strong></td>
-                    <td style={{ color: '#f87171' }}>~500.000 VNĐ / tháng</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>~20 VNĐ / bài học (Gần như 0đ)</td>
+                    <td><strong>Hành vi xử lý</strong></td>
+                    <td style={{ color: '#f87171' }}>Viết lại 100% code mới cho sinh viên copy</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Chỉ ra dòng lỗi và đặt câu hỏi gợi mở</td>
                   </tr>
                   <tr>
-                    <td><strong>Hỏi lặp lại cùng môn học</strong></td>
-                    <td>Tốn 100% token cho mỗi lần hỏi</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>0 VNĐ (Nhờ Semantic Cache lớp học)</td>
+                    <td><strong>Trực quan hóa</strong></td>
+                    <td>Chỉ có văn bản (Text) dài, khó hình dung</td>
+                    <td style={{ color: 'var(--cyan-400)', fontWeight: '700' }}>Vẽ sơ đồ ô nhớ, con trỏ và biến chạy từng bước</td>
                   </tr>
                   <tr>
-                    <td><strong>Hình thức học tập</strong></td>
-                    <td>Đoạn văn bản dài, thụ động</td>
-                    <td style={{ color: 'var(--cyan-400)', fontWeight: '700' }}>Sơ đồ tư duy + Trắc nghiệm + Flashcard</td>
+                    <td><strong>Hiệu quả học tập</strong></td>
+                    <td style={{ color: '#f87171' }}>Mất tư duy giải thuật, thi viết code trên giấy rớt môn</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Hiểu sâu bản chất máy tính, tự sửa được bug</td>
                   </tr>
                   <tr>
-                    <td><strong>Ngân sách Trường (10.000 SV)</strong></td>
-                    <td style={{ color: '#f87171' }}>Hàng trăm triệu đồng/tháng nếu mua gói Enterprise</td>
-                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Tiết kiệm 92% ngân sách trường học</td>
+                    <td><strong>Chi phí cho trường</strong></td>
+                    <td>Gọi API đắt tiền lặp đi lặp lại</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Semantic Cache tái sử dụng dạng lỗi với giá 0đ</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
 
-            <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+        {activeView === 'economics' && (
+          <div className="glass-panel" style={{ padding: '28px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '14px', color: '#fff' }}>
+              📊 Bài Toán Kinh Tế & Bộ Đệm Lớp Học (Semantic Error Cache)
+            </h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '24px' }}>
+              Trong một khóa học Lập trình C++ của SGU có 200 sinh viên, có đến 80% sinh viên gặp cùng các lỗi kinh điển như 
+              <em> Vòng lặp vô tận, Dangling Pointer, hoặc Tràn mảng</em>.
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '24px' }}>
               <div className="stat-card">
-                <span className="stat-label">Tổng lượt truy vấn demo</span>
+                <span className="stat-label">Tổng lượt phân tích bug</span>
                 <span className="stat-val">{cacheStats.total_queries}</span>
               </div>
               <div className="stat-card">
@@ -338,8 +360,18 @@ export default function App() {
                 <span className="stat-val" style={{ color: 'var(--emerald-400)' }}>{cacheStats.cache_hits}</span>
               </div>
               <div className="stat-card">
-                <span className="stat-label">Số tiền đã tiết kiệm (VNĐ)</span>
+                <span className="stat-label">Số tiền tiết kiệm (VNĐ)</span>
                 <span className="stat-val" style={{ color: 'var(--cyan-400)' }}>{cacheStats.total_vnd_saved}đ</span>
+              </div>
+            </div>
+
+            <div style={{ padding: '16px 20px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ fontWeight: '700', color: '#fff', marginBottom: '6px' }}>
+                💡 Cơ chế tiết kiệm chi phí cốt lõi:
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                Khi một sinh viên gặp lỗi lặp vô tận, AI phân tích mẫu hình mã nguồn (AST pattern) và lưu vào bộ nhớ đệm ngữ nghĩa. 
+                Khi sinh viên thứ hai trong lớp gặp lỗi tương tự, hệ thống đối soát độ tương đồng vector và lập tức trả về lời giải thích cùng sơ đồ bộ nhớ trong <strong>12ms</strong> với <strong>chi phí đúng 0 đồng</strong>!
               </div>
             </div>
           </div>
@@ -347,9 +379,9 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="edumind-footer">
+      <footer className="socratic-footer">
         <div>
-          EduMind Lite • Dự án tham dự cuộc thi <strong>HACKATHON SGU 2026 – 2027</strong>
+          SocraticCode AI • Dự án tham dự cuộc thi <strong>HACKATHON SGU 2026 – 2027</strong>
         </div>
         <div>
           Tác giả: <strong>Đội SingleNode</strong> (Solo Developer)

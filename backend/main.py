@@ -1,11 +1,11 @@
 import time
 import hashlib
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 
-app = FastAPI(title="EduMind Lite - Smart EdTech AI Engine")
+app = FastAPI(title="SocraticCode AI - Guided Programming Tutor")
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,9 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-Memory Semantic Cache
-# key: text_hash -> cached response
-SEMANTIC_CACHE: Dict[str, Any] = {}
+# In-Memory Semantic Error Cache
+SEMANTIC_ERROR_CACHE: Dict[str, Any] = {}
 CACHE_STATS = {
     "total_queries": 0,
     "cache_hits": 0,
@@ -25,309 +24,238 @@ CACHE_STATS = {
     "total_vnd_saved": 0
 }
 
-# Pre-built SGU Course Material Datasets
-PREBUILT_COURSES = {
-    "dsa-sgu": {
-        "id": "dsa-sgu",
-        "title": "Cấu trúc Dữ liệu & Giải thuật: Cây Nhị Phân & BST",
-        "subject": "Khoa CNTT - ĐH Sài Gòn",
-        "raw_text": "Cây nhị phân là cấu trúc dữ liệu phân cấp quan trọng. Mỗi nút có tối đa 2 con (trái, phải). Các phép duyệt cây gồm Tiền tự (Pre-order: Gốc-Trái-Phải), Trung tự (In-order: Trái-Gốc-Phải), Hậu tự (Post-order: Trái-Phải-Gốc). Đặc biệt trên Cây tìm kiếm nhị phân (BST), phép duyệt In-order luôn cho dãy số tăng dần. Độ phức tạp tìm kiếm trung bình là O(log N), trường hợp xấu nhất cây suy biến là O(N). Phép xóa nút có 2 con cần tìm phần tử thay thế là nút nhỏ nhất bên cây con phải hoặc lớn nhất bên cây con trái.",
-        "mindmap": {
-            "id": "root",
-            "label": "Cây Nhị Phân & BST",
-            "desc": "Cấu trúc phân cấp dữ liệu cơ bản trong CNTT",
-            "children": [
-                {
-                    "id": "node-1",
-                    "label": "1. Khái Niệm Cơ Bản",
-                    "desc": "Mỗi nút có tối đa 2 nút con",
-                    "children": [
-                        { "id": "1-1", "label": "Nút gốc (Root)" },
-                        { "id": "1-2", "label": "Nút lá (Leaf)" },
-                        { "id": "1-3", "label": "Chiều cao & Bậc của cây" }
-                    ]
-                },
-                {
-                    "id": "node-2",
-                    "label": "2. Thuật Toán Duyệt Cây",
-                    "desc": "3 phương pháp duyệt có thứ tự",
-                    "children": [
-                        { "id": "2-1", "label": "Tiền tự (Pre-order: Gốc ➔ Trái ➔ Phải)" },
-                        { "id": "2-2", "label": "Trung tự (In-order: Trái ➔ Gốc ➔ Phải) ✦ Tăng dần trên BST" },
-                        { "id": "2-3", "label": "Hậu tự (Post-order: Trái ➔ Phải ➔ Gốc)" }
-                    ]
-                },
-                {
-                    "id": "node-3",
-                    "label": "3. Cây Tìm Kiếm Nhị Phân (BST)",
-                    "desc": "Con trái < Gốc < Con phải",
-                    "children": [
-                        { "id": "3-1", "label": "Tìm kiếm: O(log N) trung bình, O(N) xấu nhất" },
-                        { "id": "3-2", "label": "Chèn nút mới (Insert Node)" },
-                        { "id": "3-3", "label": "Xóa nút có 2 con: Thay bằng thế mạng" }
-                    ]
-                }
-            ]
-        },
-        "quizzes": [
+# Pre-configured Classic SGU Programming Bug Scenarios
+SAMPLE_BUGS = {
+    "binary_search": {
+        "id": "binary_search",
+        "title": "Vòng Lặp Vô Tận (Binary Search)",
+        "language": "cpp",
+        "subject": "Cấu trúc Dữ liệu & Giải thuật (SGU)",
+        "code": """int binarySearch(int arr[], int n, int target) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) 
+            return mid;
+        if (arr[mid] < target) {
+            left = mid; // BUG Ở DÒNG NÀY: Thiếu + 1 khiến left kẹt lại
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}""",
+        "bug_line": 8,
+        "bug_type": "Infinite Loop (Lỗi Vòng Lặp Vô Tận)",
+        "trace_steps": [
+            {"step": 1, "vars": {"left": 0, "right": 4, "mid": 2}, "arr_mid_val": 5, "action": "arr[2]=5 < 7 ➔ Gán left = mid (left = 2)"},
+            {"step": 2, "vars": {"left": 2, "right": 4, "mid": 3}, "arr_mid_val": 9, "action": "arr[3]=9 > 7 ➔ Gán right = mid - 1 (right = 2)"},
+            {"step": 3, "vars": {"left": 2, "right": 2, "mid": 2}, "arr_mid_val": 5, "action": "arr[2]=5 < 7 ➔ Gán left = mid (left = 2)"},
+            {"step": 4, "vars": {"left": 2, "right": 2, "mid": 2}, "arr_mid_val": 5, "action": "⚠️ KẸT VÔ TẬN: left và right giữ nguyên giá trị (2), vòng lặp chạy mãi mãi!"}
+        ],
+        "memory_blocks": [
+            {"name": "arr[0]", "val": 1, "active": False, "pointer": ""},
+            {"name": "arr[1]", "val": 3, "active": False, "pointer": ""},
+            {"name": "arr[2]", "val": 5, "active": True, "pointer": "left, right, mid (Kẹt)", "color": "#f87171"},
+            {"name": "arr[3]", "val": 9, "active": False, "pointer": ""},
+            {"name": "arr[4]", "val": 12, "active": False, "pointer": ""}
+        ],
+        "socratic_questions": [
             {
-                "id": "q1",
-                "level": "Nhận biết",
-                "question": "Trong Cây tìm kiếm nhị phân (BST), phép duyệt nào cho kết quả là dãy số được sắp xếp tăng dần?",
-                "options": [
-                    "A. Duyệt tiền tự (Pre-order)",
-                    "B. Duyệt trung tự (In-order)",
-                    "C. Duyệt hậu tự (Post-order)",
-                    "D. Duyệt theo chiều rộng (BFS)"
-                ],
-                "correct_index": 1,
-                "explanation": "Chính xác! Trong BST, duyệt trung tự (In-order: Trái -> Gốc -> Phải) luôn duyệt qua các khóa theo thứ tự tăng dần từ bé đến lớn."
+                "level": "Quan sát",
+                "question": "Hãy nhìn vào Bảng biến chạy ở Bước 3 và Bước 4: Sau khi gán `left = mid`, giá trị của biến `left` có thực sự tăng lên không?",
+                "hint": "Cả left và right đều đang bằng 2, phép chia (2 + 2) / 2 tiếp tục cho kết quả mid = 2."
             },
             {
-                "id": "q2",
-                "level": "Thông hiểu",
-                "question": "Độ phức tạp thời gian khi tìm kiếm trên BST trong trường hợp xấu nhất (cây suy biến thành danh sách liên kết) là gì?",
-                "options": [
-                    "A. O(1)",
-                    "B. O(log N)",
-                    "C. O(N)",
-                    "D. O(N²)"
-                ],
-                "correct_index": 2,
-                "explanation": "Đúng! Khi các phần tử chèn vào bị sắp sẵn tăng dần hoặc giảm dần, cây sẽ bị lệch 1 bên và tìm kiếm tốn O(N)."
+                "level": "Tư duy bản chất",
+                "question": "Phần tử ở vị trí `mid` đã được kiểm tra và chắc chắn nhỏ hơn `target`. Vậy tại sao ta vẫn giữ nó trong phạm vi tìm kiếm tiếp theo?",
+                "hint": "Nếu arr[mid] chắc chắn không phải đáp án, phạm vi mới nên bắt đầu từ phần tử ngay sau nó."
             },
             {
-                "id": "q3",
-                "level": "Vận dụng",
-                "question": "Khi xóa một nút có ĐỦ CẢ HAI CON trên cây BST, phần tử thay thế hợp lệ là phần tử nào?",
-                "options": [
-                    "A. Nút nhỏ nhất bên cây con phải (hoặc lớn nhất bên cây con trái)",
-                    "B. Nút gốc của toàn bộ cây",
-                    "C. Nút lá bất kỳ",
-                    "D. Nút cha của nút cần xóa"
-                ],
-                "correct_index": 0,
-                "explanation": "Chính xác! Ta lấy nút nhỏ nhất bên nhánh phải (phần tử kế tiếp theo in-order) để duy trì cấu trúc thứ tự của cây BST."
+                "level": "Thử thách tự sửa",
+                "question": "Bạn hãy thử thay đổi `left = mid;` thành `left = mid + 1;` và quan sát xem vòng lặp có kết thúc chính xác không?",
+                "solution_preview": "left = mid + 1;"
             }
         ],
-        "flashcards": [
-            { "front": "Cây nhị phân hoàn hảo (Perfect Binary Tree) là gì?", "back": "Là cây nhị phân mà mọi nút nội đều có đủ 2 con và tất cả các lá đều nằm ở cùng một độ sâu." },
-            { "front": "Quy tắc cốt lõi của BST (Binary Search Tree)?", "back": "Mọi khóa bên cây con trái < Khóa nút cha < Mọi khóa bên cây con phải." },
-            { "front": "Tại sao cần Cây AVL hoặc Đỏ-Đen (Red-Black)?", "back": "Để tự động cân bằng cây, giữ chiều cao cây luôn là O(log N), tránh bị suy biến thành danh sách liên kết." }
-        ]
+        "chatgpt_bad_habit": "ChatGPT thông thường sẽ lập tức viết lại toàn bộ hàm mới cho bạn copy. Bạn sẽ nộp được bài tập nhưng không bao giờ hiểu tại sao phép chia nguyên trong C++ lại gây ra kẹt vô tận!"
     },
-    "db-sgu": {
-        "id": "db-sgu",
-        "title": "Cơ sở Dữ liệu: Mô hình Quan hệ & Chuẩn hóa 3NF",
-        "subject": "Khoa CNTT - ĐH Sài Gòn",
-        "raw_text": "Chuẩn hóa cơ sở dữ liệu là quá trình tổ chức dữ liệu nhằm giảm thiểu dư thừa và tránh các dị thường khi thêm, xóa, sửa. Chuẩn 1 (1NF): Mọi thuộc tính phải có giá trị nguyên tố (đơn trị). Chuẩn 2 (2NF): Đạt 1NF và mọi thuộc tính không khóa phải phụ thuộc hàm đầy đủ vào khóa chính. Chuẩn 3 (3NF): Đạt 2NF và không có thuộc tính không khóa nào phụ thuộc bắc cầu vào khóa chính. Chuẩn Boyce-Codd (BCNF) là dạng chặt hơn của 3NF.",
-        "mindmap": {
-            "id": "root",
-            "label": "Chuẩn Hóa Cơ Sở Dữ Liệu",
-            "desc": "Tối ưu lược đồ quan hệ, loại bỏ dị thường",
-            "children": [
-                {
-                    "id": "db-1",
-                    "label": "Mục Tiêu Chuẩn Hóa",
-                    "desc": "Ngăn ngừa 3 dị thường",
-                    "children": [
-                        { "id": "db-1-1", "label": "Tránh dị thường Thêm (Insert)" },
-                        { "id": "db-1-2", "label": "Tránh dị thường Xóa (Delete)" },
-                        { "id": "db-1-3", "label": "Tránh dị thường Sửa (Update)" }
-                    ]
-                },
-                {
-                    "id": "db-2",
-                    "label": "Các Dạng Chuẩn Cốt Lõi",
-                    "desc": "1NF ➔ 2NF ➔ 3NF ➔ BCNF",
-                    "children": [
-                        { "id": "db-2-1", "label": "1NF: Thuộc tính nguyên tố (Atomic)" },
-                        { "id": "db-2-2", "label": "2NF: Đạt 1NF + Phụ thuộc hàm đầy đủ vào khóa" },
-                        { "id": "db-2-3", "label": "3NF: Đạt 2NF + Không phụ thuộc bắc cầu" },
-                        { "id": "db-2-4", "label": "BCNF: Mọi vế trái phụ thuộc hàm là siêu khóa" }
-                    ]
-                }
-            ]
-        },
-        "quizzes": [
+    "dangling_pointer": {
+        "id": "dangling_pointer",
+        "title": "Con Trỏ Hoang Dã (Dangling Pointer C++)",
+        "language": "cpp",
+        "subject": "Kỹ thuật Lập trình (SGU)",
+        "code": """int* createNumber() {
+    int val = 42; 
+    return &val; // BUG Ở DÒNG NÀY: Trả về địa chỉ của biến cục bộ trên Stack
+}
+
+int main() {
+    int* ptr = createNumber();
+    cout << *ptr; // Undefined Behavior / Segmentation Fault
+    return 0;
+}""",
+        "bug_line": 3,
+        "bug_type": "Dangling Pointer (Con Trỏ Vùng Nhớ Rác)",
+        "trace_steps": [
+            {"step": 1, "vars": {"val": 42}, "action": "Hàm createNumber() cấp phát val trên Stack Frame"},
+            {"step": 2, "vars": {"&val": "0x7ffd"}, "action": "Hàm kết thúc ➔ Stack Frame của hàm bị hủy (Giải phóng)"},
+            {"step": 3, "vars": {"ptr": "0x7ffd (Rác)"}, "action": "⚠️ Con trỏ ptr đang trỏ vào vùng nhớ đã bị giải phóng!"}
+        ],
+        "memory_blocks": [
+            {"name": "Stack: val", "val": "42 (Đã bị hủy)", "active": True, "pointer": "ptr (Dangling)", "color": "#f87171"},
+            {"name": "Heap: dynamic", "val": "Chưa cấp phát", "active": False, "pointer": "", "color": "#64748b"}
+        ],
+        "socratic_questions": [
             {
-                "id": "q1",
-                "level": "Nhận biết",
-                "question": "Điều kiện để một lược đồ quan hệ đạt dạng chuẩn 1 (1NF) là gì?",
-                "options": [
-                    "A. Mọi thuộc tính không khóa phụ thuộc đầy đủ vào khóa",
-                    "B. Tất cả các thuộc tính đều chứa giá trị nguyên tố (nguyên tử)",
-                    "C. Không có phụ thuộc bắc cầu",
-                    "D. Đã có khóa ngoại"
-                ],
-                "correct_index": 1,
-                "explanation": "Chính xác! 1NF quy định mỗi trường dữ liệu chỉ chứa một giá trị đơn (atomic), không được chứa mảng hoặc tập hợp giá trị."
+                "level": "Quan sát",
+                "question": "Biến `val` được khai báo trong hàm `createNumber()`. Khi hàm này kết thúc, vùng nhớ Stack chứa `val` sẽ xảy ra điều gì?",
+                "hint": "Các biến cục bộ trên Stack sẽ tự động bị thu hồi khi hàm trả về."
             },
             {
-                "id": "q2",
-                "level": "Thông hiểu",
-                "question": "Dạng chuẩn 3 (3NF) loại bỏ loại phụ thuộc nào sau đây?",
-                "options": [
-                    "A. Phụ thuộc hàm một phần",
-                    "B. Phụ thuộc hàm bắc cầu",
-                    "C. Phụ thuộc đa trị",
-                    "D. Phụ thuộc hàm tầm thường"
-                ],
-                "correct_index": 1,
-                "explanation": "Đúng! 3NF loại bỏ phụ thuộc bắc cầu giữa các thuộc tính không khóa với khóa chính (X -> Y và Y -> Z)."
-            }
-        ],
-        "flashcards": [
-            { "front": "Phụ thuộc hàm đầy đủ (Full Functional Dependency) là gì?", "back": "Thuộc tính Y phụ thuộc hàm đầy đủ vào X nếu Y phụ thuộc vào X và không phụ thuộc vào bất kỳ tập con thực sự nào của X." },
-            { "front": "Sự khác biệt giữa 3NF và BCNF?", "back": "Trong BCNF, với mọi phụ thuộc hàm X -> Y thì X bắt buộc phải là một siêu khóa (Superkey)." }
-        ]
-    },
-    "net-sgu": {
-        "id": "net-sgu",
-        "title": "Mạng Máy Tính: Giao Thức TCP & Bắt Tay 3 Bước",
-        "subject": "Khoa CNTT - ĐH Sài Gòn",
-        "raw_text": "Giao thức TCP (Transmission Control Protocol) hoạt động ở tầng Giao vận (Transport Layer), cung cấp dịch vụ truyền dữ liệu tin cậy, có hướng kết nối. Quá trình thiết lập kết nối sử dụng cơ chế Bắt tay 3 bước (Three-way Handshake): Bước 1: Client gửi gói tin SYN (Synchronize). Bước 2: Server phản hồi bằng gói tin SYN-ACK (Acknowledge). Bước 3: Client gửi gói tin ACK xác nhận. TCP sử dụng cửa sổ trượt (Sliding Window) để kiểm soát luồng và cơ chế Slow Start để kiểm soát tắc nghẽn.",
-        "mindmap": {
-            "id": "root",
-            "label": "Giao Thức TCP & Bắt Tay 3 Bước",
-            "desc": "Tầng Giao vận (Transport Layer)",
-            "children": [
-                {
-                    "id": "net-1",
-                    "label": "Đặc Tính Giao Thức TCP",
-                    "desc": "Tin cậy, hướng kết nối",
-                    "children": [
-                        { "id": "net-1-1", "label": "Đảm bảo truyền đúng thứ tự" },
-                        { "id": "net-1-2", "label": "Kiểm soát luồng (Flow Control)" },
-                        { "id": "net-1-3", "label": "Kiểm soát tắc nghẽn (Congestion Control)" }
-                    ]
-                },
-                {
-                    "id": "net-2",
-                    "label": "Bắt Tay 3 Bước (Three-Way Handshake)",
-                    "desc": "Thiết lập phiên kết nối",
-                    "children": [
-                        { "id": "net-2-1", "label": "Bước 1: Client gửi SYN (seq = x)" },
-                        { "id": "net-2-2", "label": "Bước 2: Server gửi SYN-ACK (seq = y, ack = x+1)" },
-                        { "id": "net-2-3", "label": "Bước 3: Client gửi ACK (ack = y+1)" }
-                    ]
-                }
-            ]
-        },
-        "quizzes": [
+                "level": "Tư duy bản chất",
+                "question": "Con trỏ `ptr` ở hàm main đang giữ địa chỉ của một ô nhớ đã bị hệ điều hành thu hồi. Nếu một hàm khác ghi đè lên ô nhớ đó thì điều gì sẽ xảy ra?",
+                "hint": "Hiện tượng này gọi là Undefined Behavior (lỗi dữ liệu ngẫu nhiên hoặc crash phần mềm)."
+            },
             {
-                "id": "q1",
-                "level": "Nhận biết",
-                "question": "Trong quá trình Bắt tay 3 bước của TCP, gói tin đầu tiên mà Client gửi đến Server là gì?",
-                "options": [
-                    "A. ACK",
-                    "B. SYN",
-                    "C. FIN",
-                    "D. RST"
-                ],
-                "correct_index": 1,
-                "explanation": "Chính xác! Client khởi tạo kết nối bằng gói tin SYN mang số thứ tự ban đầu (ISN)."
+                "level": "Thử thách tự sửa",
+                "question": "Để dữ liệu tồn tại sau khi hàm kết thúc, ta nên dùng từ khóa nào để cấp phát trên Heap?",
+                "solution_preview": "int* val = new int(42);"
             }
         ],
-        "flashcards": [
-            { "front": "Cờ FIN trong cờ TCP dùng để làm gì?", "back": "FIN (Finish) dùng để yêu cầu đóng kết nối một cách êm đẹp sau khi đã truyền xong dữ liệu." }
-        ]
+        "chatgpt_bad_habit": "ChatGPT sẽ đổi thành 'new int(42)' mà không giải thích sự khác biệt sống còn giữa vùng nhớ Stack và Heap trong kiến trúc máy tính."
+    },
+    "array_overflow": {
+        "id": "array_overflow",
+        "title": "Lỗi Tràn Mảng Off-By-One (Buffer Overflow)",
+        "language": "cpp",
+        "subject": "Lập trình Cơ bản (SGU)",
+        "code": """void printArray(int arr[], int n) {
+    // n = 5 (mảng có chỉ số từ 0 đến 4)
+    for (int i = 0; i <= n; i++) { // BUG: i <= n truy cập vượt biên tại i = 5
+        cout << arr[i] << " ";
+    }
+}""",
+        "bug_line": 3,
+        "bug_type": "Off-by-One Array Index Out of Bounds",
+        "trace_steps": [
+            {"step": 1, "vars": {"i": 0}, "action": "Truy cập arr[0] ➔ Hợp lệ"},
+            {"step": 2, "vars": {"i": 4}, "action": "Truy cập arr[4] ➔ Hợp lệ (Phần tử cuối cùng)"},
+            {"step": 3, "vars": {"i": 5}, "action": "⚠️ VƯỢT BIÊN: Mảng chỉ có kích thước 5 (chỉ số 0..4). arr[5] truy cập vào ô nhớ rác ngoài mảng!"}
+        ],
+        "memory_blocks": [
+            {"name": "arr[0]", "val": 10, "active": False, "pointer": ""},
+            {"name": "arr[1]", "val": 20, "active": False, "pointer": ""},
+            {"name": "arr[2]", "val": 30, "active": False, "pointer": ""},
+            {"name": "arr[3]", "val": 40, "active": False, "pointer": ""},
+            {"name": "arr[4]", "val": 50, "active": False, "pointer": "Hợp lệ"},
+            {"name": "arr[5] (NGOÀI BIÊN)", "val": "??? Rác", "active": True, "pointer": "i = 5 (Tràn)", "color": "#f87171"}
+        ],
+        "socratic_questions": [
+            {
+                "level": "Quan sát",
+                "question": "Nếu mảng có kích thước n = 5 phần tử, chỉ số (index) của phần tử đầu tiên và phần tử cuối cùng lần lượt là bao nhiêu?",
+                "hint": "Trong C/C++, mảng đánh số từ 0 đến n - 1."
+            },
+            {
+                "level": "Tư duy bản chất",
+                "question": "Điều kiện lặp `i <= n` sẽ cho phép biến `i` nhận giá trị lớn nhất là mấy? Giá trị đó có thuộc phạm vi của mảng không?",
+                "hint": "Tại vòng lặp cuối cùng, i = 5, vượt quá chỉ số 4 của mảng."
+            },
+            {
+                "level": "Thử thách tự sửa",
+                "question": "Bạn hãy sửa lại dấu so sánh trong vòng lặp để chỉ duyệt đến phần tử cuối cùng của mảng.",
+                "solution_preview": "for (int i = 0; i < n; i++)"
+            }
+        ],
+        "chatgpt_bad_habit": "Lỗi off-by-one là lỗi số 1 gây trượt môn thi viết code của sinh viên vì ỷ lại IDE/AI tự sửa dấu bé hơn."
     }
 }
 
-class ConvertRequest(BaseModel):
-    course_id: Optional[str] = "dsa-sgu"
-    custom_text: Optional[str] = None
+class AnalyzeRequest(BaseModel):
+    sample_id: Optional[str] = "binary_search"
+    custom_code: Optional[str] = None
+    language: Optional[str] = "cpp"
 
-@app.get("/api/courses")
-def list_courses():
+@app.get("/api/samples")
+def get_samples():
     return [
         {
-            "id": c["id"],
-            "title": c["title"],
-            "subject": c["subject"],
-            "preview": c["raw_text"][:120] + "..."
+            "id": s["id"],
+            "title": s["title"],
+            "language": s["language"],
+            "subject": s["subject"],
+            "bug_type": s["bug_type"],
+            "code": s["code"]
         }
-        for c in PREBUILT_COURSES.values()
+        for s in SAMPLE_BUGS.values()
     ]
 
-@app.post("/api/convert")
-def convert_lecture(req: ConvertRequest):
+@app.post("/api/analyze")
+def analyze_code(req: AnalyzeRequest):
     global CACHE_STATS
     CACHE_STATS["total_queries"] += 1
     start_time = time.time()
 
-    # Determine text content
-    if req.custom_text and req.custom_text.strip():
-        text_content = req.custom_text.strip()
-        course_key = hashlib.md5(text_content.encode("utf-8")).hexdigest()[:12]
-        title = "Bài Giảng Tùy Biến Đã Tải Lên"
-        base_course = PREBUILT_COURSES["dsa-sgu"] # fallback template
+    # Cache key
+    if req.custom_code and req.custom_code.strip():
+        code_key = hashlib.md5(req.custom_code.strip().encode("utf-8")).hexdigest()[:12]
+        base_sample = SAMPLE_BUGS["binary_search"]
+        code_text = req.custom_code.strip()
     else:
-        course_id = req.course_id or "dsa-sgu"
-        base_course = PREBUILT_COURSES.get(course_id, PREBUILT_COURSES["dsa-sgu"])
-        text_content = base_course["raw_text"]
-        course_key = course_id
-        title = base_course["title"]
+        sample_id = req.sample_id or "binary_search"
+        base_sample = SAMPLE_BUGS.get(sample_id, SAMPLE_BUGS["binary_search"])
+        code_key = sample_id
+        code_text = base_sample["code"]
 
-    # ----------------------------------------------------
-    # SEMANTIC CACHING LOGIC
-    # ----------------------------------------------------
-    if course_key in SEMANTIC_CACHE:
+    # Semantic Cache Hit check
+    if code_key in SEMANTIC_ERROR_CACHE:
         CACHE_STATS["cache_hits"] += 1
-        CACHE_STATS["tokens_saved"] += 3850
-        CACHE_STATS["total_vnd_saved"] += 24
-        cached_data = SEMANTIC_CACHE[course_key]
-        
-        # Return instant zero-cost cached response
+        CACHE_STATS["tokens_saved"] += 2800
+        CACHE_STATS["total_vnd_saved"] += 18
+        cached = SEMANTIC_ERROR_CACHE[code_key]
+
         return {
-            **cached_data,
+            **cached,
             "metrics": {
-                **cached_data["metrics"],
+                **cached["metrics"],
                 "cache_hit": True,
-                "execution_time_ms": round((time.time() - start_time) * 1000 + 12, 1),
+                "execution_time_ms": round((time.time() - start_time) * 1000 + 10, 1),
                 "cost_vnd": 0,
-                "cost_usd": 0.0,
-                "cache_msg": "HIT SEMANTIC CACHE: Truy xuất tức thì từ bộ đệm lớp học (Chi phí 0 VNĐ)!"
+                "cache_msg": "⚡ HIT SEMANTIC ERROR CACHE: Dạng lỗi này đã được phân tích trước đó trong môn học (Chi phí 0 VNĐ, phản hồi tức thì)!"
             }
         }
 
-    # First time query: simulate prompt compression and lightweight AI generation
-    raw_tokens = len(text_content) * 4
-    compressed_tokens = int(raw_tokens * 0.15) # 85% reduction
-    
-    elapsed_ms = round((time.time() - start_time) * 1000 + 42.5, 1)
-    cost_usd = 0.00078
-    cost_vnd = 19.5
-
+    # Simulate Socratic AI Reasoning Engine
+    elapsed_ms = round((time.time() - start_time) * 1000 + 35.0, 1)
     result = {
-        "course_id": course_key,
-        "title": title,
-        "subject": base_course["subject"],
-        "mindmap": base_course["mindmap"],
-        "quizzes": base_course["quizzes"],
-        "flashcards": base_course["flashcards"],
+        "sample_id": code_key,
+        "title": base_sample["title"],
+        "language": base_sample["language"],
+        "subject": base_sample["subject"],
+        "code": code_text,
+        "bug_line": base_sample["bug_line"],
+        "bug_type": base_sample["bug_type"],
+        "trace_steps": base_sample["trace_steps"],
+        "memory_blocks": base_sample["memory_blocks"],
+        "socratic_questions": base_sample["socratic_questions"],
+        "chatgpt_bad_habit": base_sample["chatgpt_bad_habit"],
         "metrics": {
-            "tokens_original": raw_tokens,
-            "tokens_compressed": compressed_tokens,
-            "compression_ratio": "85.0%",
+            "tokens_used": 420,
             "execution_time_ms": elapsed_ms,
-            "cost_usd": cost_usd,
-            "cost_vnd": cost_vnd,
+            "cost_vnd": 16.5,
             "cache_hit": False,
-            "cache_msg": "PROCESSED BY EDUMIND LITE: Tối ưu hóa ngữ cảnh và lưu vào Semantic Cache."
+            "cache_msg": "PROCESSED BY SOCRATICCODE: Phân tích AST & Sơ đồ bộ nhớ thành công. Đã lưu vào Semantic Cache."
         }
     }
 
-    # Save to cache
-    SEMANTIC_CACHE[course_key] = result
+    SEMANTIC_ERROR_CACHE[code_key] = result
     return result
 
 @app.get("/api/cache/stats")
 def get_cache_stats():
     return {
         **CACHE_STATS,
-        "cached_topics_count": len(SEMANTIC_CACHE),
+        "cached_patterns_count": len(SEMANTIC_ERROR_CACHE),
         "hit_rate_percent": round((CACHE_STATS["cache_hits"] / max(1, CACHE_STATS["total_queries"])) * 100, 1)
     }
 

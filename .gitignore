@@ -26,4 +26,5 @@ Thumbs.db
 .idea/
 
 # Keep .vscode/settings.json if customized for the team
-!.vscode/settings.json
+# Agents & workspace customizations
+.agents/
