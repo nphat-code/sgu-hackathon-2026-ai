@@ -170,7 +170,7 @@ def create_deck():
     p.font.color.rgb = C_PRIMARY
 
     bullets1 = [
-        "Mưa lớn và triều cường khiến các trục đường quanh ĐH Sài Gòn (An Dương Vương, Nguyễn Văn Cừ) ngập sâu bất ngờ.",
+        "Mưa lớn và triều cường khiến các trục đường trũng thấp và khu vực đô thị ngập sâu bất ngờ.",
         "Hàng nghìn xe máy chết máy la liệt, người dân dắt bộ kiệt sức giữa dòng nước bẩn.",
         "Nguy cơ tử vong tiềm ẩn từ nắp hố ga bật trôi hoặc dây điện rò rỉ dưới nước.",
         "Ứng dụng bản đồ hiện tại (Google Maps) chỉ báo kẹt xe, hoàn toàn không đo được mực nước ngập sâu bao nhiêu cm."
@@ -334,7 +334,7 @@ def create_deck():
         "Khi nước chạm 15cm (ngập mép pô): Cảnh báo mức Vàng (Chú ý).",
         "Khi nước vượt 25cm (ngập nửa bánh xe): Cảnh báo Đỏ (Nguy hiểm chết máy).",
         "Tự động vẽ viền Polygon ngập màu đỏ và cảnh báo người lái xe quay đầu.",
-        "Đã thử nghiệm thực tế tại trạm Cổng ĐH Sài Gòn (An Dương Vương)."
+        "Đã thử nghiệm thực tế tại trạm giám sát điểm đen ngập lụt đô thị."
     ]
     for b in bullets_s1:
         pb = tf1.add_paragraph()
@@ -376,16 +376,16 @@ def create_deck():
         pb.font.color.rgb = C_TEXT_MAIN
 
     # ==========================================
-    # SLIDE 6: TRUNG TÂM GIÁM SÁT & BẢN ĐỒ QUẬN 5
+    # SLIDE 6: TRUNG TÂM GIÁM SÁT & BẢN ĐỒ AN TOÀN ĐÔ THỊ
     # ==========================================
     s6 = prs.slides.add_slide(blank_layout)
     set_white_bg(s6)
-    add_header(s6, "05. Giao Diện & Vận Hành", "Trung Tâm Giám Sát Dân Sinh & Bản Đồ Số Quận 5", "Tích hợp bản đồ OpenStreetMap trực quan bao quanh Trường ĐH Sài Gòn")
+    add_header(s6, "05. Giao Diện & Vận Hành", "Trung Tâm Giám Sát Dân Sinh & Bản Đồ Số An Toàn Đô Thị", "Tích hợp bản đồ mã nguồn mở OpenStreetMap trực quan và linh hoạt")
 
     stations = [
-        ("📍 TRẠM 01: CỔNG ĐH SÀI GÒN", "273 An Dương Vương, Phường 3, Quận 5", "Giám sát ngập lụt mùa mưa & bảo vệ sinh viên SGU tan trường", C_PRIMARY),
-        ("📍 TRẠM 02: NGÃ TƯ NVC - THĐ", "Ngã tư Nguyễn Văn Cừ & Trần Hưng Đạo", "Trọng điểm giao thông kết nối Quận 1 và Quận 5", C_SUCCESS),
-        ("📍 TRẠM 03: HẺM 105 TRẦN HƯNG ĐẠO", "Khu dân cư đông đúc, hẻm nhỏ vắng người", "Giám sát tai nạn xe máy đêm khuya và hỗ trợ y tế khẩn cấp", C_DANGER)
+        ("📍 TRẠM 01: TUYẾN ĐƯỜNG TRŨNG THẤP", "Điểm đen ngập lụt đô thị mùa triều cường / mưa lớn", "Giám sát ngập lụt thời gian thực & cảnh báo người tham gia giao thông", C_PRIMARY),
+        ("📍 TRẠM 02: NÚT GIAO THÔNG CHÍNH", "Nút giao thông trọng điểm, mật độ phương tiện cao", "Theo dõi dòng phương tiện và cảnh báo ách tắc do ngập", C_SUCCESS),
+        ("📍 TRẠM 03: NGÕ HẺM DÂN CƯ", "Khu dân cư sâu, ngõ hẻm khuất tầm nhìn, vắng người", "Giám sát tai nạn xe máy đêm khuya và hỗ trợ y tế khẩn cấp", C_DANGER)
     ]
     for i, (name, addr, desc, col) in enumerate(stations):
         y = Inches(2.2 + i * 1.5)
@@ -418,7 +418,7 @@ def create_deck():
         ("GIAI ĐOẠN 1: HIỆN TẠI (ĐÃ XONG)", [
             "Đề án ý tưởng & Kịch bản Pitching hoàn chỉnh.",
             "Backend FastAPI + YOLOv8n detector chạy mượt 35ms.",
-            "Frontend React + Leaflet Map hiển thị 3 trạm Quận 5.",
+            "Frontend React + Leaflet Map hiển thị đa trạm thực nghiệm.",
             "Kiểm thử thành công 2 kịch bản Ngập lụt & SOS ngã xe."
         ], C_SUCCESS),
         ("GIAI ĐOẠN 2: 24H CHUNG KẾT", [
@@ -428,7 +428,7 @@ def create_deck():
             "Đóng gói 1-Click Docker triển khai tức thì trên máy chấm thi."
         ], C_PRIMARY),
         ("GIAI ĐOẠN 3: TƯƠNG LAI DÂN SINH", [
-            "Thí điểm tại các ngõ hẻm Quận 5 và Hội Sinh viên SGU.",
+            "Thí điểm tại các khu dân cư và tuyến phố trũng thấp.",
             "Mở mã nguồn cho cộng đồng tự triển khai camera an toàn.",
             "Tích hợp dữ liệu mở cảnh báo ngập vào ứng dụng TP.HCM.",
             "Nâng cấp mô hình phát hiện trộm cắp và cháy nổ ban đêm."

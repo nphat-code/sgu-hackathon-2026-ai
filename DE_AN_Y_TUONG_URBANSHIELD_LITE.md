@@ -87,10 +87,10 @@ graph TD
 ## 🎬 V. KỊCH BẢN DEMO "GÂY ẤN TƯỢNG MẠNH" TRƯỚC BAN GIÁM KHẢO (3 PHÚT)
 
 1. **Phút 0:00 - 0:45 | Giới thiệu nỗi đau:**  
-   Chiếu hình ảnh ngập nước đường Nguyễn Văn Cừ / An Dương Vương (gần trường SGU) và câu chuyện cứu hộ tai nạn chậm trễ. Nêu bật luận điểm: *Tại sao thành phố chưa có hệ thống phủ rộng? Vì camera AI truyền thống quá đắt!*
+   Chiếu hình ảnh ngập nước trên các trục đường đô thị trũng thấp và câu chuyện cứu hộ tai nạn chậm trễ. Nêu bật luận điểm: *Tại sao thành phố chưa có hệ thống phủ rộng? Vì camera AI truyền thống quá đắt!*
 2. **Phút 0:46 - 2:00 | Live Demo phân tích trực tiếp:**  
-   - Bật hệ thống UrbanShield Lite kết nối Webcam laptop/camera trực tiếp.
-   - **Tình huống 1 (Ngập lụt):** Chạy đoạn video thực tế đường Sài Gòn mưa ngập $\rightarrow$ AI lập tức đóng khung bánh xe máy chìm trong nước $\rightarrow$ Đèn đỏ báo động *“Phát hiện ngập 25cm tại đường An Dương Vương”* $\rightarrow$ Điểm ngập hiện đỏ trên bản đồ Web.
+   - Bật hệ thống UrbanShield Lite kết nối luồng camera/video trực tiếp.
+   - **Tình huống 1 (Ngập lụt):** Chạy đoạn video thực tế đường phố mưa ngập $\rightarrow$ AI lập tức đóng khung bánh xe máy chìm trong nước $\rightarrow$ Đèn đỏ báo động *“Phát hiện ngập 26cm – Vượt ngưỡng an toàn”* $\rightarrow$ Điểm ngập hiện đỏ trên bản đồ Web.
    - **Tình huống 2 (Tai nạn):** Mô phỏng chiếc xe máy bị đổ và người ngã $\rightarrow$ Đếm ngược 5 giây $\rightarrow$ Chuông cảnh báo kêu $\rightarrow$ Điện thoại rung, bot Telegram báo: *“CẢNH BÁO SOS: Tai nạn tại tọa độ [X, Y], xem ảnh hiện trường đính kèm”*.
 3. **Phút 2:01 - 3:00 | Chứng minh tính khả thi & Bài toán kinh tế:**  
    Trình bày bảng so sánh chi phí: *Giải pháp truyền thống (15 triệu/camera + server 50 triệu) VS UrbanShield Lite (tận dụng camera 200k + 0đ tiền server nhờ Edge AI)*. Kết luận thông điệp dự án.

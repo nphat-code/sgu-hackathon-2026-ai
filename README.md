@@ -23,7 +23,7 @@ Khác với các hệ thống Smart City đắt đỏ (camera 15-30 triệu, má
 2. ⚡ **Mô hình siêu nhẹ (YOLOv8-nano ~6MB):** Chạy mượt mà 30 FPS trực tiếp trên CPU laptop/máy tính phổ thông mà không cần GPU rời.
 3. 📉 **Tiết kiệm 99% băng thông:** Thiết bị chỉ xử lý cục bộ; chỉ phát tín hiệu cảnh báo khẩn cấp (Alert Metadata vài KB) khi phát hiện ngập nước hoặc tai nạn.
 4. 🚨 **Cảnh báo tức thời qua Telegram Bot API (0đ chi phí):** Gửi tọa độ GPS + ảnh chụp hiện trường về Tổ dân phố và Đội cứu hộ khẩn cấp trong vòng 1 giây.
-5. 🗺️ **Bản đồ an toàn đô thị nguồn mở (Leaflet/OpenStreetMap):** Định vị trực quan các điểm đen ngập lụt và sự cố quanh khu vực Trường ĐH Sài Gòn (Quận 5).
+5. 🗺️ **Bản đồ an toàn đô thị nguồn mở (Leaflet/OpenStreetMap):** Định vị trực quan các điểm đen ngập lụt và sự cố tai nạn trên các tuyến đường đô thị.
 
 ---
 

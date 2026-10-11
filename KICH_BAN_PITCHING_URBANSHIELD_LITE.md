@@ -17,13 +17,13 @@
 ## 📜 LỜI THOẠI CHI TIẾT (WORD-BY-WORD SCRIPT)
 
 ### 🔴 PHẦN 1: ĐẶT VẤN ĐỀ – ĐÁNH TRÚNG NỖI ĐAU (0:00 - 0:45)
-*(Mở slide 1 & 2: Hình ảnh triều cường ngập đường An Dương Vương trước cổng SGU và hình ảnh tai nạn ngõ hẻm)*
+*(Mở slide 1 & 2: Hình ảnh triều cường ngập sâu trên đường phố và tai nạn ngõ hẻm)*
 
 > *"Kính thưa Ban Giám Khảo và toàn thể các bạn sinh viên,*
 > 
-> *Là sinh viên ĐH Sài Gòn, chắc hẳn ai trong chúng ta cũng từng nếm trải cảm giác dắt bộ chiếc xe máy chết máy giữa biển nước ngập trên đường An Dương Vương hay Nguyễn Văn Cừ mỗi mùa triều cường. Thậm chí đau lòng hơn, những vụ va chạm ngã xe đêm khuya trong các con hẻm vắng bị lỡ mất 'thời gian vàng' cấp cứu vì không ai phát hiện kịp thời.*
+> *Là người dân và sinh viên sống tại các đô thị lớn, chắc hẳn ai trong chúng ta cũng từng nếm trải cảm giác dắt bộ chiếc xe máy chết máy giữa biển nước ngập trên các trục đường trũng thấp mỗi mùa triều cường hay mưa lớn. Thậm chí đau lòng hơn, những vụ va chạm ngã xe đêm khuya trong các con hẻm vắng bị lỡ mất 'thời gian vàng' cấp cứu vì không ai phát hiện kịp thời.*
 > 
-> *Thành phố thông minh đã được nói đến nhiều năm, nhưng tại sao từng con hẻm, từng góc phố quanh trường chúng ta vẫn chưa có camera AI bảo vệ?*
+> *Thành phố thông minh đã được nói đến nhiều năm, nhưng tại sao từng con hẻm, từng góc phố quanh chúng ta vẫn chưa có camera AI bảo vệ?*
 > 
 > *Bởi vì một nghịch lý: **Camera AI truyền thống quá đắt đỏ!** Mỗi mắt camera chuyên dụng tốn từ 15 đến 30 triệu đồng, cộng thêm tiền máy chủ GPU và tiền đường truyền băng thông khổng lồ để stream video liên tục về trung tâm.*
 > 
@@ -36,11 +36,11 @@
 
 > *"Em xin phép trình diễn trực tiếp hệ thống đang chạy thời gian thực trên màn hình:*
 > 
-> *Hệ thống đang kết nối 3 trạm giám sát quanh khu vực Quận 5 và ĐH Sài Gòn.*
+> *Hệ thống đang kết nối đa trạm giám sát thực nghiệm đại diện cho các hình thái đô thị.*
 > 
 > *(Click nút '2. Giả lập Ngập lụt')*
 > * *Tình huống 1: Ngập lụt đô thị.*  
->   *Ngay khi nước ngập dâng lên, mô hình Edge AI phân tích tỷ lệ che khuất bánh xe máy. Trong vòng **35 mili-giây**, hệ thống phát hiện chính xác: **Mực nước ngập 26cm – Vượt nửa bánh xe, nguy cơ chết máy cao**. Lập tức, điểm ngập tại Cổng ĐH Sài Gòn trên bản đồ số nhấp nháy đèn đỏ báo nguy hiểm.*
+>   *Ngay khi nước ngập dâng lên, mô hình Edge AI phân tích tỷ lệ che khuất bánh xe máy. Trong vòng **35 mili-giây**, hệ thống phát hiện chính xác: **Mực nước ngập 26cm – Vượt nửa bánh xe, nguy cơ chết máy cao**. Lập tức, điểm ngập trên bản đồ số nhấp nháy đèn đỏ báo nguy hiểm tức thời.*
 > 
 > *(Click nút '3. Giả lập Xe ngã SOS')*
 > * *Tình huống 2: Tai nạn ngã xe đêm khuya.*  

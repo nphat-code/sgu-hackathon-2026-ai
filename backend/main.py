@@ -31,7 +31,7 @@ detector = UrbanShieldDetector()
 NODES = {
     "node-sgu-01": {
         "id": "node-sgu-01",
-        "name": "Cổng ĐH Sài Gòn (273 An Dương Vương)",
+        "name": "Trạm 01 - Tuyến Phố Trũng Thấp",
         "lat": 10.7599,
         "lng": 106.6823,
         "type": "Webcam Live / Edge Box",
@@ -42,7 +42,7 @@ NODES = {
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
-        "name": "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
+        "name": "Trạm 02 - Nút Giao Thông Trọng Điểm",
         "lat": 10.7552,
         "lng": 106.6855,
         "type": "Camera Dân Sinh #02",
@@ -53,7 +53,7 @@ NODES = {
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
-        "name": "Hẻm 218 An Dương Vương (Khu trọ SV)",
+        "name": "Trạm 03 - Ngõ Hẻm Dân Cư",
         "lat": 10.7585,
         "lng": 106.6790,
         "type": "Camera Tổ Dân Phố #03",
@@ -68,7 +68,7 @@ INCIDENTS = [
     {
         "id": "inc-001",
         "node_id": "node-sgu-02",
-        "node_name": "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
+        "node_name": "Trạm 02 - Nút Giao Thông Trọng Điểm",
         "type": "FLOOD",
         "level": "DANGER",
         "message": "Nước ngập sâu 26cm vượt nửa bánh xe máy, nguy cơ chết máy cao",
@@ -79,7 +79,7 @@ INCIDENTS = [
     {
         "id": "inc-002",
         "node_id": "node-sgu-03",
-        "node_name": "Hẻm 218 An Dương Vương",
+        "node_name": "Trạm 03 - Ngõ Hẻm Dân Cư",
         "type": "ACCIDENT",
         "level": "SOS",
         "message": "Phát hiện va chạm ngã xe máy, người nằm bất động trên 5 giây",
