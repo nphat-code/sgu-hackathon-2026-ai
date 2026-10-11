@@ -1,476 +1,358 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Shield, 
-  Video, 
-  AlertTriangle, 
-  Activity, 
+  GraduationCap, 
+  Sparkles, 
+  Layers, 
+  CheckSquare, 
+  CreditCard, 
   Cpu, 
-  Send, 
-  CheckCircle2, 
-  MapPin, 
-  Droplets, 
-  Eye,
-  Radio,
-  ServerOff,
-  Camera,
-  CameraOff
+  Zap, 
+  Coins, 
+  FileText, 
+  ArrowRight,
+  TrendingDown,
+  School,
+  RefreshCw
 } from 'lucide-react';
-import MapViewer from './components/MapViewer';
+import MindmapViewer from './components/MindmapViewer';
+import QuizRunner from './components/QuizRunner';
+import FlashcardDeck from './components/FlashcardDeck';
 import './App.css';
 
 const API_BASE = 'http://127.0.0.1:8000';
 
-const INITIAL_NODES = [
+const COURSES = [
   {
-    id: "node-sgu-01",
-    name: "Cổng ĐH Sài Gòn (273 An Dương Vương)",
-    lat: 10.7599,
-    lng: 106.6823,
-    type: "Webcam Live / Edge Box",
-    scenario: "normal",
-    status: "online",
-    device: "Tái chế PC cũ + Camera 200k"
+    id: "dsa-sgu",
+    name: "Cấu trúc Dữ liệu & Giải thuật",
+    sub: "Bài 04: Cây Nhị Phân & Cây Tìm Kiếm (BST)",
+    tag: "CNTT SGU"
   },
   {
-    id: "node-sgu-02",
-    name: "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
-    lat: 10.7552,
-    lng: 106.6855,
-    type: "Camera Dân Sinh #02",
-    scenario: "flood",
-    status: "alert",
-    device: "Smartphone cũ (Redmi 9)"
+    id: "db-sgu",
+    name: "Cơ sở Dữ liệu",
+    sub: "Chương 3: Mô hình Quan hệ & Chuẩn hóa 3NF",
+    tag: "CNTT SGU"
   },
   {
-    id: "node-sgu-03",
-    name: "Hẻm 218 An Dương Vương (Khu trọ SV)",
-    lat: 10.7585,
-    lng: 106.6790,
-    type: "Camera Tổ Dân Phố #03",
-    scenario: "accident",
-    status: "warning",
-    device: "Webcam giá rẻ 180k"
+    id: "net-sgu",
+    name: "Mạng Máy Tính",
+    sub: "Giao thức TCP & Bắt tay 3 bước",
+    tag: "CNTT SGU"
   }
 ];
 
 export default function App() {
-  const [nodes, setNodes] = useState(INITIAL_NODES);
-  const [activeNodeId, setActiveNodeId] = useState("node-sgu-01");
-  const [metrics, setMetrics] = useState({ fps: 28.5, infer_time_ms: 35.0, detections_count: 2 });
-  const [incidents, setIncidents] = useState([
-    {
-      id: "inc-001",
-      node_id: "node-sgu-02",
-      node_name: "Ngã tư Trần Hưng Đạo - Nguyễn Văn Cừ",
-      type: "FLOOD",
-      level: "DANGER",
-      message: "Nước ngập sâu 26cm vượt nửa bánh xe máy, nguy cơ chết máy cao",
-      timestamp: "10:15:30",
-      gps: "10.7552, 106.6855"
-    },
-    {
-      id: "inc-002",
-      node_id: "node-sgu-03",
-      node_name: "Hẻm 218 An Dương Vương",
-      type: "ACCIDENT",
-      level: "SOS",
-      message: "Phát hiện va chạm ngã xe máy, người nằm bất động trên 5 giây",
-      timestamp: "10:18:12",
-      gps: "10.7585, 106.6790"
-    }
-  ]);
-  const [backendConnected, setBackendConnected] = useState(false);
-  const [telegramToast, setTelegramToast] = useState(null);
-  const [streamError, setStreamError] = useState(false);
-  const [webcamEnabled, setWebcamEnabled] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState("dsa-sgu");
+  const [activeTab, setActiveTab] = useState("mindmap"); // 'mindmap', 'quiz', 'flashcard', 'economics'
+  const [loading, setLoading] = useState(false);
+  const [courseData, setCourseData] = useState(null);
+  const [cacheStats, setCacheStats] = useState({ total_queries: 0, cache_hits: 0, total_vnd_saved: 0 });
+  const [customText, setCustomText] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
-  // Sync with backend API
+  // Auto-convert on initial load
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/nodes`);
-        if (res.ok) {
-          const data = await res.json();
-          setNodes(data);
-          setBackendConnected(true);
-        }
-        const camRes = await fetch(`${API_BASE}/api/webcam/status`);
-        if (camRes.ok) {
-          const camData = await camRes.json();
-          setWebcamEnabled(camData.webcam_enabled);
-        }
-      } catch (e) {
-        setBackendConnected(false);
-      }
-    };
-
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 3000);
-    return () => clearInterval(interval);
+    handleConvert(selectedCourseId);
+    fetchCacheStats();
   }, []);
 
-  // Sync metrics for selected node
-  useEffect(() => {
-    if (!backendConnected) return;
-    const fetchMetrics = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/nodes/${activeNodeId}/metrics`);
-        if (res.ok) {
-          const data = await res.json();
-          setMetrics(data);
-        }
-      } catch (e) {}
-    };
-    const interval = setInterval(fetchMetrics, 1200);
-    return () => clearInterval(interval);
-  }, [activeNodeId, backendConnected]);
-
-  // Handle switching scenario
-  const handleScenarioChange = async (scenario) => {
-    // Optimistic UI update
-    setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
-    
-    // Add local incident if alert
-    if (scenario === 'flood' || scenario === 'accident') {
-      const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-      const newInc = {
-        id: `inc-${Date.now()}`,
-        node_id: activeNode.id,
-        node_name: activeNode.name,
-        type: scenario === 'flood' ? 'FLOOD' : 'ACCIDENT',
-        level: scenario === 'flood' ? 'DANGER' : 'SOS',
-        message: scenario === 'flood' 
-          ? 'Phát hiện ngập lụt 26cm tại cung đường (Vượt nửa bánh xe)' 
-          : 'CẢNH BÁO SOS: Phát hiện va chạm ngã xe máy ban đêm (Bất động > 5s)',
-        timestamp: new Date().toLocaleTimeString('vi-VN'),
-        gps: `${activeNode.lat}, ${activeNode.lng}`
-      };
-      setIncidents(prev => [newInc, ...prev]);
-    }
-
+  const fetchCacheStats = async () => {
     try {
-      await fetch(`${API_BASE}/api/nodes/${activeNodeId}/scenario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenario })
-      });
-    } catch (e) {}
-  };
-
-  // Trigger Telegram Alert
-  const handleSendTelegram = async (incident) => {
-    setTelegramToast(`🔔 Đã gửi cảnh báo khẩn cấp [${incident.type}] về kênh Telegram @UrbanShield_Emergency và Đội SOS SGU!`);
-    setTimeout(() => setTelegramToast(null), 4000);
-
-    try {
-      await fetch(`${API_BASE}/api/alerts/telegram`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ incident_id: incident.id })
-      });
-    } catch (e) {}
-  };
-
-  const handleToggleWebcam = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/webcam/toggle`, { method: 'POST' });
+      const res = await fetch(`${API_BASE}/api/cache/stats`);
       if (res.ok) {
         const data = await res.json();
-        setWebcamEnabled(data.webcam_enabled);
-        setTelegramToast(data.webcam_enabled ? "📷 Đã BẬT Webcam máy tính để test AI trực tiếp!" : "🔒 Đã TẮT Webcam (Chuyển sang video mô phỏng giao thông)!");
-        setTimeout(() => setTelegramToast(null), 3000);
+        setCacheStats(data);
       }
     } catch (e) {}
   };
 
-  const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
+  const handleConvert = async (courseId, text = null) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/convert`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          course_id: courseId, 
+          custom_text: text 
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCourseData(data);
+        fetchCacheStats();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectCourse = (id) => {
+    setShowCustomInput(false);
+    setSelectedCourseId(id);
+    handleConvert(id);
+  };
+
+  const handleCustomSubmit = () => {
+    if (!customText.trim()) return;
+    handleConvert(null, customText);
+  };
+
+  const metrics = courseData?.metrics || {
+    cost_vnd: 19.5,
+    tokens_compressed: 630,
+    compression_ratio: "85.0%",
+    execution_time_ms: 38.5,
+    cache_hit: false
+  };
 
   return (
-    <div className="app-container">
-      {/* Toast Notification */}
-      {telegramToast && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          right: '24px',
-          background: 'rgba(14, 165, 233, 0.95)',
-          color: '#fff',
-          padding: '14px 20px',
-          borderRadius: '10px',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
-          zIndex: 9999,
-          fontWeight: '600',
-          fontSize: '0.88rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          border: '1px solid #7dd3fc'
-        }}>
-          <Send size={18} />
-          {telegramToast}
-        </div>
-      )}
-
-      {/* Top Header */}
-      <header className="app-header glass-panel">
-        <div className="logo-group">
-          <div className="shield-icon-badge">
-            <Shield size={24} />
+    <div className="edumind-container">
+      {/* Header */}
+      <header className="edumind-header glass-panel">
+        <div className="header-left">
+          <div className="edumind-logo-badge">
+            <GraduationCap size={26} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h1 className="brand-title">UrbanShield Lite</h1>
-              <span className="team-badge">ĐỘI SINGLENODE</span>
+              <h1 className="edumind-title">EduMind Lite</h1>
+              <span className="single-node-badge">ĐỘI SINGLENODE</span>
             </div>
-            <div className="brand-subtitle">
-              <span>Mạng Lưới Giám Sát An Toàn Đô Thị Bằng Edge AI Siêu Tiết Kiệm</span>
+            <div className="edumind-sub">
+              <span>Nền Tảng Số Hóa Học Liệu & Tạo Sơ Đồ Tư Duy Siêu Tiết Kiệm</span>
               <span>•</span>
               <span style={{ color: 'var(--cyan-400)' }}>HACKATHON SGU 2026</span>
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div className="header-status-pill">
-            <Radio size={14} className="radar-dot" style={{ color: backendConnected ? 'var(--emerald-400)' : 'var(--amber-400)' }} />
-            <span>{backendConnected ? 'EDGE AI CONNECTED (CPU 30 FPS)' : 'SIMULATION MODE (OFFLINE)'}</span>
+        <div className="header-right">
+          <div className="cost-pill">
+            <Coins size={14} style={{ color: 'var(--emerald-400)' }} />
+            <span>Chi phí trung bình: <strong>~20đ / bài học</strong></span>
           </div>
         </div>
       </header>
 
-      {/* Main Command Center Grid */}
-      <div className="dashboard-grid">
-        {/* Left: Video Surveillance & Edge AI Live Feed */}
-        <section className="video-column glass-panel">
-          <div className="panel-header">
-            <div className="panel-title">
-              <Video size={18} style={{ color: 'var(--cyan-400)' }} />
-              <span>LUỒNG GIÁM SÁT THỜI GIAN THỰC (EDGE NODE)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <button
-                onClick={handleToggleWebcam}
-                style={{
-                  background: webcamEnabled ? 'rgba(239, 68, 68, 0.18)' : 'rgba(56, 189, 248, 0.18)',
-                  border: `1px solid ${webcamEnabled ? 'rgba(239, 68, 68, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`,
-                  color: webcamEnabled ? '#f87171' : 'var(--cyan-400)',
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '0.78rem',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-                title="Bật hoặc tắt camera vật lý của laptop"
-              >
-                {webcamEnabled ? <CameraOff size={14} /> : <Camera size={14} />}
-                <span>{webcamEnabled ? 'Tắt Webcam (Đang mở)' : 'Bật Webcam Laptop'}</span>
-              </button>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                MODEL: YOLOv8n (CPU)
+      {/* Course Selection & Conversion Control Bar */}
+      <section className="glass-panel control-section">
+        <div className="section-label">
+          <span>CHỌN BÀI GIẢNG ĐẠI HỌC SÀI GÒN ĐỂ SỐ HÓA TRỰC TIẾP:</span>
+        </div>
+
+        <div className="courses-grid">
+          {COURSES.map(course => (
+            <div 
+              key={course.id}
+              className={`course-card ${!showCustomInput && selectedCourseId === course.id ? 'active' : ''}`}
+              onClick={() => handleSelectCourse(course.id)}
+            >
+              <div className="course-card-top">
+                <span className="course-tag">{course.tag}</span>
+                {!showCustomInput && selectedCourseId === course.id && (
+                  <span className="active-dot" />
+                )}
               </div>
+              <div className="course-card-title">{course.name}</div>
+              <div className="course-card-sub">{course.sub}</div>
             </div>
-          </div>
+          ))}
 
-          {/* Camera Node Selector Tabs */}
-          <div className="node-selector-tabs">
-            {nodes.map(node => (
-              <button
-                key={node.id}
-                className={`node-tab-btn ${node.id === activeNodeId ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveNodeId(node.id);
-                  setStreamError(false);
-                }}
-              >
-                <MapPin size={14} />
-                <span>{node.name.split('(')[0]}</span>
-                <span style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: node.scenario === 'accident' ? 'var(--rose-500)' : node.scenario === 'flood' ? 'var(--amber-400)' : 'var(--emerald-400)'
-                }} />
-              </button>
-            ))}
-          </div>
-
-          {/* Video Stream Container */}
-          <div className="video-feed-wrapper">
-            {backendConnected && !streamError ? (
-              <img
-                src={`${API_BASE}/api/video_feed/${activeNode.id}`}
-                alt="Live Camera Feed"
-                className="video-stream-img"
-                onError={() => setStreamError(true)}
-              />
-            ) : (
-              <div style={{ 
-                width: '100%', 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                background: 'linear-gradient(135deg, #090e18, #05080e)',
-                padding: '24px',
-                textAlign: 'center'
-              }}>
-                <Cpu size={48} style={{ color: 'var(--cyan-400)', marginBottom: '14px', animation: 'pulseGlow 2s infinite' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '8px' }}>
-                  {activeNode.name}
-                </h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '420px' }}>
-                  Đang phân tích qua thiết bị biên: <strong>{activeNode.device}</strong>
-                </p>
-                <div style={{ 
-                  marginTop: '16px', 
-                  padding: '6px 14px', 
-                  borderRadius: '20px', 
-                  background: activeNode.scenario === 'accident' ? 'rgba(244,63,94,0.15)' : activeNode.scenario === 'flood' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
-                  color: activeNode.scenario === 'accident' ? 'var(--rose-500)' : activeNode.scenario === 'flood' ? 'var(--amber-400)' : 'var(--emerald-400)',
-                  fontWeight: '700',
-                  fontSize: '0.8rem',
-                  border: '1px solid currentColor'
-                }}>
-                  {activeNode.scenario === 'accident' ? '🚨 TRẠNG THÁI: SOS TAI NẠN XE NGÃ' : activeNode.scenario === 'flood' ? '⚠️ TRẠNG THÁI: CẢNH BÁO NGẬP 26CM' : '✅ TRẠNG THÁI: BÌNH THƯỜNG'}
-                </div>
-              </div>
-            )}
-
-            {/* HUD Overlay */}
-            <div className="hud-overlay">
-              <div className="live-badge">
-                <div className="live-indicator" />
-                <span>LIVE FEED • {activeNode.device}</span>
-              </div>
-
-              <div className="hud-metrics">
-                <div className="hud-metric-chip">
-                  FPS: {metrics.fps || 29.2}
-                </div>
-                <div className="hud-metric-chip">
-                  ĐỘ TRỄ: {metrics.infer_time_ms || 34.2}ms
-                </div>
-              </div>
+          <div 
+            className={`course-card custom ${showCustomInput ? 'active' : ''}`}
+            onClick={() => setShowCustomInput(true)}
+          >
+            <div className="course-card-top">
+              <span className="course-tag" style={{ color: 'var(--indigo-400)', borderColor: 'var(--indigo-400)' }}>TÙY BIẾN</span>
             </div>
+            <div className="course-card-title">Tải Slide / Nhập Văn Bản</div>
+            <div className="course-card-sub">Dán nội dung giáo trình bất kỳ để AI phân tích</div>
           </div>
+        </div>
 
-          {/* Scenario Switching Simulator Controls */}
-          <div className="scenario-controls-bar">
-            <div className="scenario-label">
-              MÔ PHỎNG TÌNH HUỐNG THỬ NGHIỆM TRỰC TIẾP TRƯỚC BAN GIÁM KHẢO:
-            </div>
-            <div className="scenario-buttons-grid">
-              <button
-                className={`scenario-btn normal ${activeNode.scenario === 'normal' ? 'active' : ''}`}
-                onClick={() => handleScenarioChange('normal')}
-              >
-                <CheckCircle2 size={16} />
-                <span>1. Bình thường</span>
-              </button>
-
-              <button
-                className={`scenario-btn flood ${activeNode.scenario === 'flood' ? 'active' : ''}`}
-                onClick={() => handleScenarioChange('flood')}
-              >
-                <Droplets size={16} />
-                <span>2. Giả lập Ngập lụt</span>
-              </button>
-
-              <button
-                className={`scenario-btn accident ${activeNode.scenario === 'accident' ? 'active' : ''}`}
-                onClick={() => handleScenarioChange('accident')}
-              >
-                <AlertTriangle size={16} />
-                <span>3. Giả lập Xe ngã SOS</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Right Column: Live Map & Incident Stream */}
-        <section className="right-column">
-          {/* Map Section */}
-          <div className="glass-panel map-card-wrapper">
-            <MapViewer 
-              nodes={nodes} 
-              activeNodeId={activeNodeId} 
-              onSelectNode={setActiveNodeId} 
+        {/* Custom Textarea if selected */}
+        {showCustomInput && (
+          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <textarea
+              className="custom-textarea"
+              placeholder="Dán nội dung bài giảng hoặc slide bất kỳ vào đây để EduMind Lite nén ngữ cảnh và sinh sơ đồ tư duy..."
+              rows={4}
+              value={customText}
+              onChange={(e) => setCustomText(e.target.value)}
             />
+            <button 
+              className="convert-btn" 
+              onClick={handleCustomSubmit}
+              disabled={loading}
+              style={{ alignSelf: 'flex-start' }}
+            >
+              <Sparkles size={16} />
+              <span>Chuyển Đổi Nội Dung Này</span>
+            </button>
           </div>
+        )}
 
-          {/* Real-time Incidents Feed */}
-          <div className="glass-panel incidents-panel">
-            <div className="panel-header">
-              <div className="panel-title">
-                <Activity size={18} style={{ color: 'var(--rose-500)' }} />
-                <span>NHẬT KÝ SỰ CỐ & CẢNH BÁO TỨC THỜI</span>
-              </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)', fontFamily: 'var(--font-mono)' }}>
-                {incidents.length} SỰ CỐ GHI NHẬN
-              </span>
+        {/* Action Button & Live Economics Ticker */}
+        <div className="conversion-action-bar">
+          <button 
+            className="convert-btn main" 
+            onClick={() => handleConvert(selectedCourseId, showCustomInput ? customText : null)}
+            disabled={loading}
+          >
+            {loading ? <RefreshCw size={18} className="spin" /> : <Sparkles size={18} />}
+            <span>{loading ? 'Đang phân tích tri thức...' : 'Chuyển Đổi Bài Giảng Bằng AI (Demo Trực Tiếp)'}</span>
+          </button>
+
+          {/* Metric Badges */}
+          <div className="live-metrics-group">
+            <div className={`metric-chip ${metrics.cache_hit ? 'cache-hit' : ''}`}>
+              <Coins size={14} />
+              <span>Chi phí: <strong>{metrics.cost_vnd === 0 ? '0 VNĐ (Cache Hit)' : `${metrics.cost_vnd} VNĐ`}</strong></span>
             </div>
 
-            <div className="incidents-list">
-              {incidents.map(inc => (
-                <div 
-                  key={inc.id} 
-                  className={`incident-item ${inc.level === 'SOS' ? 'sos' : 'danger'}`}
-                >
-                  <span className={`inc-badge ${inc.level === 'SOS' ? 'sos' : 'danger'}`}>
-                    {inc.level}
-                  </span>
-                  <div className="inc-info">
-                    <div className="inc-title">
-                      <span>{inc.node_name}</span>
-                      <span className="inc-time">{inc.timestamp}</span>
-                    </div>
-                    <div className="inc-desc">
-                      {inc.message}
-                    </div>
-                  </div>
-                  <button 
-                    className="telegram-btn"
-                    onClick={() => handleSendTelegram(inc)}
-                    title="Gửi cảnh báo đến nhóm Telegram"
-                  >
-                    <Send size={12} />
-                    <span>Telegram</span>
-                  </button>
-                </div>
-              ))}
+            <div className="metric-chip">
+              <TrendingDown size={14} style={{ color: 'var(--cyan-400)' }} />
+              <span>Nén Token: <strong>{metrics.compression_ratio}</strong></span>
+            </div>
+
+            <div className="metric-chip">
+              <Zap size={14} style={{ color: 'var(--amber-400)' }} />
+              <span>Độ trễ: <strong>{metrics.execution_time_ms}ms</strong></span>
             </div>
           </div>
-        </section>
+        </div>
+
+        {/* Semantic Cache Status Notice */}
+        {metrics.cache_hit && (
+          <div className="cache-banner">
+            <span style={{ fontWeight: '700' }}>⚡ SEMANTIC CACHE HIT:</span>
+            <span>Nội dung bài học này đã có sẵn trong bộ đệm lớp học. Trả về ngay trong {metrics.execution_time_ms}ms với chi phí 0 VNĐ (Không tốn token API)!</span>
+          </div>
+        )}
+      </section>
+
+      {/* Main Content Workspace Navigation Tabs */}
+      <div className="workspace-tabs-bar">
+        <button 
+          className={`tab-btn ${activeTab === 'mindmap' ? 'active' : ''}`}
+          onClick={() => setActiveTab('mindmap')}
+        >
+          <Layers size={16} />
+          <span>1. Sơ Đồ Tư Duy (Mindmap)</span>
+        </button>
+
+        <button 
+          className={`tab-btn ${activeTab === 'quiz' ? 'active' : ''}`}
+          onClick={() => setActiveTab('quiz')}
+        >
+          <CheckSquare size={16} />
+          <span>2. Trắc Nghiệm Thông Minh ({courseData?.quizzes?.length || 3} câu)</span>
+        </button>
+
+        <button 
+          className={`tab-btn ${activeTab === 'flashcard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('flashcard')}
+        >
+          <CreditCard size={16} />
+          <span>3. Thẻ Ghi Nhớ (Flashcards)</span>
+        </button>
+
+        <button 
+          className={`tab-btn ${activeTab === 'economics' ? 'active' : ''}`}
+          onClick={() => setActiveTab('economics')}
+        >
+          <Coins size={16} />
+          <span>4. Bài Toán Kinh Tế (Tối Ưu Chi Phí)</span>
+        </button>
       </div>
 
-      {/* Bottom Cost-Saving Comparison Banner */}
-      <footer className="glass-panel comparison-banner">
-        <div className="comp-metric-box">
-          <span className="comp-label">Chi phí thiết bị mỗi điểm</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>~200.000 VNĐ</span>
-          <span className="comp-sub">Tiết kiệm 98% so với camera AI 15tr</span>
-        </div>
+      {/* Tab Panels */}
+      <main className="tab-content-area">
+        {activeTab === 'mindmap' && (
+          <MindmapViewer mindmap={courseData?.mindmap} />
+        )}
 
-        <div className="comp-metric-box">
-          <span className="comp-label">Chi phí máy chủ GPU trung tâm</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>0 VNĐ</span>
-          <span className="comp-sub">Xử lý Edge AI trực tiếp tại biên</span>
-        </div>
+        {activeTab === 'quiz' && (
+          <QuizRunner quizzes={courseData?.quizzes || []} />
+        )}
 
-        <div className="comp-metric-box">
-          <span className="comp-label">Băng thông tiết kiệm</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>99.2%</span>
-          <span className="comp-sub">Chỉ gửi metadata khi có sự cố</span>
-        </div>
+        {activeTab === 'flashcard' && (
+          <FlashcardDeck flashcards={courseData?.flashcards || []} />
+        )}
 
-        <div className="comp-metric-box">
-          <span className="comp-label">Hạ tầng cảnh báo cứu hộ</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Telegram API</span>
-          <span className="comp-sub">Miễn phí 100%, độ trễ &lt; 1 giây</span>
+        {activeTab === 'economics' && (
+          <div className="glass-panel economics-panel">
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '14px', color: '#fff' }}>
+              📊 Báo Cáo Hiệu Quả Kinh Tế & Tối Ưu Chi Phí Của EduMind Lite
+            </h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '24px' }}>
+              Điểm cốt lõi giúp <strong>EduMind Lite</strong> giải quyết rào cản tài chính cho sinh viên và nhà trường nằm ở kiến trúc 
+              <strong> Nén ngữ cảnh (Context Compression)</strong> kết hợp <strong>Bộ đệm câu hỏi lớp học (Semantic Caching)</strong>.
+            </p>
+
+            <div className="comparison-table-wrapper">
+              <table className="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Tiêu chí so sánh</th>
+                    <th>ChatGPT Plus / Claude Pro</th>
+                    <th>EduMind Lite (SingleNode)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Chi phí cho sinh viên</strong></td>
+                    <td style={{ color: '#f87171' }}>~500.000 VNĐ / tháng</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>~20 VNĐ / bài học (Gần như 0đ)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hỏi lặp lại cùng môn học</strong></td>
+                    <td>Tốn 100% token cho mỗi lần hỏi</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>0 VNĐ (Nhờ Semantic Cache lớp học)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hình thức học tập</strong></td>
+                    <td>Đoạn văn bản dài, thụ động</td>
+                    <td style={{ color: 'var(--cyan-400)', fontWeight: '700' }}>Sơ đồ tư duy + Trắc nghiệm + Flashcard</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ngân sách Trường (10.000 SV)</strong></td>
+                    <td style={{ color: '#f87171' }}>Hàng trăm triệu đồng/tháng nếu mua gói Enterprise</td>
+                    <td style={{ color: 'var(--emerald-400)', fontWeight: '700' }}>Tiết kiệm 92% ngân sách trường học</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+              <div className="stat-card">
+                <span className="stat-label">Tổng lượt truy vấn demo</span>
+                <span className="stat-val">{cacheStats.total_queries}</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-label">Lượt trúng Cache (0 đồng)</span>
+                <span className="stat-val" style={{ color: 'var(--emerald-400)' }}>{cacheStats.cache_hits}</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-label">Số tiền đã tiết kiệm (VNĐ)</span>
+                <span className="stat-val" style={{ color: 'var(--cyan-400)' }}>{cacheStats.total_vnd_saved}đ</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="edumind-footer">
+        <div>
+          EduMind Lite • Dự án tham dự cuộc thi <strong>HACKATHON SGU 2026 – 2027</strong>
+        </div>
+        <div>
+          Tác giả: <strong>Đội SingleNode</strong> (Solo Developer)
         </div>
       </footer>
     </div>
