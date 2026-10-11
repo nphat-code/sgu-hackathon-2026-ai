@@ -166,11 +166,11 @@ export default function CodeEditorView({
       {activeTab === 'solution.cpp' ? (
         <div style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.86rem',
-          lineHeight: '1.68',
-          padding: '14px 0',
+          fontSize: '0.84rem',
+          lineHeight: '1.6',
+          padding: '10px 0',
           overflowX: 'auto',
-          maxHeight: '380px',
+          maxHeight: '280px',
           background: '#ffffff'
         }}>
           {lines.map((lineContent, idx) => {
