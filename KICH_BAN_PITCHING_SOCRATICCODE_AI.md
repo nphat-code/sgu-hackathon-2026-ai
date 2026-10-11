@@ -52,3 +52,16 @@
 ### Câu 3: "Dự án tiết kiệm chi phí như thế nào nếu mở rộng cho toàn bộ trường SGU?"
 - **Cách trả lời ăn điểm:**
   > *"Dạ, nếu mỗi sinh viên hỏi một câu đều gọi API LLM thì chi phí cho hàng nghìn sinh viên SGU sẽ rất đắt. Nhưng phân tích thực tế cho thấy 85-90% lỗi của sinh viên năm nhất năm hai là các lỗi mẫu lặp lại (off-by-one, null pointer, dangling pointer, uninitialized variable, infinite recursion/loop). Nhờ tầng Semantic Error Cache lưu trữ vector embedding của cấu trúc lỗi AST, các lần hỏi sau của các bạn sinh viên khác đều được phục vụ trực tiếp từ cache với chi phí **0 VNĐ** và độ trễ chỉ 10-20ms. Chỉ những đoạn code mang tính logic thuật toán mới lạ thì hệ thống mới tốn khoảng 15-20 VNĐ cho LLM."*
+
+### Câu 4: "Thuật toán có hàng ngàn loại, với các bài toán quá lớn hoặc phức tạp thì hệ thống có bao quát và trực quan hóa được không?"
+- **Cách trả lời ăn điểm:**
+  > *"Dạ thưa Thầy/Cô, không một kỹ sư hay sinh viên nào debug bằng cách nhìn 1 triệu ô nhớ trên màn hình. Trong kỹ nghệ phần mềm, mọi lỗi logic thuật toán luôn xuất hiện ngay trên các ca kiểm thử tối thiểu (Minimal Reproducible Example). SocraticCode AI giải quyết bài toán quy mô lớn bằng 2 kỹ thuật:  
+  > 1. Tự động thu nhỏ test case về bộ vi mô (Micro-testbench 3-7 phần tử) tái hiện nguyên vẹn bản chất bug.  
+  > 2. Sử dụng kỹ thuật Cửa sổ trượt (Windowed Memory) chỉ phóng to 7 ô nhớ xung quanh con trỏ và Cắt tỉa cây đệ quy (Stack Pruning). Dù bài toán lớn đến đâu, giao diện vẫn luôn gọn gàng và trực quan tuyệt đối."*
+
+### Câu 5: "Nếu LLM bị ảo giác (hallucination) mà tính sai giá trị biến hoặc địa chỉ ô nhớ thì sao?"
+- **Cách trả lời ăn điểm:**
+  > *"Dạ thưa Thầy/Cô, nếu để LLM tự tính toán biến thì chắc chắn sẽ bị ảo giác vì LLM không phải là CPU. Vì vậy, SocraticCode AI áp dụng kiến trúc Neuro-Symbolic (Lai giữa Máy ảo xác định và AI):  
+  > 1. **Dữ liệu ô nhớ, con trỏ và Trace Table là 100% SỰ THẬT VẬT LÝ (Ground Truth)** được sinh ra từ Sandbox máy ảo thực thi thật, LLM hoàn toàn không được tham gia tính nhẩm.  
+  > 2. LLM chỉ đóng vai trò là **Lớp chuyển đổi Sư phạm (Pedagogical Layer)**: Nhận bản báo cáo sự thật từ máy ảo và dịch thành các câu hỏi gợi mở thân thiện.  
+  > 3. Hệ thống có Guardrail Schema kiểm soát chặt chẽ, triệt tiêu hoàn toàn nguy cơ ảo giác trong môi trường học thuật!"*
