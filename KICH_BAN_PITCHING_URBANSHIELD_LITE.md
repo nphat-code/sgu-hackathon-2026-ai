@@ -1,5 +1,5 @@
 # 🎙️ KỊCH BẢN THUYẾT TRÌNH (PITCHING SCRIPT) 3 PHÚT
-# DỰ ÁN: URBANSHIELD LITE – MẮT THẦN BÌNH DÂN BẢO VỆ ĐÔ THỊ
+# DỰ ÁN: URBANSHIELD LITE – MẠNG LƯỚI THỊ GIÁC AI PHÂN TÁN BẢO VỆ ĐÔ THỊ
 ### Đội thi: **SingleNode** | Hackathon SGU 2026 – 2027
 
 ---
@@ -27,7 +27,7 @@
 > 
 > *Bởi vì một nghịch lý: **Camera AI truyền thống quá đắt đỏ!** Mỗi mắt camera chuyên dụng tốn từ 15 đến 30 triệu đồng, cộng thêm tiền máy chủ GPU và tiền đường truyền băng thông khổng lồ để stream video liên tục về trung tâm.*
 > 
-> *Hôm nay, đội **SingleNode** mang đến giải pháp: **UrbanShield Lite – Mắt thần bình dân**, biến mọi webcam 200 ngàn hay smartphone cũ thành trạm giám sát thông minh với **chi phí gần như bằng 0**!"*
+> *Hôm nay, đội **SingleNode** mang đến giải pháp: **UrbanShield Lite – Mạng lưới thị giác AI phân tán**, biến mọi webcam 200 ngàn hay smartphone cũ thành trạm giám sát thông minh với **chi phí gần như bằng 0**!"*
 
 ---
 
