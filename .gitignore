@@ -16,6 +16,7 @@ dist/
 build/
 out/
 *.log
+*.pt
 
 # OS & Editor
 .DS_Store
