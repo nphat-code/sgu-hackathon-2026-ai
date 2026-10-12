@@ -23,7 +23,7 @@ SCENE-BY-SCENE BREAKDOWN (STORYBOARD):
 [SCENE 1: 0:00 - 0:25 | INTRODUCTION]
 - Visual: Clean white screen with title "UrbanShield Lite - Theo dõi ngập nước & sự cố giao thông". Logo "SingleNode". Transition to B-roll of busy Vietnamese street traffic.
 - Text on Screen: UrbanShield Lite | Giải pháp Edge AI phân tán | SingleNode
-- Voiceover (Tiếng Việt): "Kính chào Hội đồng Giám khảo, chúng tôi là đội ngũ SingleNode. Hôm nay, chúng tôi xin giới thiệu đề án UrbanShield Lite – Hệ thống hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên nhỏ gọn, với mục tiêu mang công nghệ bảo vệ đến với những tuyến đường nhánh và khu dân cư bình dị."
+- Voiceover (Tiếng Việt): "Xin chào mọi người, mình là đại diện nhóm SingleNode. Hôm nay, nhóm muốn chia sẻ về UrbanShield Lite – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mục tiêu mang công nghệ bảo vệ đến với những tuyến đường nhánh và khu dân cư bình dị."
 
 [SCENE 2: 0:25 - 0:55 | THE REAL-WORLD PROBLEM & BOTTLENECK]
 - Visual: Footage of heavy rain, motorbikes struggling through 20cm floodwater on a narrow street; cut to a deserted dark alley at night. Split screen showing a traditional expensive AI camera with price tag "$1,000+" and a bottleneck graphic showing overloaded server bandwidth.
