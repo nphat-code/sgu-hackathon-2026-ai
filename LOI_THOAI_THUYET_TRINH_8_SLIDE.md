@@ -53,7 +53,7 @@
 
 > *"Để giải quyết nghịch lý đó, UrbanShield Lite tiếp cận theo hướng **Điện toán biên phân tán (Edge AI)**:*  
 > 
-> *Thay vì gửi video về máy chủ trung tâm cồng kềnh, chúng em chuyển dịch năng lực tính toán về ngay máy trạm cơ sở. Bằng cách tối ưu mô hình **YOLOv8-nano** chạy trực tiếp trên CPU máy tính phổ thông kết hợp camera có sẵn, hệ thống xử lý hình ảnh cục bộ và chỉ phát đi siêu dữ liệu sự kiện siêu nhẹ khi có sự cố."*
+> *Thay vì gửi video về máy chủ trung tâm cồng kềnh, nhóm chuyển dịch năng lực tính toán về ngay máy trạm cơ sở. Bằng cách tối ưu mô hình **YOLOv8-nano** chạy trực tiếp trên CPU máy tính phổ thông kết hợp camera có sẵn, hệ thống xử lý hình ảnh cục bộ và chỉ phát đi siêu dữ liệu sự kiện siêu nhẹ khi có sự cố."*
 
 *(Bấm chuyển Slide 4)*
 
@@ -62,7 +62,7 @@
 ### 🟢 SLIDE 4: ƯỚC LƯỢNG NGẬP QUA HÌNH HỌC (1:05 – 1:30 | 25 giây)
 *(Màn hình hiển thị: Bánh xe máy 50cm và 3 mức nước nét đứt Xanh - Vàng - Đỏ)*
 
-> *"Về bài toán ngập nước: Thay vì dùng cảm biến gắn dưới cống vốn rất dễ bị bùn rác làm nghẹt, chúng em ứng dụng nguyên lý thị giác máy tính:*  
+> *"Về bài toán ngập nước: Thay vì dùng cảm biến gắn dưới cống vốn rất dễ bị bùn rác làm nghẹt, nhóm ứng dụng nguyên lý thị giác máy tính:*  
 > 
 > *Lấy đường kính tiêu chuẩn khoảng 50cm của bánh xe máy lưu thông làm vật tham chiếu tương đối. Khi xe đi qua vùng nước, thuật toán phân tích tỷ lệ phần bánh xe bị che lấp kết hợp dải màu phản xạ bề mặt HSV để phân loại 3 mức độ: dưới 10cm là an toàn xăm xắp, 10 đến 20cm là cảnh báo chạm ống xả, và trên 20cm là báo động ngập sâu có nguy cơ chết máy."*
 
@@ -95,7 +95,7 @@
 ### 🟢 SLIDE 7: PHÂN TÍCH TÍNH KHẢ THI KINH TẾ TCO (2:15 – 2:40 | 25 giây)
 *(Màn hình hiển thị: Bảng so sánh kinh tế TCO và Mô hình trạm cụm 20-30 camera)*
 
-> *"Về bài toán mở rộng quy mô kinh tế: Chúng em áp dụng **Mô hình Trạm cụm (Cluster)**. Một máy tính cơ sở đặt tại văn phòng khu phố có thể gom và xử lý từ 20 đến 30 camera xung quanh ngõ xóm.*  
+> *"Về bài toán mở rộng quy mô kinh tế: Nhóm áp dụng **Mô hình Trạm cụm (Cluster)**. Một máy tính cơ sở đặt tại văn phòng khu phố có thể gom và xử lý từ 20 đến 30 camera xung quanh ngõ xóm.*  
 > 
 > *So với hệ thống tập trung truyền thống, mô hình này giúp cắt giảm ước tính **70% đến 80% chi phí đầu tư ban đầu** do tận dụng camera phổ thông và loại bỏ máy chủ GPU đắt đỏ, đồng thời **tiết kiệm hơn 95% lưu lượng băng thông** do không phải truyền phát video 24/7."*
 
@@ -106,11 +106,11 @@
 ### 🟢 SLIDE 8: LỘ TRÌNH THỬ NGHIỆM & KẾT LUẬN (2:40 – 3:00 | 20 giây)
 *(Màn hình hiển thị: 3 giai đoạn lộ trình & Slogan SingleNode)*
 
-> *"Thay vì vẽ ra những kế hoạch xa vời, nhóm chúng em đặt mục tiêu rõ ràng: Hoàn thiện thử nghiệm bước đầu tại một khu dân cư đô thị diện hẹp để đo lường thực tế và hiệu chỉnh tỷ lệ báo động giả trước khi nhân rộng.*  
+> *"Thay vì vẽ ra những kế hoạch xa vời, nhóm đặt mục tiêu rõ ràng: Hoàn thiện thử nghiệm bước đầu tại một khu dân cư đô thị diện hẹp để đo lường thực tế và hiệu chỉnh tỷ lệ báo động giả trước khi nhân rộng.*  
 > 
-> *Đội ngũ **SingleNode** hướng tới một giải pháp kỹ thuật khiêm tốn nhưng mang lại giá trị thực tiễn và an toàn cho cộng đồng.*  
+> *Nhóm **SingleNode** hướng tới một giải pháp kỹ thuật khiêm tốn nhưng mang lại giá trị thực tiễn và an toàn cho cộng đồng.*  
 > 
-> *Em xin chân thành cảm ơn Ban Giám khảo và sẵn sàng lắng nghe các câu hỏi góp ý ạ!"*
+> *Em xin cảm ơn Ban Giám khảo và sẵn sàng lắng nghe các câu hỏi góp ý ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 

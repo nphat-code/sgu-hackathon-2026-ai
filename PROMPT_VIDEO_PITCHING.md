@@ -33,7 +33,7 @@ SCENE-BY-SCENE BREAKDOWN (STORYBOARD):
 [SCENE 3: 0:55 - 1:25 | THE EDGE AI SOLUTION]
 - Visual: Diagram showing an affordable USB webcam connected to a compact office computer / mini PC running YOLOv8-nano. Visual of video being processed locally, without streaming heavy video to the cloud.
 - Text on Screen: Edge AI | Xử lý tại chỗ trên CPU | Tận dụng phần cứng sẵn có
-- Voiceover (Tiếng Việt): "UrbanShield Lite giải quyết nghịch lý này bằng kiến trúc Điện toán biên (Edge AI): Thay vì dồn video về máy chủ trung tâm, chúng tôi tối ưu mô hình YOLOv8-nano hoạt động trực tiếp trên vi xử lý CPU của máy tính phổ thông tại cơ sở. Hệ thống phân tích hình ảnh tại chỗ và chỉ gửi dữ liệu khi phát sinh sự cố."
+- Voiceover (Tiếng Việt): "UrbanShield Lite giải quyết nghịch lý này bằng kiến trúc Điện toán biên (Edge AI): Thay vì dồn video về máy chủ trung tâm, nhóm tối ưu mô hình YOLOv8-nano hoạt động trực tiếp trên vi xử lý CPU của máy tính phổ thông tại cơ sở. Hệ thống phân tích hình ảnh tại chỗ và chỉ gửi dữ liệu khi phát sinh sự cố."
 
 [SCENE 4: 1:25 - 1:55 | CORE TECHNOLOGY: FLOOD ESTIMATION & FALL DETECTION]
 - Visual: Close-up of CCTV angle showing motorbike in water with green bounding box around the wheel and 3 water depth marker lines (Level 1, Level 2, Level 3). Next shot: Night alley with fallen rider, timer counting >5s, red bounding box labeled "SOS: FALLEN DETECTED".
@@ -48,12 +48,12 @@ SCENE-BY-SCENE BREAKDOWN (STORYBOARD):
 [SCENE 6: 2:15 - 2:35 | ECONOMIC VIABILITY: CLUSTER MODEL]
 - Visual: Cluster diagram showing 1 local neighborhood PC managing 20-30 surrounding cameras. Clean cost comparison table showing 70-80% initial cost reduction.
 - Text on Screen: Mô hình Trạm cụm: 1 Máy trạm gánh 20-30 Camera | Tiết kiệm 70-80% chi phí
-- Voiceover (Tiếng Việt): "Về tính kinh tế, chúng tôi triển khai mô hình Trạm cụm: Một máy tính cơ sở tại trụ sở khu phố có thể quản lý 20 đến 30 camera xung quanh, giúp tiết kiệm ước tính 70 đến 80% chi phí đầu tư ban đầu và cắt giảm hơn 95% lưu lượng băng thông mạng."
+- Voiceover (Tiếng Việt): "Về tính kinh tế, nhóm triển khai mô hình Trạm cụm: Một máy tính cơ sở tại trụ sở khu phố có thể quản lý 20 đến 30 camera xung quanh, giúp tiết kiệm ước tính 70 đến 80% chi phí đầu tư ban đầu và cắt giảm hơn 95% lưu lượng băng thông mạng."
 
 [SCENE 7: 2:35 - 3:00 | CONCLUSION & CLOSING]
 - Visual: Clean white closing screen with open-source digital map interface, team name "SingleNode", and contact info.
 - Text on Screen: SingleNode - Giải pháp kỹ thuật khiêm tốn, giá trị thực tiễn cho cộng đồng
-- Voiceover (Tiếng Việt): "Với kế hoạch thử nghiệm bước đầu tại khu dân cư diện hẹp để đo lường độ ổn định thực tế, đội ngũ SingleNode cam kết mang lại một giải pháp kỹ thuật khiêm tốn, thiết thực và vì sự an toàn của cộng đồng. Xin chân thành cảm ơn."
+- Voiceover (Tiếng Việt): "Với kế hoạch thử nghiệm bước đầu tại khu dân cư diện hẹp để đo lường độ ổn định thực tế, nhóm SingleNode mong muốn mang lại một giải pháp kỹ thuật khiêm tốn, thiết thực và vì sự an toàn của cộng đồng. Cảm ơn mọi người đã theo dõi."
 ```
 
 ---
