@@ -29,6 +29,9 @@ QUY TẮC BẮT BUỘC VỀ NGÔN NGỮ (ANTI-HYPE & KHÔNG PHÓNG ĐẠI):
 4. TRUNG THỰC VỀ MẶT KỸ THUẬT:
    - Thừa nhận rõ các điều kiện hoạt động thực tế: Đo ngập dựa trên phương tiện xe máy lưu thông thực tế; nhận diện ngã xe cần bộ đếm bất động liên tục > 5 giây để giảm thiểu báo động giả; xử lý thiếu sáng bằng bộ lọc cân bằng sáng thích ứng (CLAHE).
    - Nêu đúng bản chất kiến trúc: Mô hình chạy trên CPU máy trạm biên tại khu vực giám sát (Edge Computing), không phải nhúng bên trong chip của camera.
+5. PHONG CÁCH THIẾT KẾ & MÀU SẮC (BẮT BUỘC NỀN TRẮNG):
+   - NỀN SLIDE: Bắt buộc sử dụng nền trắng tinh tế (Clean White / Light Theme, mã màu #FFFFFF hoặc #F8FAFC) để hiển thị sáng rõ, sắc nét trên máy chiếu hội trường. Tuyệt đối KHÔNG dùng nền tối đen (Dark mode) hay nền gradient màu mè phức tạp.
+   - MÀU SẮC: Chữ màu đen/xám than đậm (#0F172A) tương phản cao; màu nhấn công nghệ là xanh dương (#2563EB); các thẻ nội dung (cards) phân khung viền xám nhạt gọn gàng, thoáng đãng.
 
 CẤU TRÚC ĐẦU RA CHO MỖI SLIDE (TỪ SLIDE 1 ĐẾN SLIDE 8):
 Với mỗi slide, hãy trình bày rõ các mục sau:
