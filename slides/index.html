@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UrbanShield Lite - Slide Thuyết Trình | SingleNode SGU Hackathon 2026</title>
+  <title>UrbanShield Lite - Trình Bày Ý Tưởng | SingleNode</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -15,8 +15,8 @@
       --border-light: #E2E8F0;
       --border-accent: #CBD5E1;
       --text-main: #0F172A;
-      --text-muted: #64748B;
-      --text-soft: #94A3B8;
+      --text-muted: #475569;
+      --text-soft: #64748B;
       --primary: #2563EB;
       --primary-light: #EFF6FF;
       --primary-border: #BFDBFE;
@@ -50,7 +50,6 @@
       user-select: none;
     }
 
-    /* Container trình chiếu 16:9 */
     .deck-viewport {
       display: flex;
       align-items: center;
@@ -93,14 +92,13 @@
       transform: translateX(0);
     }
 
-    /* Header của mỗi Slide */
     .slide-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       border-bottom: 1px solid var(--border-light);
-      padding-bottom: 20px;
+      padding-bottom: 18px;
     }
 
     .slide-badge {
@@ -119,7 +117,7 @@
     }
 
     .slide-title {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.5px;
@@ -127,7 +125,7 @@
     }
 
     .slide-subtitle {
-      font-size: 16px;
+      font-size: 15px;
       color: var(--text-muted);
       font-weight: 500;
       margin-top: 4px;
@@ -139,7 +137,7 @@
       gap: 8px;
       font-weight: 700;
       font-size: 14px;
-      color: var(--text-muted);
+      color: var(--text-soft);
     }
 
     .header-logo .dot {
@@ -149,7 +147,6 @@
       border-radius: 50%;
     }
 
-    /* Slide Content & Bento Layouts */
     .slide-body {
       flex: 1;
       display: flex;
@@ -162,11 +159,6 @@
       gap: 20px;
       width: 100%;
       height: 100%;
-    }
-
-    .grid-2x2 {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
     }
 
     .grid-3col {
@@ -189,7 +181,6 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: all 0.2s ease;
     }
 
     .card.white {
@@ -203,8 +194,8 @@
     }
 
     .card-icon {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
@@ -217,7 +208,7 @@
     }
 
     .card-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 8px;
@@ -231,20 +222,19 @@
 
     .metric-value {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 38px;
+      font-size: 28px;
       font-weight: 800;
       color: var(--primary);
       margin: 10px 0;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
     }
 
     .metric-sub {
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-soft);
     }
 
-    /* Bảng so sánh */
     .compare-table {
       width: 100%;
       border-collapse: collapse;
@@ -277,16 +267,9 @@
     .compare-table .highlight {
       background: #F0FDF4;
       color: var(--success);
-      font-weight: 700;
-    }
-
-    .compare-table .bad {
-      background: #FEF2F2;
-      color: var(--danger);
       font-weight: 600;
     }
 
-    /* Code block & terminal pill */
     .tech-pill {
       display: inline-block;
       padding: 4px 10px;
@@ -301,7 +284,6 @@
       margin-top: 6px;
     }
 
-    /* Thanh điều hướng dưới cùng */
     .deck-controls {
       position: absolute;
       bottom: 20px;
@@ -358,7 +340,6 @@
       background: #DBEAFE;
     }
 
-    /* Slide bìa đặc biệt (Hero) */
     .hero-slide {
       text-align: center;
       align-items: center;
@@ -374,17 +355,17 @@
       background: var(--primary-light);
       color: var(--primary);
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       border-radius: 999px;
       border: 1px solid var(--primary-border);
       margin-bottom: 24px;
     }
 
     .hero-title {
-      font-size: 52px;
+      font-size: 48px;
       font-weight: 800;
       line-height: 1.15;
-      letter-spacing: -1.5px;
+      letter-spacing: -1.2px;
       color: var(--text-main);
       margin-bottom: 16px;
     }
@@ -394,7 +375,7 @@
     }
 
     .hero-slogan {
-      font-size: 22px;
+      font-size: 20px;
       color: var(--text-muted);
       font-weight: 500;
       max-width: 820px;
@@ -409,7 +390,7 @@
       border-top: 1px solid var(--border-light);
       padding-top: 24px;
       width: 100%;
-      max-width: 760px;
+      max-width: 780px;
     }
 
     .meta-item {
@@ -425,13 +406,12 @@
     }
 
     .meta-val {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-main);
       margin-top: 2px;
     }
 
-    /* Print / Xuất PDF sắc nét nền trắng tuyệt đối */
     @media print {
       body {
         background: #FFFFFF !important;
@@ -474,11 +454,11 @@
       <section class="slide active" id="slide-1">
         <div class="hero-slide">
           <div class="hero-tag">
-            <span>🛡️</span> SMART CITY EDGE AI SOLUTION
+            ĐỀ XUẤT KỸ THUẬT
           </div>
           <h1 class="hero-title">URBANSHIELD <span>LITE</span></h1>
           <p class="hero-slogan">
-            <strong>Mạng lưới thị giác AI phân tán</strong> – Giữ an toàn từng góc phố đô thị bằng giải pháp Edge AI siêu nhẹ, chi phí 0 đồng
+            Đề xuất giải pháp hỗ trợ theo dõi ngập nước và sự cố giao thông sử dụng mô hình AI biên trên phần cứng phổ thông
           </p>
 
           <div class="hero-meta">
@@ -487,28 +467,28 @@
               <div class="meta-val">SingleNode</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Kiến trúc kỹ thuật</div>
-              <div class="meta-val">Edge AI (YOLOv8n + OpenCV)</div>
+              <div class="meta-label">Mô hình sử dụng</div>
+              <div class="meta-val">YOLOv8-nano + OpenCV</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Hiệu năng xử lý</div>
-              <div class="meta-val">~35ms / CPU phổ thông</div>
+              <div class="meta-label">Môi trường thực thi</div>
+              <div class="meta-val">CPU máy tính phổ thông</div>
             </div>
             <div class="meta-item">
-              <div class="meta-label">Mục tiêu giải pháp</div>
-              <div class="meta-val">Cảnh báo ngập &amp; Cứu nạn 24/7</div>
+              <div class="meta-label">Phạm vi ứng dụng</div>
+              <div class="meta-val">Theo dõi ngập &amp; Hỗ trợ sự cố</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SLIDE 2: BỐI CẢNH & NỖI ĐAU ĐÔ THỊ -->
+      <!-- SLIDE 2: BỐI CẢNH THỰC TẾ -->
       <section class="slide" id="slide-2">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">01. Vấn Đề Thực Tiễn</span>
-            <h2 class="slide-title">Hai Nghịch Lý An Toàn Tại TP. Hồ Chí Minh</h2>
-            <p class="slide-subtitle">Thành phố phát triển nhưng sinh viên và người dân vẫn đối mặt nguy cơ hàng ngày</p>
+            <span class="slide-badge">01. Bối Cảnh Thực Tế</span>
+            <h2 class="slide-title">Tình Huống Cần Giải Quyết: Ngập Nước &amp; Sự Cố Giao Thông</h2>
+            <p class="slide-subtitle">Hai vấn đề thực tế thường gặp trong giao thông đô thị</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -516,27 +496,27 @@
         <div class="slide-body">
           <div class="bento-grid grid-2col">
             <div class="card white">
-              <div class="card-icon" style="color: #2563EB;">🌊</div>
-              <h3 class="card-title">1. Ngập Lụt Đột Ngột & Chết Máy Xe</h3>
+              <h3 class="card-title">1. Ngập Nước Cục Bộ</h3>
               <p class="card-text">
-                Triều cường và mưa lớn khiến các trục đường trũng thấp và khu vực đô thị ngập sâu bất ngờ.
+                Triều cường và mưa lớn thường gây ngập cục bộ tại một số khu vực trũng thấp.
               </p>
               <div style="margin-top: 14px; padding: 12px; background: var(--bg-subtle); border-radius: 8px;">
                 <p class="card-text" style="font-size: 13px;">
-                  ⚠️ <strong>Hậu quả:</strong> Hàng nghìn phương tiện chết máy, kẹt xe hàng giờ, nguy cơ rò rỉ điện và sụp hố ga nguy hiểm tính mạng.
+                  • Phương tiện xe máy có thể bị chết máy khi nước ngập cao hơn ống xả.<br>
+                  • Người điều khiển phương tiện khó ước lượng độ sâu thực tế trước khi đi vào khu vực ngập.
                 </p>
               </div>
             </div>
 
             <div class="card white">
-              <div class="card-icon" style="color: #DC2626;">🚨</div>
-              <h3 class="card-title">2. Tai Nạn Ngõ Hẻm & "Thời Gian Vàng"</h3>
+              <h3 class="card-title">2. Sự Cố Ngã Xe Ban Đêm</h3>
               <p class="card-text">
-                Các vụ té xe máy, va chạm đêm khuya trong ngõ hẻm vắng người hoàn toàn không có ai phát hiện để sơ cứu kịp thời.
+                Sự cố trượt ngã hoặc va chạm xe máy tại các đoạn đường vắng người hoặc ngõ hẻm vào ban đêm.
               </p>
               <div style="margin-top: 14px; padding: 12px; background: var(--bg-subtle); border-radius: 8px;">
                 <p class="card-text" style="font-size: 13px;">
-                  ⚠️ <strong>Hậu quả:</strong> Bỏ lỡ "thời gian vàng" y tế (15 phút đầu). Người bị nạn nằm bất động hàng giờ mà gia đình và y tế không hay biết.
+                  • Người gặp nạn có thể cần hỗ trợ nếu bị chấn thương hoặc khó tự đứng dậy.<br>
+                  • Thiếu cơ chế phát hiện kịp thời khi xung quanh không có người qua lại.
                 </p>
               </div>
             </div>
@@ -544,13 +524,13 @@
         </div>
       </section>
 
-      <!-- SLIDE 3: NGHỊCH LÝ CHI PHÍ SMART CITY -->
+      <!-- SLIDE 3: KHẢO SÁT KỸ THUẬT -->
       <section class="slide" id="slide-3">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">02. Nút Thắt Công Nghệ</span>
-            <h2 class="slide-title">Tại Sao Smart City Chưa Thể Phủ Sóng Từng Con Hẻm?</h2>
-            <p class="slide-subtitle">Rào cản tài chính và kiến trúc máy chủ tập trung truyền thống quá cồng kềnh</p>
+            <span class="slide-badge">02. Khảo Sát Kỹ Thuật</span>
+            <h2 class="slide-title">Đặc Điểm Của Các Phương Án Giám Sát</h2>
+            <p class="slide-subtitle">So sánh yêu cầu hạ tầng giữa hệ thống tập trung và mô hình xử lý tại biên</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -560,43 +540,43 @@
             <thead>
               <tr>
                 <th style="width: 25%;">Hạng mục</th>
-                <th style="width: 37%;">Hệ thống Smart City Truyền Thống</th>
-                <th style="width: 38%;" class="highlight">UrbanShield Lite (Đề Xuất)</th>
+                <th style="width: 37%;">Hệ thống camera truyền thống</th>
+                <th style="width: 38%;" class="highlight">Mô hình đề xuất UrbanShield Lite</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>1. Phần cứng camera</strong></td>
-                <td class="bad">Camera AI chuyên dụng: 15 - 30 triệu VNĐ / mắt</td>
-                <td class="highlight">Webcam dân sinh 200k / Phone cũ / RTSP sẵn có</td>
+                <td><strong>Thiết bị thu nhận</strong></td>
+                <td>Camera IP chuyên dụng</td>
+                <td class="highlight">Tận dụng camera hoặc webcam sẵn có</td>
               </tr>
               <tr>
-                <td><strong>2. Hạ tầng xử lý</strong></td>
-                <td class="bad">Cụm máy chủ GPU đắt đỏ (hàng trăm triệu)</td>
-                <td class="highlight">Edge AI trên CPU máy tính phổ thông (YOLOv8n)</td>
+                <td><strong>Hạ tầng tính toán</strong></td>
+                <td>Máy chủ GPU trung tâm</td>
+                <td class="highlight">Chạy mô hình thu gọn trên CPU phổ thông</td>
               </tr>
               <tr>
-                <td><strong>3. Băng thông mạng</strong></td>
-                <td class="bad">Stream video 24/7 liên tục (Tốn kém GB/tháng)</td>
-                <td class="highlight">Chỉ gửi Alert Metadata &lt; 5KB khi có sự cố (Giảm 99%)</td>
+                <td><strong>Phương thức truyền tải</strong></td>
+                <td>Truyền luồng video liên tục về máy chủ</td>
+                <td class="highlight">Xử lý tại biên; gửi dữ liệu theo sự kiện</td>
               </tr>
               <tr>
-                <td><strong>4. Triển khai dân sinh</strong></td>
-                <td class="bad">Chỉ lắp ở ngã tư lớn; bỏ trống ngõ hẻm dân cư</td>
-                <td class="highlight">Bình dân hóa, tổ dân phố &amp; trường học tự gắn được</td>
+                <td><strong>Phạm vi áp dụng</strong></td>
+                <td>Thường ưu tiên cho trục đường chính</td>
+                <td class="highlight">Có thể áp dụng linh hoạt cho khu dân cư</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- SLIDE 4: GIẢI PHÁP ĐỘT PHÁ -->
+      <!-- SLIDE 4: Ý TƯỞNG TIẾP CẬN -->
       <section class="slide" id="slide-4">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">03. Giải Pháp</span>
-            <h2 class="slide-title">UrbanShield Lite – Mạng Lưới Thị Giác AI Phân Tán</h2>
-            <p class="slide-subtitle">Dân chủ hóa công nghệ giám sát: Biến mọi camera giá rẻ thành trạm an toàn thông minh</p>
+            <span class="slide-badge">03. Phương Pháp Tiếp Cận</span>
+            <h2 class="slide-title">Mô Hình Tiếp Cận Đề Xuất</h2>
+            <p class="slide-subtitle">Ứng dụng mô hình AI biên nhỏ gọn và tận dụng thiết bị sẵn có</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -604,51 +584,48 @@
         <div class="slide-body">
           <div class="bento-grid grid-3col">
             <div class="card white">
-              <div class="card-icon" style="color: #2563EB;">⚡</div>
-              <h3 class="card-title">Mô Hình Edge Siêu Nhẹ</h3>
+              <h3 class="card-title">Mô Hình Xử Lý Cục Bộ</h3>
               <p class="card-text">
-                Sử dụng <strong>YOLOv8-nano (~6.5MB)</strong> chạy trực tiếp trên CPU phổ thông với tốc độ <strong>30+ FPS</strong>, không phụ thuộc vào card GPU rời.
+                Sử dụng mô hình nhận diện vật thể YOLOv8-nano (~6.5MB) có thể chạy trực tiếp trên CPU thông thường mà không cần GPU rời.
               </p>
               <div style="margin-top: auto; padding-top: 10px;">
-                <span class="tech-pill">Latency: ~35ms</span>
-                <span class="tech-pill">RAM: &lt; 250MB</span>
+                <span class="tech-pill">YOLOv8-nano</span>
+                <span class="tech-pill">Xử lý trên CPU</span>
               </div>
             </div>
 
             <div class="card white">
-              <div class="card-icon" style="color: #059669;">📐</div>
-              <h3 class="card-title">Thuật Toán Che Khuất Bánh Xe</h3>
+              <h3 class="card-title">Ước Lượng Độ Sâu Hình Học</h3>
               <p class="card-text">
-                Đo mực nước ngập vật lý dựa trên tỷ lệ ngập lốp xe máy tiêu chuẩn (50cm). Tính toán chính xác độ sâu centimet mà <strong>không cần lắp cảm biến thủy văn đắt tiền</strong>.
+                Ước lượng độ sâu ngập dựa trên tỷ lệ bánh xe máy bị nước che khuất, giảm nhu cầu lắp đặt cảm biến chìm.
               </p>
               <div style="margin-top: auto; padding-top: 10px;">
-                <span class="tech-pill">Wheel Occlusion</span>
-                <span class="tech-pill">Mực nước: cm</span>
+                <span class="tech-pill">Tỷ lệ che khuất</span>
+                <span class="tech-pill">Tham chiếu bánh xe (~50cm)</span>
               </div>
             </div>
 
             <div class="card white">
-              <div class="card-icon" style="color: #D97706;">📡</div>
-              <h3 class="card-title">Báo Động 0 Đồng Qua Telegram</h3>
+              <h3 class="card-title">Thông Báo Theo Sự Kiện</h3>
               <p class="card-text">
-                Khi có sự cố té xe bất động &gt; 5s hoặc ngập vượt 25cm, hệ thống lập tức phát tín hiệu định vị GPS và ảnh chụp hiện trường về nhóm hỗ trợ khẩn cấp.
+                Khi phát hiện ngập sâu hoặc người ngã bất động, hệ thống gửi thông tin sự kiện kèm ảnh và tọa độ qua Telegram Bot.
               </p>
               <div style="margin-top: auto; padding-top: 10px;">
                 <span class="tech-pill">Telegram Bot</span>
-                <span class="tech-pill">OpenStreetMap</span>
+                <span class="tech-pill">Bản đồ số</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SLIDE 5: CƠ CHẾ Ý TƯỞNG CỐT LÕI -->
+      <!-- SLIDE 5: CƠ CHẾ HOẠT ĐỘNG -->
       <section class="slide" id="slide-5">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">04. Cơ Chế Ý Tưởng</span>
-            <h2 class="slide-title">Cơ Chế Thị Giác AI Đo Ngập &amp; Phát Hiện Tai Nạn Khẩn Cấp</h2>
-            <p class="slide-subtitle">Mô hình toán học &amp; thị giác máy tính được thiết kế tối ưu trên vi xử lý phổ thông</p>
+            <span class="slide-badge">04. Cơ Chế Hoạt Động</span>
+            <h2 class="slide-title">Cơ Chế Phát Hiện Ngập Nước &amp; Sự Cố Ngã Xe</h2>
+            <p class="slide-subtitle">Các bước phân tích hình thái học và logic xác thực sự kiện</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -657,44 +634,44 @@
           <div class="bento-grid grid-2col">
             <div class="card primary">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="card-title" style="color: var(--primary);">🌊 Cơ Chế 1: Đo Ngập Bằng Độ Che Khuất Bánh Xe</h3>
-                <span class="slide-badge" style="background:#DBEAFE;">Cơ Chế Vật Lý</span>
+                <h3 class="card-title" style="color: var(--primary);">1. Ước Lượng Mực Nước Ngập</h3>
+                <span class="slide-badge" style="background:#DBEAFE;">Hình Học</span>
               </div>
               <div class="metric-value">Depth = Ratio × 50cm</div>
-              <p class="metric-sub">Thuật toán Optical Wheel-Occlusion Ratio dựa trên kích thước chuẩn bánh xe</p>
+              <p class="metric-sub">Công thức ước tính dựa trên đường kính trung bình bánh xe máy</p>
               <ul style="margin-top: 16px; font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 18px;">
-                <li>Nhận diện phương tiện xe máy di chuyển qua vũng nước.</li>
-                <li>Phân tích tỷ lệ phần dưới bánh xe bị nước che khuất (Occlusion Ratio).</li>
-                <li>Phân cấp mức nguy hiểm: 15cm chạm mép pô (Vàng) | 26cm vượt nửa bánh (Đỏ nguy hiểm).</li>
-                <li>Tự động ghim điểm ngập lên bản đồ số để người dân chủ động chuyển hướng an toàn.</li>
+                <li>Nhận diện phương tiện xe máy di chuyển qua khu vực có nước.</li>
+                <li>Xác định tỷ lệ phần dưới của bánh xe bị che khuất bởi mặt nước.</li>
+                <li>Phân loại mức độ: Mức chú ý (~15cm) và Mức cảnh báo ngập sâu (>25cm).</li>
+                <li>Cập nhật trạng thái điểm quan sát lên bản đồ theo dõi.</li>
               </ul>
             </div>
 
             <div class="card" style="background: #FEF2F2; border-color: #FECACA;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 class="card-title" style="color: var(--danger);">🚨 Cơ Chế 2: Phát Hiện Ngã Xe &amp; Nằm Bất Động Đêm Khuya</h3>
-                <span class="slide-badge" style="background:#FEE2E2; color: var(--danger); border-color:#FECACA;">Cơ Chế Cứu Nạn</span>
+                <h3 class="card-title" style="color: var(--danger);">2. Hỗ Trợ Phát Hiện Sự Cố Ngã Xe</h3>
+                <span class="slide-badge" style="background:#FEE2E2; color: var(--danger); border-color:#FECACA;">Phát Hiện Sự Cố</span>
               </div>
-              <div class="metric-value" style="color: var(--danger);">Aspect &gt; 1.3 &amp; Timer &gt; 5s</div>
-              <p class="metric-sub" style="color: var(--danger);">Kết hợp tỷ lệ khung hình ngang và bộ đếm bất động thông minh</p>
+              <div class="metric-value" style="color: var(--danger);">Width / Height &gt; 1.3</div>
+              <p class="metric-sub" style="color: var(--danger);">Tỷ lệ khung hình ngang kết hợp kiểm tra thời gian bất động > 5 giây</p>
               <ul style="margin-top: 16px; font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 18px;">
-                <li>Theo dõi tỷ lệ khung hình cơ thể (Width / Height &gt; 1.3 khi ngã nằm ngang).</li>
-                <li>Kích hoạt bộ đếm thời gian bất động (Inactivity Timer &gt; 5.0s) loại trừ báo động giả.</li>
-                <li>Tự động phát gói tin SOS khẩn cấp kèm ảnh hiện trường về lực lượng cứu trợ.</li>
-                <li>Nắm bắt trọn vẹn "thời gian vàng" y tế để cấp cứu nạn nhân kịp thời.</li>
+                <li>Nhận diện tư thế cơ thể nằm ngang bất thường trên mặt đường.</li>
+                <li>Theo dõi trạng thái liên tục trong 5 giây nhằm giảm thiểu cảnh báo nhầm.</li>
+                <li>Nếu đối tượng không thay đổi vị trí, tạo gói tin thông báo sự cố.</li>
+                <li>Gửi hình ảnh ghi nhận và vị trí đến người phụ trách để kiểm tra.</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SLIDE 6: BẢN ĐỒ & TRUNG TÂM ĐIỀU HÀNH DÂN SINH -->
+      <!-- SLIDE 6: MÔ HÌNH VẬN HÀNH -->
       <section class="slide" id="slide-6">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">05. Giao Diện &amp; Vận Hành</span>
-            <h2 class="slide-title">Mô Hình Vận Hành &amp; Giao Diện Điều Hành Đề Xuất</h2>
-            <p class="slide-subtitle">Trực quan hóa mạng lưới đa trạm trên nền tảng bản đồ số nguồn mở linh hoạt</p>
+            <span class="slide-badge">05. Mô Hình Vận Hành</span>
+            <h2 class="slide-title">Mô Hình Vận Hành &amp; Thu Thập Dữ Liệu</h2>
+            <p class="slide-subtitle">Phân loại vị trí quan sát và quy trình xử lý thông tin</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -702,36 +679,36 @@
         <div class="slide-body">
           <div class="bento-grid grid-1-2">
             <div class="card white">
-              <h3 class="card-title">Mạng Lưới Trạm Thử Nghiệm Thực Tế</h3>
+              <h3 class="card-title">Phân Loại Điểm Quan Sát</h3>
               <p class="card-text">
-                Kết nối đa trạm camera thực nghiệm đại diện cho các hình thái đô thị:
+                Hệ thống đề xuất phân loại các điểm đặt theo mục đích theo dõi:
               </p>
               <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="padding: 10px; background: var(--bg-subtle); border-radius: 8px; border-left: 3px solid var(--primary);">
-                  <strong>Trạm 01:</strong> Tuyến đường trũng thấp (Điểm đen ngập lụt)
+                  <strong>Điểm 01:</strong> Tuyến đường trũng thấp (theo dõi mực nước ngập)
                 </div>
                 <div style="padding: 10px; background: var(--bg-subtle); border-radius: 8px; border-left: 3px solid var(--success);">
-                  <strong>Trạm 02:</strong> Nút giao thông trọng điểm (Mật độ xe cao)
+                  <strong>Điểm 02:</strong> Nút giao thông (theo dõi lưu thông phương tiện)
                 </div>
                 <div style="padding: 10px; background: var(--bg-subtle); border-radius: 8px; border-left: 3px solid var(--warning);">
-                  <strong>Trạm 03:</strong> Ngõ hẻm dân cư (Khuất tầm nhìn, vắng người)
+                  <strong>Điểm 03:</strong> Khu vực ngõ hẻm (hỗ trợ phát hiện tai nạn ban đêm)
                 </div>
               </div>
             </div>
 
             <div class="card white">
-              <h3 class="card-title">Ưu Điểm Vận Hành Độc Bản</h3>
+              <h3 class="card-title">Đặc Điểm Xử Lý Dữ Liệu</h3>
               <div class="bento-grid grid-2col" style="margin-top: 12px;">
                 <div style="padding: 12px; background: var(--bg-subtle); border-radius: 8px;">
-                  <strong style="color: var(--primary);">🎯 Khác với Google Maps:</strong>
+                  <strong style="color: var(--primary);">Xử lý theo thời gian thực:</strong>
                   <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-                    Google Maps chỉ báo tắc đường dựa trên GPS chậm trễ; UrbanShield đo chính xác từng centimet ngập và tai nạn ngã xe.
+                    Thông tin sự cố được phát hiện trực tiếp tại điểm quan sát và gửi thông báo khi phát sinh sự kiện.
                   </p>
                 </div>
                 <div style="padding: 12px; background: var(--bg-subtle); border-radius: 8px;">
-                  <strong style="color: var(--success);">🔒 Bảo vệ quyền riêng tư:</strong>
+                  <strong style="color: var(--success);">Xử lý dữ liệu cục bộ:</strong>
                   <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-                    Video được xử lý tại thiết bị biên (Edge) rồi xóa ngay; không bao giờ lưu trữ khuôn mặt hay biển số xe người dân.
+                    Hình ảnh được phân tích trong bộ nhớ tạm thời của máy trạm; không lưu trữ video liên tục để bảo vệ quyền riêng tư.
                   </p>
                 </div>
               </div>
@@ -740,13 +717,13 @@
         </div>
       </section>
 
-      <!-- SLIDE 7: BÀI TOÁN KINH TẾ & KHẢ NĂNG NHÂN RỘNG -->
+      <!-- SLIDE 7: TÍNH KHẢ THI -->
       <section class="slide" id="slide-7">
         <div class="slide-header">
           <div>
-            <span class="slide-badge">06. Hiệu Quả &amp; Nhân Rộng</span>
-            <h2 class="slide-title">Bài Toán Kinh Tế &amp; Khả Năng Nhân Rộng Thực Tế</h2>
-            <p class="slide-subtitle">Tối ưu hóa chi phí đầu tư và năng lực mở rộng hàng nghìn trạm giám sát phân tán</p>
+            <span class="slide-badge">06. Đánh Giá Khả Thi</span>
+            <h2 class="slide-title">Đánh Giá Tính Khả Thi Trong Thực Tế</h2>
+            <p class="slide-subtitle">Xem xét về phần cứng, hạ tầng truyền dẫn và bảo vệ dữ liệu</p>
           </div>
           <div class="header-logo"><span class="dot"></span> UrbanShield Lite</div>
         </div>
@@ -754,67 +731,65 @@
         <div class="slide-body">
           <div class="bento-grid grid-3col">
             <div class="card white">
-              <div class="slide-badge" style="margin-bottom: 12px; background: #ECFDF5; color: var(--success); border-color:#A7F3D0;">Tối Ưu Ngân Sách</div>
-              <h3 class="card-title">Tiết Kiệm 95% Chi Phí TCO</h3>
+              <div class="slide-badge" style="margin-bottom: 12px; background: #ECFDF5; color: var(--success); border-color:#A7F3D0;">Phần Cứng</div>
+              <h3 class="card-title">Yêu Cầu Phần Cứng</h3>
               <ul style="font-size: 13px; color: var(--text-muted); line-height: 1.6; padding-left: 18px; margin-top: 8px;">
-                <li>Chi phí lắp mới: ~200.000 VNĐ thay vì 25.000.000 VNĐ cho mỗi mắt camera AI.</li>
-                <li>Tái chế phần cứng cũ: Webcam, điện thoại thông minh, máy tính văn phòng.</li>
-                <li>Không tốn chi phí thuê máy chủ GPU đám mây đắt tiền hàng tháng.</li>
+                <li>Có thể vận hành trên các máy tính phổ thông hoặc camera sẵn có.</li>
+                <li>Không bắt buộc trang bị card đồ họa rời tại từng vị trí lắp đặt.</li>
+                <li>Phù hợp cho việc triển khai thử nghiệm diện hẹp.</li>
               </ul>
             </div>
 
             <div class="card primary">
-              <div class="slide-badge" style="margin-bottom: 12px; background: #DBEAFE;">Mở Rộng Không Giới Hạn</div>
-              <h3 class="card-title" style="color: var(--primary);">Khả Năng Nhân Rộng (Scalability)</h3>
+              <div class="slide-badge" style="margin-bottom: 12px; background: #DBEAFE;">Đường Truyền</div>
+              <h3 class="card-title" style="color: var(--primary);">Hạ Tầng Truyền Dẫn</h3>
               <ul style="font-size: 13px; color: var(--text-main); line-height: 1.6; padding-left: 18px; margin-top: 8px;">
-                <li>Xử lý phân tán tại biên (Edge Computing), không nghẽn băng thông trung tâm.</li>
-                <li>Mở rộng từ 1 trạm lên 1.000 trạm mà tải máy chủ trung tâm gần như không đổi.</li>
-                <li>Chỉ phát gói tin sự cố &lt; 5KB khi có ngập lụt hoặc tai nạn khẩn cấp.</li>
+                <li>Không cần truyền luồng video liên tục 24/7 về máy chủ.</li>
+                <li>Chỉ gửi gói tin dữ liệu sự kiện khi có ngập nước hoặc tai nạn.</li>
+                <li>Phù hợp với hạ tầng mạng Internet cơ bản.</li>
               </ul>
             </div>
 
             <div class="card white">
-              <div class="slide-badge" style="margin-bottom: 12px;">Quyền Riêng Tư</div>
-              <h3 class="card-title">Privacy-First (Bảo Mật Biên)</h3>
+              <div class="slide-badge" style="margin-bottom: 12px;">Bảo Mật</div>
+              <h3 class="card-title">Bảo Vệ Quyền Riêng Tư</h3>
               <ul style="font-size: 13px; color: var(--text-muted); line-height: 1.6; padding-left: 18px; margin-top: 8px;">
-                <li>Video được suy luận trực tiếp trong bộ nhớ tạm thời và xóa ngay lập tức.</li>
-                <li>Không lưu trữ luồng video công dân, không nhận diện khuôn mặt người dân.</li>
-                <li>Tuân thủ tuyệt đối các quy chuẩn an toàn dữ liệu và quyền riêng tư đô thị.</li>
+                <li>Dữ liệu video được phân tích tại biên và giải phóng bộ nhớ sau khi suy luận.</li>
+                <li>Hệ thống không nhận diện khuôn mặt hay thông tin định danh cá nhân.</li>
+                <li>Chỉ lưu lại hình ảnh hiện trường tại thời điểm phát sinh sự cố phục vụ đối chiếu.</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SLIDE 8: KẾT LUẬN & SỨ MỆNH -->
+      <!-- SLIDE 8: TỔNG KẾT -->
       <section class="slide" id="slide-8">
         <div class="hero-slide">
           <div class="hero-tag" style="background:#ECFDF5; color: var(--success); border-color:#A7F3D0;">
-            <span>🤝</span> KẾT LUẬN &amp; TẦM NHÌN
+            TỔNG KẾT ĐỀ XUẤT
           </div>
-          <h2 class="hero-title" style="font-size: 44px;">
-            "Một Góc Phố, Một Điểm Chạm An Toàn"
+          <h2 class="hero-title" style="font-size: 40px;">
+            Tóm Tắt Đề Xuất UrbanShield Lite
           </h2>
           <p class="hero-slogan">
-            UrbanShield Lite chứng minh rằng: <strong>AI đỉnh cao không nhất thiết phải xa xỉ nghìn tỷ</strong>.<br>
-            Bằng sự sáng tạo và tối ưu hóa điện toán biên, công nghệ hoàn toàn có thể phụng sự và bảo vệ từng người dân bình dị nhất.
+            Đề xuất kỹ thuật tập trung vào tính khả thi: ứng dụng mô hình AI biên nhỏ gọn trên phần cứng phổ thông để hỗ trợ theo dõi ngập nước và phát hiện sự cố giao thông đô thị.
           </p>
 
           <div style="display: flex; gap: 16px; justify-content: center; margin-top: 10px;">
             <div style="padding: 16px 28px; background: var(--bg-subtle); border-radius: 12px; border: 1px solid var(--border-light); text-align: center;">
-              <div style="font-size: 13px; color: var(--text-soft); font-weight: 700;">ĐƠN VỊ PHÁT TRIỂN</div>
-              <div style="font-size: 18px; font-weight: 800; color: var(--primary); margin-top: 4px;">SingleNode</div>
+              <div style="font-size: 12px; color: var(--text-soft); font-weight: 700;">ĐƠN VỊ PHÁT TRIỂN</div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-top: 4px;">SingleNode</div>
             </div>
             <div style="padding: 16px 28px; background: var(--bg-subtle); border-radius: 12px; border: 1px solid var(--border-light); text-align: center;">
-              <div style="font-size: 13px; color: var(--text-soft); font-weight: 700;">GIẢI PHÁP</div>
-              <div style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">Edge AI Phân Tán</div>
+              <div style="font-size: 12px; color: var(--text-soft); font-weight: 700;">MÔ HÌNH SỬ DỤNG</div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--text-main); margin-top: 4px;">YOLOv8-nano (CPU)</div>
             </div>
             <div style="padding: 16px 28px; background: var(--bg-subtle); border-radius: 12px; border: 1px solid var(--border-light); text-align: center;">
-              <div style="font-size: 13px; color: var(--text-soft); font-weight: 700;">SỨ MỆNH</div>
-              <div style="font-size: 18px; font-weight: 800; color: var(--success); margin-top: 4px;">An Toàn Đô Thị 24/7</div>
+              <div style="font-size: 12px; color: var(--text-soft); font-weight: 700;">MỤC TIÊU ỨNG DỤNG</div>
+              <div style="font-size: 16px; font-weight: 800; color: var(--success); margin-top: 4px;">Hỗ Trợ An Toàn Đô Thị</div>
             </div>
           </div>
-        </div>
       </section>
 
       <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
@@ -823,7 +798,7 @@
         <div class="nav-buttons">
           <button class="btn-nav" id="btn-prev" onclick="prevSlide()">← Trước</button>
           <button class="btn-nav" id="btn-next" onclick="nextSlide()">Tiếp →</button>
-          <button class="btn-nav btn-print" onclick="window.print()">🖨️ In ra PDF Nộp Bài</button>
+          <button class="btn-nav btn-print" onclick="window.print()">🖨️ In ra PDF</button>
         </div>
       </footer>
 
@@ -856,7 +831,6 @@
       showSlide(currentSlide - 1);
     }
 
-    // Điều khiển bằng phím mũi tên và Space
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
@@ -877,7 +851,6 @@
       }
     });
 
-    // Touch swipe trên thiết bị di động
     let touchStartX = 0;
     document.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;

@@ -38,7 +38,7 @@ NODES = {
         "scenario": "normal",
         "status": "online",
         "last_ping": time.time(),
-        "device": "Tái chế PC cũ + Camera 200k"
+        "device": "PC văn phòng + Camera USB"
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
@@ -49,7 +49,7 @@ NODES = {
         "scenario": "flood",
         "status": "alert",
         "last_ping": time.time(),
-        "device": "Smartphone cũ (Redmi 9)"
+        "device": "Thiết bị nhúng thông dụng"
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
@@ -60,7 +60,7 @@ NODES = {
         "scenario": "accident",
         "status": "warning",
         "last_ping": time.time(),
-        "device": "Webcam giá rẻ 180k"
+        "device": "Webcam USB tiêu chuẩn"
     }
 }
 

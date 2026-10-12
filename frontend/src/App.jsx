@@ -27,7 +27,7 @@ const INITIAL_NODES = [
     type: "Webcam Live / Edge Box",
     scenario: "normal",
     status: "online",
-    device: "Tái chế PC cũ + Camera 200k"
+    device: "PC văn phòng + Camera USB"
   },
   {
     id: "node-sgu-02",
@@ -37,7 +37,7 @@ const INITIAL_NODES = [
     type: "Camera Dân Sinh #02",
     scenario: "flood",
     status: "alert",
-    device: "Smartphone cũ (Redmi 9)"
+    device: "Thiết bị nhúng thông dụng"
   },
   {
     id: "node-sgu-03",
@@ -47,7 +47,7 @@ const INITIAL_NODES = [
     type: "Camera Tổ Dân Phố #03",
     scenario: "accident",
     status: "warning",
-    device: "Webcam giá rẻ 180k"
+    device: "Webcam USB tiêu chuẩn"
   }
 ];
 
@@ -203,9 +203,9 @@ export default function App() {
               <span className="team-badge">ĐỘI SINGLENODE</span>
             </div>
             <div className="brand-subtitle">
-              <span>Mạng Lưới Giám Sát An Toàn Đô Thị Bằng Edge AI Siêu Tiết Kiệm</span>
+              <span>Hệ Thống Hỗ Trợ Theo Dõi Ngập Nước & An Toàn Giao Thông Bằng Edge AI</span>
               <span>•</span>
-              <span style={{ color: 'var(--cyan-400)' }}>HACKATHON SGU 2026</span>
+              <span style={{ color: 'var(--cyan-400)' }}>Mô Hình Thử Nghiệm PoC</span>
             </div>
           </div>
         </div>
@@ -330,7 +330,7 @@ export default function App() {
           {/* Scenario Switching Simulator Controls */}
           <div className="scenario-controls-bar">
             <div className="scenario-label">
-              MÔ PHỎNG TÌNH HUỐNG THỬ NGHIỆM TRỰC TIẾP TRƯỚC BAN GIÁM KHẢO:
+              MÔ PHỎNG CÁC TÌNH HUỐNG GIÁM SÁT THỰC TẾ:
             </div>
             <div className="scenario-buttons-grid">
               <button
@@ -419,27 +419,27 @@ export default function App() {
       {/* Bottom Cost-Saving Comparison Banner */}
       <footer className="glass-panel comparison-banner">
         <div className="comp-metric-box">
-          <span className="comp-label">Chi phí thiết bị mỗi điểm</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>~200.000 VNĐ</span>
-          <span className="comp-sub">Tiết kiệm 98% so với camera AI 15tr</span>
+          <span className="comp-label">Mô hình triển khai</span>
+          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>Phần cứng phổ thông</span>
+          <span className="comp-sub">Sử dụng webcam hoặc camera sẵn có</span>
         </div>
 
         <div className="comp-metric-box">
-          <span className="comp-label">Chi phí máy chủ GPU trung tâm</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>0 VNĐ</span>
-          <span className="comp-sub">Xử lý Edge AI trực tiếp tại biên</span>
+          <span className="comp-label">Xử lý hình ảnh</span>
+          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>Tính toán tại biên</span>
+          <span className="comp-sub">Chạy trên CPU, không yêu cầu GPU rời</span>
         </div>
 
         <div className="comp-metric-box">
-          <span className="comp-label">Băng thông tiết kiệm</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>99.2%</span>
-          <span className="comp-sub">Chỉ gửi metadata khi có sự cố</span>
+          <span className="comp-label">Truyền dữ liệu</span>
+          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Theo sự kiện</span>
+          <span className="comp-sub">Chỉ gửi dữ liệu khi có ngập hoặc sự cố</span>
         </div>
 
         <div className="comp-metric-box">
-          <span className="comp-label">Hạ tầng cảnh báo cứu hộ</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Telegram API</span>
-          <span className="comp-sub">Miễn phí 100%, độ trễ &lt; 1 giây</span>
+          <span className="comp-label">Kênh thông báo</span>
+          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Telegram Bot</span>
+          <span className="comp-sub">Gửi hình ảnh sự cố và tọa độ vị trí</span>
         </div>
       </footer>
     </div>

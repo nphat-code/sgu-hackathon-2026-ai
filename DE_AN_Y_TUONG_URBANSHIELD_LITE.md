@@ -1,11 +1,11 @@
 # 🛡️ ĐỀ ÁN Ý TƯỞNG DỰ THI HACKATHON SGU 2026
-# URBANSHIELD LITE – HỆ THỐNG GIÁM SÁT NGẬP LỤT & AN TOÀN ĐÔ THỊ BẰNG EDGE AI TIẾT KIỆM CHI PHÍ
+# URBANSHIELD LITE – HỆ THỐNG THEO DÕI NGẬP NƯỚC & TAI NẠN BẰNG AI BIÊN CHI PHÍ THẤP
 
 > **Đơn vị tổ chức:** BCH Đoàn Khoa Công nghệ Thông tin – Trường Đại học Sài Gòn  
 > **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày*  
 > **Tên đội thi:** **SingleNode**  
 > **Tên dự án:** **UrbanShield Lite**  
-> **Khẩu hiệu (Slogan):** *“Mạng lưới thị giác AI phân tán – Giữ an toàn từng góc phố Sài Gòn”*  
+> **Mục tiêu đề án:** *Ứng dụng mô hình AI biên chi phí thấp vào theo dõi ngập nước và hỗ trợ cảnh báo sự cố giao thông.*  
 > **Tên file nộp bài:** `SingleNode_UrbanShieldLite.pdf`  
 > **Cú pháp chuyển khoản lệ phí:** `SINGLENODE - NOPLEPHITHIHACKATHON2026`
 
@@ -13,83 +13,83 @@
 
 ## 📌 I. BỐI CẢNH & TÍNH CẤP THIẾT CỦA BÀI TOÁN
 
-Thành phố Hồ Chí Minh là đô thị đặc biệt với mật độ giao thông xe máy dày đặc nhất cả nước và đặc thù địa hình trũng thấp, thường xuyên đối mặt với hai vấn nạn kinh niên:
-1. **Ngập lụt đô thị mùa triều cường và mưa lớn:** Nước ngập sâu bất ngờ khiến hàng nghìn phương tiện chết máy, gây tê liệt giao thông và nguy cơ tai nạn sụp hố ga, rò rỉ điện.
-2. **Tai nạn giao thông và sự cố đêm khuya:** Nhiều vụ va chạm, ngã xe máy trên các tuyến đường vắng hoặc ngõ hẻm vào ban đêm không được phát hiện kịp thời, làm lỡ "thời gian vàng" cứu hộ y tế.
+Tại các đô thị lớn như TP. Hồ Chí Minh, mật độ phương tiện xe máy cao kết hợp đặc thù địa hình trũng thấp dẫn đến hai vấn đề thường gặp:
+1. **Tình trạng ngập nước cục bộ mùa mưa và triều cường:** Nước ngập sâu khiến nhiều phương tiện bị chết máy, gây ách tắc giao thông và tiềm ẩn rủi ro cho người đi đường.
+2. **Sự cố ngã xe ban đêm tại khu vực vắng người:** Các vụ va chạm hoặc trượt ngã xe máy trong ngõ xóm vào ban đêm có thể không được phát hiện kịp thời để sơ cứu hoặc hỗ trợ y tế.
 
-### 🛑 Nút thắt của các giải pháp hiện nay:
-- Các hệ thống "Thành phố thông minh" (Smart City) hiện tại cực kỳ đắt đỏ, đòi hỏi camera AI chuyên dụng hàng chục triệu đồng mỗi chiếc và hạ tầng máy chủ GPU công suất lớn để phân tích luồng video tập trung.
-- Chi phí đường truyền băng thông truyền phát (streaming) hàng nghìn luồng camera về trung tâm là rào cản tài chính khổng lồ khiến việc phủ sóng an toàn đến các ngõ xóm dân cư là bất khả thi.
-
----
-
-## 💡 II. GIẢI PHÁP ĐỘT PHÁ: "TIẾT KIỆM CHI PHÍ BẰNG EDGE AI"
-
-**UrbanShield Lite** giải quyết bài toán trên bằng mô hình **Trí tuệ nhân tạo biên (Edge AI)** siêu nhẹ, mang lại hiệu quả vượt trội với chi phí đầu tư gần như bằng 0:
-
-### 1. Tận dụng phần cứng giá rẻ sẵn có (Tái chế thiết bị):
-- Hoạt động mượt mà trên **camera dân sinh 200.000 VNĐ, webcam phổ thông, hoặc điện thoại thông minh cũ** của người dân/tổ dân phố.
-- Không đòi hỏi máy chủ GPU đắt tiền: Sử dụng mô hình thị giác máy tính siêu nhẹ (**YOLOv8-nano / MobileNet**) được tối ưu hóa để chạy trực tiếp trên CPU phổ thông hoặc trình duyệt (WebGPU).
-
-### 2. Tiết kiệm 99% chi phí băng thông & lưu trữ:
-- Camera không cần truyền stream video liên tục về máy chủ.
-- Thiết bị biên chỉ xử lý cục bộ, chỉ khi phát hiện sự cố (ngập nước, ngã xe) mới gửi gói tín hiệu cảnh báo cực nhẹ (Alert Metadata: tọa độ, thời gian, 1 ảnh snapshot hiện trường).
-
-### 3. Tận dụng hạ tầng truyền thông 0 đồng:
-- Bắn cảnh báo khẩn cấp tức thời (realtime) qua **Telegram Bot API** và hiển thị trên **Bản đồ web cộng đồng mã nguồn mở (OpenStreetMap/Leaflet)** mà không phát sinh bất kỳ chi phí dịch vụ bên thứ ba nào.
+### 🛑 Hạn chế của các giải pháp hiện nay:
+- Các hệ thống camera AI chuyên dụng thường có giá thành cao, đòi hỏi máy chủ GPU tập trung để giải mã luồng video liên tục.
+- Chi phí đường truyền và duy trì băng thông lớn cho nhiều luồng camera khiến việc mở rộng đến các tuyến đường nhánh và khu dân cư gặp khó khăn về ngân sách.
 
 ---
 
-## ⚙️ III. BA TÍNH NĂNG CỐT LÕI (CORE FEATURES)
+## 💡 II. ĐỀ XUẤT GIẢI PHÁP: ỨNG DỤNG EDGE AI TIẾT KIỆM CHI PHÍ
+
+**UrbanShield Lite** tiếp cận bài toán bằng việc ứng dụng mô hình **Trí tuệ nhân tạo biên (Edge AI)** nhỏ gọn, giúp giảm chi phí đầu tư phần cứng và vận hành:
+
+### 1. Tận dụng phần cứng phổ thông sẵn có:
+- Có khả năng hoạt động trên các thiết bị ghi hình phổ thông, webcam hoặc máy tính sẵn có tại khu dân cư.
+- Sử dụng mô hình thị giác máy tính rút gọn (**YOLOv8-nano**) được tối ưu hóa để chạy trực tiếp trên vi xử lý CPU thông thường mà không bắt buộc trang bị card đồ họa rời.
+
+### 2. Giảm thiểu băng thông đường truyền & lưu trữ:
+- Thiết bị biên phân tích hình ảnh trực tiếp tại chỗ, không cần truyền luồng video liên tục 24/7 về máy chủ.
+- Khi phát hiện sự cố (ngập nước hoặc người ngã xe), hệ thống mới gửi gói tin thông báo dữ liệu nhỏ (Alert Metadata gồm tọa độ, thời gian và 1 ảnh chụp hiện trường).
+
+### 3. Phương thức truyền nhận thông báo tự động:
+- Gửi thông báo sự cố qua **Telegram Bot API** và hiển thị vị trí trên **Bản đồ số nguồn mở (OpenStreetMap/Leaflet)** nhằm giảm chi phí sử dụng dịch vụ trung gian.
+
+---
+
+## ⚙️ III. CÁC TÍNH NĂNG ĐỀ XUẤT
 
 ```mermaid
 graph TD
-    A[Camera dân sinh / Smartphone cũ / Webcam] -->|Luồng hình ảnh cục bộ| B[Edge AI Engine: YOLOv8n]
-    B -->|Phân tích mực nước| C1[Cảnh báo Ngập lụt bánh xe]
-    B -->|Phân tích hình học & thời gian| C2[Cảnh báo Va chạm / Ngã xe khẩn cấp]
-    C1 --> D[Hạ tầng Gateway siêu nhẹ]
+    A[Thiết bị ghi hình phổ thông / Webcam] -->|Khung hình cục bộ| B[Mô hình Edge AI: YOLOv8n]
+    B -->|Phân tích che khuất bánh xe| C1[Ước lượng độ sâu ngập nước]
+    B -->|Phân tích hình thái & thời gian| C2[Phát hiện người ngã bất động]
+    C1 --> D[Xử lý sự kiện tại máy trạm]
     C2 --> D
-    D -->|Push Notification| E[Bot Telegram Khẩn Cấp]
-    D -->|WebSocket| F[Bản đồ Trực quan Trung tâm Điều hành]
+    D -->|Thông báo tự động| E[Telegram Bot]
+    D -->|Cập nhật trạng thái| F[Bản đồ số Quản trị]
 ```
 
-### 1. Phát hiện & Đo lường ngập lụt cục bộ (Flood Detection):
-- AI nhận diện phương tiện di chuyển qua vùng nước ngập.
-- Sử dụng thuật toán đo tỉ lệ che khuất của nước đối với bánh xe máy/ô tô để phân loại 3 cấp độ:
-  - 🟢 **Mức 1 (An toàn):** Dưới 10cm (nước xăm xắp mặt đường).
-  - 🟡 **Mức 2 (Nguy cơ):** 10 - 20cm (nước ngập nửa bánh xe máy).
-  - 🔴 **Mức 3 (Báo động ngập sâu):** > 20cm (nguy cơ chết máy, khuyến cáo đổi lộ trình).
+### 1. Ước lượng mức độ ngập nước (Water Depth Estimation):
+- Mô hình nhận diện phương tiện xe máy di chuyển qua khu vực có nước.
+- Dựa trên đường kính tiêu chuẩn của bánh xe máy (~50cm), thuật toán tính tỷ lệ che khuất của mặt nước để phân loại các mức độ:
+  - 🟢 **Mức 1 (Bình thường):** Dưới 10cm (mặt đường chỉ xăm xắp nước).
+  - 🟡 **Mức 2 (Mức chú ý):** 10 - 20cm (nước chạm mép ống xả xe máy).
+  - 🔴 **Mức 3 (Mức cảnh báo sâu):** > 20cm (nguy cơ chết máy phương tiện).
 
-### 2. Nhận diện tai nạn & Ngã xe ban đêm (Accident & Fall Alert):
-- AI phát hiện sự tương quan vị trí giữa đối tượng `người` và `xe máy`.
-- Khi phát hiện xe và người nằm nghiêng/ngang trên mặt đường quá 5 giây mà không đứng dậy:
-  - Hệ thống tự động kích hoạt trạng thái **SOS Khẩn cấp**.
-  - Gửi ảnh chụp hiện trường + tọa độ vị trí về kênh cứu hộ/người thân qua Telegram.
+### 2. Hỗ trợ phát hiện người ngã xe ban đêm (Fall Detection):
+- Mô hình phân tích tương quan giữa đối tượng `người` và `xe máy`.
+- Khi phát hiện tư thế người nằm ngang trên mặt đường (Width / Height > 1.3) và giữ nguyên trạng thái liên tục quá 5 giây:
+  - Kích hoạt thông báo sự cố.
+  - Gửi ảnh chụp hiện trường kèm tọa độ qua Telegram đến người phụ trách.
 
-### 3. Bản đồ An toàn Đô thị Thời gian thực (Live Safety Map):
-- Giao diện trung tâm điều hành trực quan trên Web (thiết kế phong cách Dark-mode chỉ huy).
-- Tự động hiển thị các điểm đen ngập lụt và sự cố tai nạn theo thời gian thực trên bản đồ TP.HCM.
+### 3. Bản đồ theo dõi trực quan (Safety Map Concept):
+- Giao diện web hiển thị vị trí các điểm giám sát trên nền bản đồ mở.
+- Cập nhật trạng thái ngập nước và cảnh báo sự cố theo thời gian thực.
 
 ---
 
-## 🛠️ IV. KIẾN TRÚC KỸ THUẬT CHO VÒNG THI 24 GIỜ (TECH STACK)
+## 🛠️ IV. KIẾN TRÚC KỸ THUẬT (TECH STACK)
 
-| Thành phần | Công nghệ sử dụng | Lý do lựa chọn (Tối ưu cho 24h & Solo Dev) |
+| Thành phần | Công nghệ sử dụng | Lý do lựa chọn |
 | :--- | :--- | :--- |
-| **Edge AI Engine** | Python, `ultralytics` (YOLOv8n), OpenCV | Mô hình nhẹ nhất thế giới (~6MB), chạy 30 FPS mượt mà trên CPU laptop không cần GPU rời. |
-| **Backend API** | FastAPI, Uvicorn, WebSockets | Xử lý bất đồng bộ cực nhanh, đẩy dữ liệu sự cố lên Frontend trong vài mili-giây. |
-| **Frontend Dashboard** | React / Next.js / Vite, Tailwind CSS, Lucide Icons | Xây dựng giao diện trung tâm điều hành hiện đại, bắt mắt, phản hồi nhanh. |
-| **Bản đồ số** | Leaflet.js / OpenStreetMap | Miễn phí 100%, không cần đăng ký thẻ tín dụng hay API Key đắt tiền của Google Maps. |
-| **Hệ thống Cảnh báo** | Telegram Bot API | Triển khai trong 5 phút, miễn phí, hỗ trợ gửi kèm ảnh và định vị GPS tức thời. |
+| **Edge AI Engine** | Python, `ultralytics` (YOLOv8n), OpenCV | Mô hình nhỏ gọn (~6.5MB), chạy được trên CPU máy tính phổ thông không cần GPU rời. |
+| **Backend API** | FastAPI, Uvicorn, WebSockets | Xử lý bất đồng bộ gọn nhẹ, phản hồi nhanh. |
+| **Frontend Dashboard** | React / Vite, Clean CSS | Giao diện quản trị rõ ràng, tương phản tốt, dễ theo dõi. |
+| **Bản đồ số** | Leaflet.js / OpenStreetMap | Nguồn mở, linh hoạt, không phát sinh chi phí bản quyền API. |
+| **Kênh thông báo** | Telegram Bot API | Dễ tích hợp, hỗ trợ gửi kèm ảnh và tọa độ vị trí. |
 
 ---
 
 ## 🎬 V. KỊCH BẢN THUYẾT TRÌNH Ý TƯỞNG 3 PHÚT (PITCHING OUTLINE)
 
-1. **Phút 0:00 - 0:45 | Đặt vấn đề thực tiễn & Nút thắt chi phí:**  
-   Nêu bật thực trạng ngập lụt trũng thấp gây chết máy hàng loạt và các vụ tai nạn ngõ hẻm vắng người bị lỡ "thời gian vàng" cấp cứu. Khẳng định nghịch lý: *Không phải thiếu công nghệ, mà vì camera AI truyền thống quá đắt (30 triệu/mắt + cụm server GPU đồ sộ)*.
-2. **Phút 0:46 - 2:00 | Ý tưởng giải pháp & Cơ chế thị giác AI đột phá:**  
-   - **Đo ngập vật lý không cảm biến:** Phân tích tỷ lệ che khuất bánh xe máy lưu thông (chuẩn 50cm) $\rightarrow$ Tính toán chính xác độ sâu cm nước $\rightarrow$ Ghim cảnh báo lên bản đồ số để người dân chuyển hướng.
-   - **Phát hiện tai nạn ngã xe ban đêm:** Nhận diện tỷ lệ dáng người nằm ngang ($W/H > 1.3$) kết hợp đếm bất động ($> 5s$) để triệt tiêu báo động giả $\rightarrow$ Tự động gửi gói tin SOS kèm ảnh hiện trường qua bot Telegram về lực lượng cứu trợ.
-3. **Phút 2:01 - 3:00 | Bài toán kinh tế & Khả năng nhân rộng phân tán:**  
-   Trình bày so sánh TCO: Tiết kiệm 95% chi phí đầu tư nhờ tái chế phần cứng và tiết kiệm 99% băng thông nhờ điện toán biên (Edge Computing). Kết luận thông điệp: *"Một góc phố, một điểm chạm an toàn"*.
+1. **Phút 0:00 - 0:45 | Đặt vấn đề thực tế & Rào cản chi phí:**  
+   Nêu thực trạng ngập nước cục bộ gây chết máy xe và các vụ ngã xe ban đêm khó được phát hiện kịp thời tại khu vực vắng người. Nêu rõ rào cản chi phí khi muốn mở rộng camera AI truyền thống.
+2. **Phút 0:46 - 2:00 | Ý tưởng giải pháp & Phương pháp kỹ thuật:**  
+   - **Ước lượng độ sâu qua bánh xe:** Dựa vào đường kính tiêu chuẩn bánh xe máy để tính tỷ lệ che khuất $\rightarrow$ Cảnh báo mức nước cho người đi đường.
+   - **Phát hiện người ngã xe:** Phân tích tỷ lệ khung hình ngang kết hợp kiểm tra bất động 5 giây nhằm giảm cảnh báo nhầm $\rightarrow$ Gửi thông tin qua Telegram.
+3. **Phút 2:01 - 3:00 | Tính khả thi & Bảo vệ quyền riêng tư:**  
+   Trình bày ưu điểm của xử lý cục bộ: Tận dụng phần cứng sẵn có, giảm tải băng thông và chỉ lưu trữ hình ảnh khi có sự kiện để bảo vệ quyền riêng tư người dân.

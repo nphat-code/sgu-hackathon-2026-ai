@@ -1,56 +1,55 @@
-# 🛡️ UrbanShield Lite – Hệ Thống Giám Sát Ngập Lụt & An Toàn Đô Thị Bằng Edge AI Tiết Kiệm Chi Phí
+# UrbanShield Lite – Hệ Thống Hỗ Trợ Theo Dõi Ngập Nước & Sự Cố Giao Thông Bằng Edge AI
 
-> **Dự án tham dự cuộc thi HACKATHON SGU 2026 – 2027**  
-> **Chủ đề dự thi:** *Ứng dụng AI sáng tạo, tiết kiệm chi phí vào giải pháp an toàn đô thị hoặc cuộc sống thường ngày.*  
-> **Đội ngũ phát triển:** **SingleNode** ([nphat-code](https://github.com/nphat-code))  
-> **Khẩu hiệu:** *“Mạng lưới thị giác AI phân tán – Giữ an toàn từng góc phố Sài Gòn”*  
+> **Dự án phát triển bởi:** **SingleNode** ([nphat-code](https://github.com/nphat-code))  
+> **Mục tiêu:** Ứng dụng mô hình thị giác AI biên và thiết bị sẵn có vào theo dõi ngập nước và phát hiện sự cố giao thông đô thị.  
 > **Repository:** [sgu-hackathon-2026-ai](https://github.com/nphat-code/sgu-hackathon-2026-ai)
 
 ---
 
 ## 📑 Tài liệu dự án
 
-* 📄 **Đề án ý tưởng chính thức (Nộp sơ loại trước 15/10):** [DE_AN_Y_TUONG_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/DE_AN_Y_TUONG_URBANSHIELD_LITE.md)
-* 🎙️ **Kịch bản thuyết trình 3 phút & Bộ 5 câu phản biện Q&A:** [KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
-* 📋 **Thể lệ & Quy chế cuộc thi:** [THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/THE_LE_CUOC_THI.md) | [Google Doc Gốc](https://docs.google.com/document/d/1PgbiUjs3lAx1mC2_aQAIZt3utYWmxBShro1ehpxOYe4/edit?tab=t.0)
+* 📄 **Đề án ý tưởng giải pháp:** [DE_AN_Y_TUONG_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/DE_AN_Y_TUONG_URBANSHIELD_LITE.md)
+* 🎙️ **Kịch bản thuyết trình ý tưởng & Bộ câu hỏi trao đổi:** [KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
+* 🖥️ **Slide trình chiếu ý tưởng (HTML):** [slides/index.html](file:///c:/Competition/HackathonSGU2026/slides/index.html)
+* 📊 **Slide PowerPoint (16:9):** [SingleNode_UrbanShieldLite_Slides.pptx](file:///c:/Competition/HackathonSGU2026/SingleNode_UrbanShieldLite_Slides.pptx)
 
 ---
 
-## 💡 Đột phá của giải pháp: "Tiết kiệm chi phí bằng Edge AI"
+## 💡 Định hướng kỹ thuật của giải pháp
 
-Khác với các hệ thống Smart City đắt đỏ (camera 15-30 triệu, máy chủ GPU đồ sộ, băng thông streaming nặng nề), **UrbanShield Lite** áp dụng mô hình **Trí tuệ nhân tạo biên (Edge AI)**:
-1. 📷 **Tái chế phần cứng bình dân:** Hoạt động trên webcam 200.000 VNĐ, điện thoại thông minh cũ hoặc camera gia đình.
-2. ⚡ **Mô hình siêu nhẹ (YOLOv8-nano ~6MB):** Chạy mượt mà 30 FPS trực tiếp trên CPU laptop/máy tính phổ thông mà không cần GPU rời.
-3. 📉 **Tiết kiệm 99% băng thông:** Thiết bị chỉ xử lý cục bộ; chỉ phát tín hiệu cảnh báo khẩn cấp (Alert Metadata vài KB) khi phát hiện ngập nước hoặc tai nạn.
-4. 🚨 **Cảnh báo tức thời qua Telegram Bot API (0đ chi phí):** Gửi tọa độ GPS + ảnh chụp hiện trường về Tổ dân phố và Đội cứu hộ khẩn cấp trong vòng 1 giây.
-5. 🗺️ **Bản đồ an toàn đô thị nguồn mở (Leaflet/OpenStreetMap):** Định vị trực quan các điểm đen ngập lụt và sự cố tai nạn trên các tuyến đường đô thị.
+Hệ thống tiếp cận bài toán theo hướng tận dụng thiết bị sẵn có kết hợp mô hình AI biên nhỏ gọn:
+1. **Tận dụng thiết bị sẵn có:** Có thể vận hành trên webcam hoặc camera thông dụng kết hợp máy tính văn phòng.
+2. **Mô hình nhỏ gọn (YOLOv8-nano ~6.5MB):** Có khả năng thực thi trực tiếp trên vi xử lý CPU thông thường mà không bắt buộc trang bị GPU rời.
+3. **Giảm tải băng thông:** Xử lý khung hình tại chỗ; chỉ gửi dữ liệu sự kiện (metadata kèm hình ảnh) khi phát hiện ngập sâu hoặc sự cố.
+4. **Thông báo qua Telegram Bot:** Tự động gửi thông tin sự cố, ảnh ghi nhận hiện trường và tọa độ điểm quan sát đến người phụ trách.
+5. **Bản đồ số nguồn mở:** Hiển thị trực quan trạng thái các điểm quan sát trên nền Leaflet / OpenStreetMap.
 
 ---
 
 ## 🛠️ Kiến trúc công nghệ (Tech Stack)
 
 ```
-[ Camera Dân Sinh / Webcam 200k / Phone Cũ ]
-                    │
-                    ▼ (Khung hình cục bộ)
+[ Thiết bị ghi hình / Webcam USB ]
+                │
+                ▼ (Khung hình cục bộ)
 ┌────────────────────────────────────────────────────────┐
 │               Edge AI Detector (Python)                │
-│  • YOLOv8-nano (Object Detection & Morphology)         │
-│  • Optical Wheel-Occlusion Ratio (Đo mực nước ngập)    │
-│  • Fall Aspect Ratio & Inactivity Timer (SOS ngã xe)   │
+│  • YOLOv8-nano (Object Detection)                      │
+│  • Optical Wheel-Occlusion Ratio (Ước lượng mực nước)  │
+│  • Aspect Ratio & Inactivity Timer (Nhận diện xe ngã)  │
 └──────────────────────────┬─────────────────────────────┘
                            │
              ┌─────────────┴─────────────┐
              ▼                           ▼
 ┌─────────────────────────┐ ┌─────────────────────────┐
-│ FastAPI Gateway         │ │ Telegram Bot Alert API  │
-│ WebSockets / Live Stream│ │ Push thông báo 0đ       │
+│ FastAPI Gateway         │ │ Telegram Bot API        │
+│ Quản lý luồng dữ liệu   │ │ Gửi thông báo sự kiện   │
 └────────────┬────────────┘ └─────────────────────────┘
              │
              ▼
 ┌────────────────────────────────────────────────────────┐
-│ React Command Center (Vite + Leaflet OpenStreetMap)    │
-│ Trực quan hóa điểm ngập, sự cố & mô phỏng kịch bản     │
+│ Giao diện Quản trị (React + Leaflet OpenStreetMap)     │
+│ Hiển thị điểm quan sát, trạng thái và nhật ký sự cố   │
 └────────────────────────────────────────────────────────┘
 ```
 
