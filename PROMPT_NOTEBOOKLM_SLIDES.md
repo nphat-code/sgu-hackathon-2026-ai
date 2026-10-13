@@ -54,10 +54,14 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
   + Trực quan: Bánh xe máy với 3 vạch mức nước nét đứt Xanh - Vàng - Đỏ.
 
 - Slide 5: Phương pháp 2 - Nhận diện sự cố ngã xe đa tầng
-  + Nhận diện hình thái: Khung bao cơ thể người nằm ngang (W/H > 1.15) trong cự ly gần phương tiện.
-  + Bộ lọc chống báo giả: Bộ đếm thời gian bất động liên tục > 5 giây (loại bỏ trường hợp ngồi nghỉ, nhặt đồ).
-  + Xử lý ban đêm: Tích hợp thuật toán cân bằng sáng thích ứng CLAHE tăng tương phản khi thiếu sáng.
-  + Trực quan: Quy trình lọc 4 bước: [Khung bao ngang W/H > 1.15] ➔ [Cự ly gần xe] ➔ [Bộ đếm bất động 5s] ➔ [Xác nhận sự cố].
+  + Phụ đề: Quy trình 4 bộ lọc logic liên hoàn (Pipeline: 4 Logical Filters) - hiển thị rõ ràng, không viết sai chính tả.
+  + Sơ đồ 4 bước nối bằng điều kiện logic AND:
+    [Thuật toán CLAHE ban đêm] ➔ [Khung bao ngang W/H > 1.15 gần xe] ➔ [Bộ đếm bất động liên tục > 5s] ➔ [Kích hoạt cảnh báo gửi tọa độ & ảnh].
+  + Chi tiết 4 thẻ:
+    1. Thuật toán CLAHE: Cân bằng sáng cục bộ, tăng tương phản ban đêm.
+    2. Tỷ lệ khung bao (Bounding Box): Width / Height > 1.15 khi đối tượng ở gần xe máy.
+    3. Bộ đếm thời gian (Timer): Trạng thái bất động giữ liên tục > 5s (loại trừ người ngồi nghỉ hoặc nhặt đồ).
+    4. Kích hoạt cảnh báo: Gửi tọa độ GPS & ảnh hiện trường.
 
 - Slide 6: Kiến trúc dữ liệu & Bảo vệ quyền riêng tư
   + Nguyên tắc Privacy-by-design: Video sinh hoạt nạp vào RAM tạm thời để suy luận và hủy vĩnh viễn ngay lập tức (Zero-Disk storage); không lưu ổ cứng; không nhận diện khuôn mặt người dân.
