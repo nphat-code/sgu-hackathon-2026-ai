@@ -1,7 +1,8 @@
 # 📌 Bộ Prompt Tạo Slide Trình Chiếu Chuẩn Trên NotebookLM / Gemini Notebook
 
 > **Mục tiêu:** Tạo bộ 8 slide trình chiếu trực quan (Presenter Slides) cho bài thuyết trình 3 phút về đề án **UrbanShield Lite** trước Ban Giám khảo.  
-> **Hình thức:** Tạo **1 LƯỢT DUY NHẤT** bằng tính năng **Customize Slide Deck** để xuất ra 1 file slide hoàn chỉnh dùng thuyết trình trực tiếp.
+> **Hình thức:** Tạo **1 LƯỢT DUY NHẤT** bằng tính năng **Customize Slide Deck** để xuất ra 1 file slide hoàn chỉnh dùng thuyết trình trực tiếp.  
+> **Phong cách hình ảnh:** Kết hợp **HÌNH ẢNH THỰC TẾ (Real-life Photos)** với sơ đồ kỹ thuật tối giản, chân thực, loại bỏ hình vẽ hoạt họa cách điệu.
 
 ---
 
@@ -11,7 +12,7 @@ Trước khi bấm tạo, thiết lập các tùy chọn trên popup như sau:
 
 | Mục thiết lập | Giá trị chọn | Lý do |
 | :--- | :--- | :--- |
-| **Format** | **`Presenter Slides`** *(Bắt buộc)* | Slide thoáng, trực quan, nhiều sơ đồ/icon, cô đọng chữ để vừa chiếu vừa nói (KHÔNG chọn `Detailed Deck` vì sẽ bị quá nhiều chữ). |
+| **Format** | **`Presenter Slides`** *(Bắt buộc)* | Slide thoáng, trực quan, nhiều sơ đồ/icon/ảnh thật, cô đọng chữ để vừa chiếu vừa nói (KHÔNG chọn `Detailed Deck`). |
 | **Choose language** | **`Tiếng Việt`** | Giữ ngôn ngữ tiếng Việt đồng bộ với đề án. |
 | **Length** | **`Default`** | Vừa vặn tạo 7 - 8 slide cho bài thuyết trình 3 phút. |
 | **Sources** | **`2 sources`** | Đã chọn sẵn `DE_AN_Y_TUONG_URBANSHIELD_LITE.md` và `KICH_BAN_PITCHING_URBANSHIELD_LITE.md`. |
@@ -24,7 +25,7 @@ Trước khi bấm tạo, thiết lập các tùy chọn trên popup như sau:
 
 ```text
 Tạo bộ slide trình chiếu (Presenter Slides) đúng 8 slide cho bài thuyết trình 3 phút về đề án UrbanShield Lite trước Ban Giám khảo kỹ thuật.
-Yêu cầu thiết kế: Nền trắng tinh tế (#FFFFFF), phong cách tối giản hiện đại, chữ to rõ ràng, sử dụng bố cục thẻ bento box, sơ đồ khối và icon trực quan. Tuyệt đối không dùng từ ngữ phóng đại, không sáo rỗng.
+YÊU CẦU THỊ GIÁC: Nền trắng tinh tế (#FFFFFF), chữ to rõ. ƯU TIÊN SỬ DỤNG HÌNH ẢNH CHỤP THỰC TẾ (Real-life documentary photos) chân thực ngoài đời sống đô thị thay vì hình vẽ hoạt hình minh họa. Kết hợp sơ đồ kỹ thuật tối giản. Tuyệt đối không dùng từ ngữ quảng cáo phóng đại.
 
 Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp SAU):
 
@@ -32,41 +33,35 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
   + Tiêu đề: UrbanShield Lite - Hệ thống hỗ trợ theo dõi ngập nước & an toàn giao thông dân sinh
   + Nhóm phát triển: SingleNode
   + Định vị: Giải pháp AI biên nhỏ gọn tối ưu chi phí cho các tuyến đường nhánh và khu dân cư thiếu vắng hạ tầng tập trung.
-  + Trực quan: Slide thoáng đãng, hình ảnh bối cảnh khu dân cư đô thị (CHƯA đưa sơ đồ kỹ thuật vào slide này).
+  + Trực quan: Ảnh chụp thực tế camera giám sát gắn trên cột điện góc phố ngõ xóm dân sinh bình dị (CHƯA đưa sơ đồ kỹ thuật vào).
 
 - Slide 2: Thực trạng dân sinh & Rào cản hạ tầng
-  + 2 Vấn đề dân sinh:
-    1. Ngập lụt cục bộ đường nhánh: Triều cường/mưa lớn gây chết máy xe hàng loạt, cản trở lưu thông.
-    2. Sự cố ngã xe ban đêm trong ngõ vắng: Khó phát hiện kịp thời, lỡ "thời gian vàng" cứu hộ.
-  + 2 Rào cản công nghệ truyền thống:
-    1. Phần cứng đắt đỏ: Camera AI chuyên dụng có chi phí đầu tư ban đầu quá cao (15 - 25 triệu/mắt), khó nhân rộng.
-    2. Nút thắt cổ chai băng thông: Truyền video liên tục 24/7 từ hàng ngàn điểm làm quá tải băng thông máy chủ.
-  + Trực quan: Sơ đồ nút thắt cổ chai (Bottleneck) với icon cảnh báo màu đỏ/cam thể hiện điểm nghẽn đường truyền.
+  + 2 Vấn đề dân sinh (Dùng ảnh chụp thực tế):
+    1. Ảnh thực tế xe máy ngập nước chết máy mùa mưa trên đường nhánh/ngõ hẻm đô thị.
+    2. Ảnh thực tế sự cố ngã xe ban đêm trong ngõ vắng thiếu ánh sáng, chậm sơ cứu.
+  + 2 Rào cản công nghệ truyền thống: Chi phí camera AI đắt đỏ ($$$) & Nút thắt cổ chai băng thông khi stream video 24/7 về máy chủ.
+  + Trực quan: Kết hợp 2 ảnh chụp hiện trường thực tế và sơ đồ nút thắt cổ chai băng thông màu đỏ/cam.
 
 - Slide 3: Ý tưởng cốt lõi - Kiến trúc Edge AI phân tán
   + Vai trò: Lời giải tháo gỡ nút thắt băng thông và chi phí ở Slide 2.
-  + Cốt lõi: Xử lý hình ảnh cục bộ ngay tại máy trạm CPU cơ sở; dùng camera có sẵn; chỉ gửi gói tin cảnh báo siêu nhẹ khi có sự cố. Tối ưu hóa mô hình YOLOv8-nano (~6.5MB, 25-30 FPS trên CPU phổ thông).
-  + Trực quan: ĐẶT SƠ ĐỒ LUỒNG XỬ LÝ TẠI ĐÂY: [Camera phổ thông] ➔ [CPU Máy trạm (Edge AI / YOLOv8n)] ➔ [Cảnh báo Telegram & Bản đồ].
+  + Cốt lõi: Xử lý hình ảnh cục bộ ngay tại máy trạm CPU cơ sở; dùng camera có sẵn; chỉ gửi gói tin cảnh báo siêu nhẹ khi có sự cố. Tối ưu hóa YOLOv8-nano (~6.5MB, 25-30 FPS trên CPU phổ thông).
+  + Trực quan: Sơ đồ luồng xử lý: [Camera thực tế] ➔ [CPU Máy trạm (Edge AI / YOLOv8n)] ➔ [Cảnh báo Telegram & Bản đồ].
 
 - Slide 4: Phương pháp 1 - Ước lượng ngập nước qua hình học
   + Cốt lõi: Lấy đường kính bánh xe máy ~50cm lưu thông thực tế làm vật tham chiếu tương đối; đo tỷ lệ che khuất kết hợp phân tích màu phản xạ bề mặt HSV.
   + Phân loại 3 mức độ cảnh báo: Dưới 10cm (xăm xắp an toàn), 10 - 20cm (cảnh báo chạm ống xả), trên 20cm (ngập sâu nguy hiểm). Không cần cảm biến dưới cống.
-  + Trực quan: Bánh xe máy với 3 vạch mức nước nét đứt Xanh - Vàng - Đỏ.
+  + Trực quan: Ảnh chụp thực tế bánh xe máy lội trong nước ngập, có các đường nét đứt đo đạc Computer Vision (vạch Xanh - Vàng - Đỏ) đè lên ảnh thật.
 
 - Slide 5: Phương pháp 2 - Nhận diện sự cố ngã xe đa tầng
   + Phụ đề: Quy trình lọc 4 bước (4-Step Filter Pipeline) - hiển thị trung thực, không viết sai chính tả.
   + Sơ đồ 4 bước nối bằng điều kiện logic AND:
     [Thuật toán CLAHE ban đêm] ➔ [Khung bao ngang W/H > 1.15 gần xe] ➔ [Bộ đếm bất động liên tục > 5s] ➔ [Kích hoạt cảnh báo gửi tọa độ & ảnh].
-  + Chi tiết 4 thẻ:
-    1. Thuật toán CLAHE: Cân bằng sáng cục bộ, tăng tương phản ban đêm.
-    2. Tỷ lệ khung bao (Bounding Box): Width / Height > 1.15 khi đối tượng ở gần xe máy.
-    3. Bộ đếm thời gian (Timer): Trạng thái bất động giữ liên tục > 5s (loại trừ người ngồi nghỉ hoặc nhặt đồ).
-    4. Kích hoạt cảnh báo: Gửi tọa độ GPS & ảnh hiện trường.
+  + Trực quan: Ảnh trích xuất thực tế từ khung hình camera ban đêm sau khi lọc sáng CLAHE, hiển thị Bounding Box đối tượng người và phương tiện.
 
 - Slide 6: Kiến trúc dữ liệu & Bảo vệ quyền riêng tư
   + Nguyên tắc Privacy-by-design: Video sinh hoạt nạp vào RAM tạm thời để suy luận và hủy vĩnh viễn ngay lập tức (Zero-Disk storage); không lưu ổ cứng; không nhận diện khuôn mặt người dân.
   + Cơ chế cảnh báo: Chỉ gửi đúng 1 ảnh chụp hiện trường kèm tọa độ GPS qua Bot Telegram và bản đồ điều hành khi xảy ra sự cố.
-  + Trực quan: Sơ đồ luồng video nạp vào RAM rồi giải phóng vào thùng rác, chỉ 1 gói tin sự cố nhẹ thoát ra ngoài.
+  + Trực quan: Ảnh chụp thực tế giao diện tin nhắn Bot Telegram nhận cảnh báo sự cố kèm ảnh hiện trường tĩnh.
 
 - Slide 7: Tính khả thi kinh tế (TCO) & Mô hình trạm cụm
   + Mô hình trạm cụm (Cluster): 1 máy tính cơ sở đặt tại khu dân cư gom xử lý 20 - 30 camera phụ cận.
@@ -84,5 +79,5 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
 ---
 
 ## 🎯 3. LƯU Ý KHI THUYẾT TRÌNH BẰNG SLIDE NÀY
-* Slide được thiết kế tối giản, đóng vai trò làm nền tảng trực quan cho người nghe.
+* Slide được thiết kế trực quan kết hợp ảnh tư liệu thực tế giúp bài thuyết trình tăng tính thuyết phục dân sinh.
 * Người thuyết trình không đọc chữ trên slide mà nói theo kịch bản lời thoại chi tiết trong file [LOI_THOAI_THUYET_TRINH_8_SLIDE.md](file:///c:/Competition/HackathonSGU2026/LOI_THOAI_THUYET_TRINH_8_SLIDE.md).
