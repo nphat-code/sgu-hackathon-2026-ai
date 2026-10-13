@@ -25,7 +25,10 @@ Trước khi bấm tạo, thiết lập các tùy chọn trên popup như sau:
 
 ```text
 Tạo bộ slide trình chiếu (Presenter Slides) đúng 8 slide cho bài thuyết trình 3 phút về đề án UrbanShield Lite trước Ban Giám khảo kỹ thuật.
-YÊU CẦU THỊ GIÁC: Nền trắng tinh tế (#FFFFFF), chữ to rõ. ƯU TIÊN SỬ DỤNG HÌNH ẢNH CHỤP THỰC TẾ (Real-life documentary photos) chân thực ngoài đời sống đô thị thay vì hình vẽ hoạt hình minh họa. Kết hợp sơ đồ kỹ thuật tối giản. Tuyệt đối không dùng từ ngữ quảng cáo phóng đại.
+YÊU CẦU THỊ GIÁC: Nền trắng tinh tế (#FFFFFF), chữ to rõ, phong cách chuyên nghiệp.
+- Slide 1 & Slide 2: Dùng hình ảnh chụp thực tế ngoài đời sống (Real-life documentary photos) để làm nổi bật bối cảnh ngõ xóm và nỗi đau thực trạng dân sinh.
+- Slide 4: BẮT BUỘC dùng Sơ đồ bản vẽ kỹ thuật hình học (Technical Schematic Blueprint) của bánh xe máy 50cm sắc nét với thước đo và 3 dải màu Xanh - Vàng - Đỏ chuẩn mực (TUYỆT ĐỐI KHÔNG vẽ vạch màu nguệch ngoạc đè lên ảnh chụp người và xe).
+- Slide 3, 5, 6, 7: Dùng sơ đồ khối kỹ thuật tối giản và bảng biểu số liệu rõ ràng. Tuyệt đối không dùng từ ngữ quảng cáo phóng đại.
 
 Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp SAU):
 
@@ -50,7 +53,7 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
 - Slide 4: Phương pháp 1 - Ước lượng ngập nước qua hình học
   + Cốt lõi: Lấy đường kính bánh xe máy ~50cm lưu thông thực tế làm vật tham chiếu tương đối; đo tỷ lệ che khuất kết hợp phân tích màu phản xạ bề mặt HSV.
   + Phân loại 3 mức độ cảnh báo: Dưới 10cm (xăm xắp an toàn), 10 - 20cm (cảnh báo chạm ống xả), trên 20cm (ngập sâu nguy hiểm). Không cần cảm biến dưới cống.
-  + Trực quan: Ảnh chụp thực tế bánh xe máy lội trong nước ngập, có các đường nét đứt đo đạc Computer Vision (vạch Xanh - Vàng - Đỏ) đè lên ảnh thật.
+  + Trực quan: Bản vẽ sơ đồ kỹ thuật hình học sắc nét (Technical CAD/Blueprint diagram) của bánh xe máy 50cm với thước đo đường kính và 3 phân vùng mặt nước nét đứt: Xanh lá (<10cm), Vàng (10-20cm), Đỏ (>20cm) sạch sẽ, chính xác về tỷ lệ.
 
 - Slide 5: Phương pháp 2 - Nhận diện sự cố ngã xe đa tầng
   + Phụ đề: Quy trình lọc 4 bước (4-Step Filter Pipeline) - hiển thị trung thực, không viết sai chính tả.
