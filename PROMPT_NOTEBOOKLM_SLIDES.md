@@ -54,7 +54,7 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
   + Trực quan: Bánh xe máy với 3 vạch mức nước nét đứt Xanh - Vàng - Đỏ.
 
 - Slide 5: Phương pháp 2 - Nhận diện sự cố ngã xe đa tầng
-  + Phụ đề: Quy trình 4 bộ lọc logic liên hoàn (Pipeline: 4 Logical Filters) - hiển thị rõ ràng, không viết sai chính tả.
+  + Phụ đề: Quy trình lọc 4 bước (4-Step Filter Pipeline) - hiển thị trung thực, không viết sai chính tả.
   + Sơ đồ 4 bước nối bằng điều kiện logic AND:
     [Thuật toán CLAHE ban đêm] ➔ [Khung bao ngang W/H > 1.15 gần xe] ➔ [Bộ đếm bất động liên tục > 5s] ➔ [Kích hoạt cảnh báo gửi tọa độ & ảnh].
   + Chi tiết 4 thẻ:
