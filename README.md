@@ -23,12 +23,9 @@ HackathonSGU2026/
 │
 ├── slides/                                # Tài nguyên trình chiếu, Infographic & Video
 │   ├── SingleNode_UrbanShieldLite.pdf     # Slide thuyết trình chính thức (Bản vẽ kỹ thuật 16:9)
-│   ├── SingleNode_UrbanShieldLite_Infographic.png    # Infographic tóm tắt đề án (Bản 1)
-│   ├── SingleNode_UrbanShieldLite_Infographic_v2.png # Infographic poster sắc nét (Bản 2)
-│   ├── SingleNode_UrbanShieldLite_Pitch.mp4          # Video pitch giới thiệu giải pháp (2.5 phút)
-│   ├── SingleNode_UrbanShieldLite_Slides.pptx        # Slide định dạng PowerPoint
-│   ├── index.html                         # Slide trình chiếu tương tác dạng Web động
-│   └── generate_pptx.py                   # Script tự động sinh file PowerPoint
+│   ├── SingleNode_UrbanShieldLite.png     # Poster Infographic sắc nét tóm tắt đề án
+│   ├── SingleNode_UrbanShieldLite.mp4     # Video pitch giới thiệu giải pháp (2.5 phút)
+│   └── SingleNode_UrbanShieldLite_Slides.pptx # Slide định dạng PowerPoint
 │
 ├── backend/                               # Máy trạm xử lý tại biên (Edge AI Service)
 │   ├── detector.py                        # Logic nhận diện YOLOv8n, đo ngập & ngã xe (CLAHE)
@@ -60,9 +57,8 @@ HackathonSGU2026/
 ### 2. Slide trình chiếu & Truyền thông:
 * 🖥️ **Slide PDF chính thức (16:9):** [slides/SingleNode_UrbanShieldLite.pdf](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.pdf)
 * 📊 **Slide PowerPoint:** [slides/SingleNode_UrbanShieldLite_Slides.pptx](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite_Slides.pptx)
-* 🌐 **Slide Web tương tác:** [slides/index.html](file:///c:/Competition/HackathonSGU2026/slides/index.html)
-* 📜 **Poster Infographic đề án:** [slides/SingleNode_UrbanShieldLite_Infographic.png](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite_Infographic.png) *(hoặc [Bản v2](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite_Infographic_v2.png))*
-* 🎬 **Video thuyết trình ý tưởng:** [slides/SingleNode_UrbanShieldLite_Pitch.mp4](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite_Pitch.mp4)
+* 📜 **Poster Infographic đề án:** [slides/SingleNode_UrbanShieldLite.png](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.png)
+* 🎬 **Video thuyết trình ý tưởng:** [slides/SingleNode_UrbanShieldLite.mp4](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.mp4)
 
 ---
 
