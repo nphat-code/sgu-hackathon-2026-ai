@@ -25,10 +25,13 @@ Trước khi bấm tạo, thiết lập các tùy chọn trên popup như sau:
 
 ```text
 Tạo bộ slide trình chiếu (Presenter Slides) đúng 8 slide cho bài thuyết trình 3 phút về đề án UrbanShield Lite trước Ban Giám khảo kỹ thuật.
-YÊU CẦU THỊ GIÁC: Nền trắng tinh tế (#FFFFFF), chữ to rõ, phong cách chuyên nghiệp.
-- Slide 1 & Slide 2: Dùng hình ảnh chụp thực tế ngoài đời sống (Real-life documentary photos) để làm nổi bật bối cảnh ngõ xóm và nỗi đau thực trạng dân sinh.
-- Slide 4: BẮT BUỘC dùng Sơ đồ bản vẽ kỹ thuật hình học (Technical Schematic Blueprint) của bánh xe máy 50cm sắc nét với thước đo và 3 dải màu Xanh - Vàng - Đỏ chuẩn mực (TUYỆT ĐỐI KHÔNG vẽ vạch màu nguệch ngoạc đè lên ảnh chụp người và xe).
-- Slide 3, 5, 6, 7: Dùng sơ đồ khối kỹ thuật tối giản và bảng biểu số liệu rõ ràng. Tuyệt đối không dùng từ ngữ quảng cáo phóng đại.
+YÊU CẦU THỊ GIÁC (TƯƠI SÁNG & HIỆN ĐẠI):
+- Nền trắng tinh tế (#FFFFFF), phong cách công nghệ đô thị văn minh, sáng rõ và chuyên nghiệp.
+- MÀU SẮC HÌNH ẢNH: BẮT BUỘC dùng ảnh MÀU TỰ NHIÊN, BAN NGÀY, TƯƠI SÁNG (Full-color, bright natural daylight, clean). TUYỆT ĐỐI CẤM dùng ảnh đen trắng (Grayscale / Black & White), cấm ảnh hẻm tối tăm u ám, mờ ảo mang cảm giác rùng rợn/kinh dị hoặc hiện trường án mạng.
+- Slide 1: Ảnh màu thực tế góc phố / ngõ xóm dân cư ban ngày thoáng đãng, ngập tràn ánh sáng tự nhiên với camera giám sát an ninh.
+- Slide 2: Ảnh màu thực tế xe máy lưu thông qua đoạn ngập mùa mưa ban ngày & ảnh minh họa sự cố giao thông trong ánh đèn đường vàng ấm áp (không dùng ảnh hẻm đen u ám). Kết hợp sơ đồ nút thắt băng thông.
+- Slide 4: Bản vẽ kỹ thuật hình học sắc nét (CAD/Blueprint Schematic) của bánh xe máy 50cm với 3 dải màu Xanh - Vàng - Đỏ sạch sẽ, chính xác.
+- Slide 3, 5, 6, 7, 8: Sơ đồ khối công nghệ hiện đại, giao diện trực quan, bảng số liệu rõ ràng.
 
 Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp SAU):
 
@@ -36,14 +39,14 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
   + Tiêu đề: UrbanShield Lite - Hệ thống hỗ trợ theo dõi ngập nước & an toàn giao thông dân sinh
   + Nhóm phát triển: SingleNode
   + Định vị: Giải pháp AI biên nhỏ gọn tối ưu chi phí cho các tuyến đường nhánh và khu dân cư thiếu vắng hạ tầng tập trung.
-  + Trực quan: Ảnh chụp thực tế camera giám sát gắn trên cột điện góc phố ngõ xóm dân sinh bình dị (CHƯA đưa sơ đồ kỹ thuật vào).
+  + Trực quan: Ảnh màu thực tế góc ngõ xóm đô thị ban ngày tươi sáng, sạch sẽ với camera an ninh góc nhìn mở rộng (CHƯA đưa sơ đồ kỹ thuật vào).
 
 - Slide 2: Thực trạng dân sinh & Rào cản hạ tầng
-  + 2 Vấn đề dân sinh (Dùng ảnh chụp thực tế):
-    1. Ảnh thực tế xe máy ngập nước chết máy mùa mưa trên đường nhánh/ngõ hẻm đô thị.
-    2. Ảnh thực tế sự cố ngã xe ban đêm trong ngõ vắng thiếu ánh sáng, chậm sơ cứu.
+  + 2 Vấn đề dân sinh (Dùng ảnh màu thực tế, sáng rõ):
+    1. Ảnh màu thực tế xe máy ngập nước chết máy mùa mưa trên đường ngập ban ngày.
+    2. Ảnh màu thực tế sự cố xe máy ban đêm dưới ánh đèn đường đô thị, nêu bật bài toán chậm sơ cứu.
   + 2 Rào cản công nghệ truyền thống: Chi phí camera AI đắt đỏ ($$$) & Nút thắt cổ chai băng thông khi stream video 24/7 về máy chủ.
-  + Trực quan: Kết hợp 2 ảnh chụp hiện trường thực tế và sơ đồ nút thắt cổ chai băng thông màu đỏ/cam.
+  + Trực quan: 2 ảnh màu hiện trường thực tế kết hợp sơ đồ nút thắt cổ chai băng thông màu đỏ/cam.
 
 - Slide 3: Ý tưởng cốt lõi - Kiến trúc Edge AI phân tán
   + Vai trò: Lời giải tháo gỡ nút thắt băng thông và chi phí ở Slide 2.
@@ -59,12 +62,12 @@ Mạch logic chuẩn (Đặt vấn đề & Rào cản TRƯỚC ➔ Giải pháp 
   + Phụ đề: Quy trình lọc 4 bước (4-Step Filter Pipeline) - hiển thị trung thực, không viết sai chính tả.
   + Sơ đồ 4 bước nối bằng điều kiện logic AND:
     [Thuật toán CLAHE ban đêm] ➔ [Khung bao ngang W/H > 1.15 gần xe] ➔ [Bộ đếm bất động liên tục > 5s] ➔ [Kích hoạt cảnh báo gửi tọa độ & ảnh].
-  + Trực quan: Ảnh trích xuất thực tế từ khung hình camera ban đêm sau khi lọc sáng CLAHE, hiển thị Bounding Box đối tượng người và phương tiện.
+  + Trực quan: Giao diện trực quan mô phỏng khung hình camera an ninh sáng rõ dưới ánh đèn đường vàng ấm áp (TUYỆT ĐỐI KHÔNG dùng ảnh đen trắng u ám rùng rợn), hiển thị Bounding Box đối tượng người và phương tiện.
 
 - Slide 6: Kiến trúc dữ liệu & Bảo vệ quyền riêng tư
   + Nguyên tắc Privacy-by-design: Video sinh hoạt nạp vào RAM tạm thời để suy luận và hủy vĩnh viễn ngay lập tức (Zero-Disk storage); không lưu ổ cứng; không nhận diện khuôn mặt người dân.
   + Cơ chế cảnh báo: Chỉ gửi đúng 1 ảnh chụp hiện trường kèm tọa độ GPS qua Bot Telegram và bản đồ điều hành khi xảy ra sự cố.
-  + Trực quan: Ảnh chụp thực tế giao diện tin nhắn Bot Telegram nhận cảnh báo sự cố kèm ảnh hiện trường tĩnh.
+  + Trực quan: Mockup giao diện tin nhắn Bot Telegram hiện đại, sáng sủa nhận thông báo sự cố kèm ảnh hiện trường tĩnh.
 
 - Slide 7: Tính khả thi kinh tế (TCO) & Mô hình trạm cụm
   + Mô hình trạm cụm (Cluster): 1 máy tính cơ sở đặt tại khu dân cư gom xử lý 20 - 30 camera phụ cận.
