@@ -95,9 +95,9 @@
 ### 🟢 SLIDE 7: PHÂN TÍCH TÍNH KHẢ THI KINH TẾ TCO (2:15 – 2:40 | 25 giây)
 *(Màn hình hiển thị: Bảng so sánh kinh tế TCO và Mô hình trạm cụm 20-30 camera)*
 
-> *"Về bài toán mở rộng quy mô kinh tế: Nhóm áp dụng **Mô hình Trạm cụm (Cluster)**. Một máy tính cơ sở đặt tại văn phòng khu phố có thể gom và xử lý từ 20 đến 30 camera xung quanh ngõ xóm.*  
+> *"Để nhân rộng giải pháp này vào đời sống, nhóm em áp dụng **mô hình trạm cụm rất đơn giản**: Chỉ cần một máy tính phổ thông đặt tại văn phòng khu phố là có thể xử lý cho 20 đến 30 camera xung quanh.*  
 > 
-> *So với hệ thống tập trung truyền thống, mô hình này giúp cắt giảm ước tính **70% đến 80% chi phí đầu tư ban đầu** do tận dụng camera phổ thông và loại bỏ máy chủ GPU đắt đỏ, đồng thời **tiết kiệm hơn 95% lưu lượng băng thông** do không phải truyền phát video 24/7."*
+> *Cách làm này giúp cắt giảm từ **70 đến 80% chi phí đầu tư ban đầu**, do tận dụng lại camera có sẵn và không cần máy chủ GPU đắt đỏ. Đồng thời, hệ thống **tiết kiệm hơn 95% đường truyền mạng** vì không phải phát video liên tục 24/7."*
 
 *(Bấm chuyển Slide 8)*
 
