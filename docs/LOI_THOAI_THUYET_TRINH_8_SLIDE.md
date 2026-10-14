@@ -40,7 +40,7 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Mỗi mùa mưa đến, ở các đô thị chúng ta thường thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
+> *"Bởi vì ở chính những nơi ấy, mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
 > 
 > *Thế nhưng, ta không thể lắp camera AI xuống từng con hẻm nhỏ được, bởi vì một camera đã có giá từ 15 đến 25 triệu đồng, và việc truyền hàng ngàn luồng video liên tục 24/7 sẽ làm nghẽn đường truyền mạng."*
 
