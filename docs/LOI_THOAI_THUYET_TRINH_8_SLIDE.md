@@ -84,9 +84,9 @@
 ### 🟢 SLIDE 6: KIẾN TRÚC DỮ LIỆU & QUYỀN RIÊNG TƯ (1:55 – 2:15 | 20 giây)
 *(Màn hình hiển thị: Luồng video rơi vào thùng rác trên RAM & Kênh Telegram/Bản đồ)*
 
-> *"Thưa Ban Giám khảo, điểm cốt lõi về mặt bảo mật của hệ thống là nguyên tắc **Privacy-by-design**:*  
+> *"Một vấn đề mà bà con ngõ xóm rất lo lắng là quyền riêng tư. Vì vậy, nhóm em cam kết bảo vệ dữ liệu ngay từ thiết kế:*  
 > 
-> *Toàn bộ luồng video sinh hoạt của người dân chỉ được nạp vào bộ nhớ RAM tạm thời để suy luận và **bị hủy vĩnh viễn ngay lập tức**, không lưu một byte nào vào ổ cứng. Hệ thống hoàn toàn không nhận diện khuôn mặt. Chỉ duy nhất khi có tai nạn hoặc ngập lụt, đúng một ảnh chụp hiện trường cùng tọa độ GPS mới được gửi qua bot Telegram của đội cứu hộ và cập nhật lên bản đồ điều hành."*
+> *Toàn bộ video chỉ được lưu tạm trên RAM để AI phân tích rồi **xóa sạch ngay lập tức**, không lưu bất kỳ một byte nào vào ổ cứng. Hệ thống hoàn toàn không nhận diện khuôn mặt người dân. Chỉ duy nhất khi có tai nạn hoặc ngập lụt, đúng một bức ảnh hiện trường kèm tọa độ GPS mới được gửi về bot Telegram của đội cứu hộ và cập nhật lên bản đồ điều hành."*
 
 *(Bấm chuyển Slide 7)*
 
