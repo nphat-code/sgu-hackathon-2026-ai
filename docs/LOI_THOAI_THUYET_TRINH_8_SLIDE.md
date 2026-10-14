@@ -42,7 +42,7 @@
 
 > *"Mỗi mùa mưa đến, ở các đô thị chúng ta thường thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
 > 
-> *Thế nhưng, ta không thể mở rộng camera AI xuống từng con hẻm nhỏ được, bởi vì một mắt camera thông minh có giá từ 15 đến 25 triệu đồng, và việc truyền hàng ngàn luồng video liên tục 24/7 sẽ gây quá tải nghiêm trọng cho đường truyền mạng."*
+> *Thế nhưng, ta không thể lắp camera AI xuống từng con hẻm nhỏ được, bởi vì một camera đã có giá từ 15 đến 25 triệu đồng, và việc truyền hàng ngàn luồng video liên tục 24/7 sẽ làm nghẽn đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 
