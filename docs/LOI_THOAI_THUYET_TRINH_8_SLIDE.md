@@ -29,9 +29,9 @@
 ### 🟢 SLIDE 1: GIỚI THIỆU ĐỀ ÁN (0:00 – 0:20 | 20 giây)
 *(Màn hình hiển thị: UrbanShield Lite – Theo dõi ngập nước & sự cố giao thông)*
 
-> *"Xin chào mọi người và ban giám khảo, em là Nguyễn Tấn Phát đại diện cho đội **SingleNode**.*  
+> *"Kính chào Quý Thầy Cô trong Ban Giám khảo cùng toàn thể hội trường. Em là Phát, đại diện cho đội **SingleNode**.*  
 > 
-> *Hôm nay, nhóm em muốn chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mục tiêu mang công nghệ an toàn đến với những tuyến đường nhánh và khu dân cư bình dị nhất."*
+> *Hôm nay, nhóm em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những tuyến đường nhánh và khu dân cư bình dị nhất."*
 
 *(Bấm chuyển Slide 2)*
 
