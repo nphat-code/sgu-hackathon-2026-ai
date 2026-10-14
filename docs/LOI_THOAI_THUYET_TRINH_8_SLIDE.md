@@ -40,9 +40,9 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Thưa Thầy Cô, mùa mưa tại các đô thị thường bộc lộ hai rủi ro lớn: các tuyến đường nhánh trũng thấp bị ngập cục bộ gây chết máy hàng loạt, và những vụ ngã xe máy trong ngõ vắng ban đêm dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
+> *"Mỗi mùa mưa đến, ở các đô thị chúng ta thường thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
 > 
-> *Tuy nhiên, ta không thể mở rộng camera AI truyền thống xuống từng ngõ xóm được, bởi vì một mắt camera chuyên dụng có giá từ 15 đến 25 triệu đồng, và việc truyền hàng ngàn luồng video liên tục 24/7 về máy chủ sẽ gây quá tải nghiêm trọng cho hạ tầng băng thông mạng."*
+> *Thế nhưng, ta không thể mở rộng camera AI xuống từng con hẻm nhỏ được, bởi vì một mắt camera thông minh có giá từ 15 đến 25 triệu đồng, và việc truyền hàng ngàn luồng video liên tục 24/7 sẽ gây quá tải nghiêm trọng cho đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 
