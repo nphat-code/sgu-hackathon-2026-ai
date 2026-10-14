@@ -106,11 +106,11 @@
 ### 🟢 SLIDE 8: LỘ TRÌNH THỬ NGHIỆM & KẾT LUẬN (2:40 – 3:00 | 20 giây)
 *(Màn hình hiển thị: 3 giai đoạn lộ trình & Slogan SingleNode)*
 
-> *"Thay vì vẽ ra những kế hoạch xa vời, nhóm đặt mục tiêu rõ ràng: Hoàn thiện thử nghiệm bước đầu tại một khu dân cư đô thị diện hẹp để đo lường thực tế và hiệu chỉnh tỷ lệ báo động giả trước khi nhân rộng.*  
+> *"Về lộ trình sắp tới, nhóm em chọn cách đi từng bước thực tế: Hoàn thiện thử nghiệm trước mắt tại một khu dân cư cụ thể, để đo lường và tinh chỉnh độ chính xác trước khi nhân rộng.*  
 > 
-> *Nhóm **SingleNode** hướng tới một giải pháp kỹ thuật khiêm tốn nhưng mang lại giá trị thực tiễn và an toàn cho cộng đồng.*  
+> *Nhóm **SingleNode** mong muốn mang đến một giải pháp nhỏ gọn, gần gũi, góp phần bảo vệ sự an toàn cho bà con mỗi mùa mưa bão.*  
 > 
-> *Em xin cảm ơn Ban Giám khảo và sẵn sàng lắng nghe các câu hỏi góp ý ạ!"*
+> *Em xin cảm ơn Thầy Cô và các bạn đã chú ý lắng nghe, nhóm em rất mong nhận được những ý kiến đóng góp ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 
