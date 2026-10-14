@@ -64,7 +64,7 @@
 
 > *"Cụ thể với bài toán ngập nước: Thay vì gắn cảm biến dưới cống rất dễ bị rác làm nghẹt, nhóm em tận dụng chính bánh xe máy lưu thông trên đường làm cây thước đo.*  
 > 
-> *Với đường kính bánh xe khoảng 50cm, hệ thống sẽ nhìn vào phần bánh xe bị nước che khuất để chia làm ba mức cảnh báo: dưới 10cm là an toàn xăm xắp, từ 10 đến 20cm là nước chạm mép ống xả, và trên 20cm là báo động ngập sâu có nguy cơ chết máy."*
+> *Với đường kính bánh xe khoảng 50cm, hệ thống sẽ nhìn vào phần bánh xe bị nước che khuất để chia làm ba mức cảnh báo: dưới 10cm là an toàn, xe chạy bình thường, từ 10 đến 20cm là nước chạm mép ống xả, và trên 20cm là báo động ngập sâu có nguy cơ chết máy."*
 
 *(Bấm chuyển Slide 5)*
 
