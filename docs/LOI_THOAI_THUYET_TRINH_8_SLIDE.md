@@ -51,9 +51,9 @@
 ### 🟢 SLIDE 3: TIẾP CẬN BẰNG EDGE AI PHÂN TÁN (0:45 – 1:05 | 20 giây)
 *(Màn hình hiển thị: So sánh Hệ thống tập trung vs Hệ thống phân tán UrbanShield Lite)*
 
-> *"Để giải quyết nghịch lý đó, UrbanShield Lite tiếp cận theo hướng **Điện toán biên phân tán (Edge AI)**:*  
+> *"Để giải bài toán chi phí này, nhóm em không gom video về máy chủ trung tâm nữa, mà đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
 > 
-> *Thay vì gửi video về máy chủ trung tâm cồng kềnh, nhóm chuyển dịch năng lực tính toán về ngay máy trạm cơ sở. Bằng cách tối ưu mô hình **YOLOv8-nano** chạy trực tiếp trên CPU máy tính phổ thông kết hợp camera có sẵn, hệ thống xử lý hình ảnh cục bộ và chỉ phát đi siêu dữ liệu sự kiện siêu nhẹ khi có sự cố."*
+> *Bằng cách tối ưu mô hình **YOLOv8-nano** chạy mượt trên CPU máy tính phổ thông, hệ thống tận dụng ngay camera có sẵn ở khu dân cư, tự phân tích hình ảnh tại chỗ và chỉ phát tín hiệu báo động khi thực sự có sự cố."*
 
 *(Bấm chuyển Slide 4)*
 
