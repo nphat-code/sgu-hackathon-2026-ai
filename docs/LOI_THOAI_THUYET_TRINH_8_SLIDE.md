@@ -73,9 +73,9 @@
 ### 🟢 SLIDE 5: NHẬN DIỆN SỰ CỐ NGÃ XE (1:30 – 1:55 | 25 giây)
 *(Màn hình hiển thị: Quy trình 4 bước: W/H > 1.15 -> Cự ly -> Bộ đếm 5s -> Xác nhận)*
 
-> *"Đối với sự cố tai nạn và ngã xe ban đêm: Để giảm thiểu tối đa báo động giả, hệ thống áp dụng cơ chế lọc đa tầng:*  
+> *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, nhóm em áp dụng **bộ đếm thời gian 5 giây**.*  
 > 
-> *Trước hết, AI kiểm tra hình thái học khi khung bao của người chuyển sang tư thế nằm ngang trên mặt đường (W/H > 1.15) trong cự ly gần phương tiện. Ngay sau đó, **bộ đếm thời gian bất động** được kích hoạt: chỉ khi người nằm bất động liên tục **quá 5 giây** mà không đứng dậy thì sự cố mới được xác nhận. Ngoài ra, thuật toán cân bằng sáng thích ứng CLAHE được tích hợp sẵn để tăng độ tương phản khi ghi hình ban đêm."*
+> *Cụ thể, khi AI phát hiện dáng người chuyển sang tư thế nằm ngang ngay sát cạnh xe máy, bộ đếm sẽ kích hoạt. Chỉ khi người đó nằm bất động liên tục **quá 5 giây** mà không đứng dậy, hệ thống mới phát cảnh báo. Ngoài ra, thuật toán **CLAHE** cũng được tích hợp sẵn để tăng độ sáng rõ khi trời tối."*
 
 *(Bấm chuyển Slide 6)*
 
