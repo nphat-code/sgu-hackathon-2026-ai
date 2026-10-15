@@ -89,7 +89,7 @@
 
 > *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, em áp dụng **quy trình lọc 4 bước** như trên màn hình:*  
 > 
-> *Đầu tiên, thuật toán **CLAHE** tự động cân bằng sáng để nhìn rõ vào ban đêm. Tiếp theo, AI nhận diện **dáng người nằm ngang sát cạnh xe máy**. Và quan trọng nhất là **bộ đếm 5 giây**: Chỉ khi người đó nằm bất động liên tục quá 5 giây mà không đứng dậy, hệ thống mới kích hoạt cảnh báo, gửi hình ảnh và tọa độ để ứng cứu kịp thời."*
+> *Đầu tiên, thuật toán **CLAHE** tự động cân bằng sáng để nhìn rõ vào ban đêm. Tiếp theo, mô hình nhận diện **dáng người nằm ngang sát cạnh xe máy**. Và quan trọng nhất là **bộ đếm 5 giây**: Chỉ khi người đó nằm bất động liên tục quá 5 giây mà không đứng dậy, hệ thống mới kích hoạt cảnh báo, gửi hình ảnh và tọa độ để ứng cứu kịp thời."*
 
 *(Bấm chuyển Slide 6)*
 
