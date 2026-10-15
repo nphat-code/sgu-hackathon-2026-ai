@@ -108,7 +108,7 @@
 
 > *"Về lộ trình, em chọn cách đi từng bước thực tế: Trước mắt là thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
 > 
-> *Đội **SingleNode** xin chân thành cảm ơn Thầy Cô và các bạn, và em rất mong nhận được các câu hỏi và góp ý từ Thầy Cô ạ!"*
+> *Em xin cảm ơn các thầy và mọi người đã lắng nghe, và em rất mong nhận được câu hỏi cũng như góp ý từ các thầy ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 
