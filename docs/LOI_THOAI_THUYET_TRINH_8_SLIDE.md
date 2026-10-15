@@ -31,7 +31,7 @@
 
 > *"Chào Thầy Cô và các bạn, em là Phát đến từ đội **SingleNode**.*  
 > 
-> *Hôm nay, nhóm em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
+> *Hôm nay, em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
 
 *(Bấm chuyển Slide 2)*
 
@@ -51,7 +51,7 @@
 ### 🟢 SLIDE 3: TIẾP CẬN BẰNG EDGE AI PHÂN TÁN (0:45 – 1:05 | 20 giây)
 *(Màn hình hiển thị: Sơ đồ luồng Edge AI từ Camera -> CPU Máy trạm YOLOv8-nano -> Gói tin cảnh báo -> Telegram & Bản đồ số)*
 
-> *"Để giải bài toán chi phí này, nhóm em đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
+> *"Để giải bài toán chi phí này, em chọn cách đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
 > 
 > *Quy trình hoạt động rất đơn giản: Đầu tiên, hình ảnh từ các camera có sẵn sẽ được truyền về máy tính ở khu phố, chạy mô hình **YOLOv8-nano rất nhẹ** mà không cần GPU đắt tiền. Tại đây, máy tính sẽ tự phân tích tại chỗ, và chỉ khi thực sự có sự cố thì mới gửi một **tin nhắn cảnh báo** về Telegram và Bản đồ số."*
 
@@ -62,7 +62,7 @@
 ### 🟢 SLIDE 4: ƯỚC LƯỢNG NGẬP QUA HÌNH HỌC (1:05 – 1:30 | 25 giây)
 *(Màn hình hiển thị: Bánh xe máy 50cm và 3 mức nước nét đứt Xanh - Vàng - Đỏ)*
 
-> *"Cụ thể với bài toán ngập nước: Thay vì gắn cảm biến dưới cống rất dễ bị nghẹt rác và hỏng hóc, nhóm em tận dụng chính bánh xe máy lưu thông trên đường làm thước đo.*  
+> *"Cụ thể với bài toán ngập nước: Thay vì gắn cảm biến dưới cống rất dễ bị nghẹt rác và hỏng hóc, em tận dụng chính bánh xe máy lưu thông trên đường làm thước đo.*  
 > 
 > *Với đường kính bánh xe khoảng 50cm, hệ thống sẽ nhìn vào phần bánh xe bị nước che khuất để chia làm ba mức cảnh báo **như ba dải màu trên màn hình**: Dưới 10cm là an toàn, xe chạy bình thường; từ 10 đến 20cm là nước chạm mép ống xả; và trên 20cm là ngập sâu, xe rất dễ bị chết máy."*
 
@@ -73,7 +73,7 @@
 ### 🟢 SLIDE 5: NHẬN DIỆN SỰ CỐ NGÃ XE (1:30 – 1:55 | 25 giây)
 *(Màn hình hiển thị: Quy trình lọc 4 bước: CLAHE -> Khung bao ngang W/H > 1.15 gần xe máy -> Bộ đếm bất động liên tục > 5s -> Kích hoạt cảnh báo)*
 
-> *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, nhóm em áp dụng **quy trình lọc 4 bước** như trên màn hình:*  
+> *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, em áp dụng **quy trình lọc 4 bước** như trên màn hình:*  
 > 
 > *Đầu tiên, thuật toán **CLAHE** tự động cân bằng sáng để nhìn rõ trong đêm tối. Tiếp theo, AI nhận diện **dáng người nằm ngang sát cạnh xe máy**. Và quan trọng nhất là **bộ đếm 5 giây**: Chỉ khi người đó nằm bất động liên tục quá 5 giây mà không đứng dậy, hệ thống mới kích hoạt cảnh báo, gửi hình ảnh và tọa độ để ứng cứu kịp thời."*
 
@@ -84,7 +84,7 @@
 ### 🟢 SLIDE 6: KIẾN TRÚC DỮ LIỆU & QUYỀN RIÊNG TƯ (1:55 – 2:15 | 20 giây)
 *(Màn hình hiển thị: Khung Privacy-by-design bên trái và Giao diện Telegram Real UI bên phải)*
 
-> *"Về quyền riêng tư ở khung bên trái: Nhóm em **hoàn toàn không nhận diện khuôn mặt**, video chỉ lưu tạm trên RAM để phân tích rồi **hủy vĩnh viễn**, tuyệt đối không lưu ổ cứng.*  
+> *"Về quyền riêng tư ở khung bên trái: Hệ thống **hoàn toàn không nhận diện khuôn mặt**, video chỉ lưu tạm trên RAM để phân tích rồi **hủy vĩnh viễn**, tuyệt đối không lưu ổ cứng.*  
 > 
 > *Còn ở bên phải là giao diện thực tế: Chỉ khi có sự cố, hệ thống mới gửi **đúng một bức ảnh hiện trường kèm tọa độ** về Telegram để hỗ trợ ứng cứu kịp thời."*
 
@@ -95,7 +95,7 @@
 ### 🟢 SLIDE 7: PHÂN TÍCH TÍNH KHẢ THI KINH TẾ TCO (2:15 – 2:40 | 25 giây)
 *(Màn hình hiển thị: Bảng so sánh kinh tế TCO và Mô hình trạm cụm 20-30 camera)*
 
-> *"Để giải pháp có tính khả thi cao, nhóm em áp dụng **mô hình trạm cụm như bảng so sánh trên màn hình**: Thay vì đầu tư máy chủ GPU đắt đỏ, chỉ cần một máy tính CPU phổ thông đặt tại khu phố là đã xử lý được cho **20 đến 30 camera** xung quanh.*  
+> *"Để giải pháp có tính khả thi cao, em áp dụng **mô hình trạm cụm như bảng so sánh trên màn hình**: Thay vì đầu tư máy chủ GPU đắt đỏ, chỉ cần một máy tính CPU phổ thông đặt tại khu phố là đã xử lý được cho **20 đến 30 camera** xung quanh.*  
 > 
 > *Nhờ xử lý tại chỗ, hệ thống **tiết kiệm hơn 95% băng thông** mạng; và quan trọng nhất là **cắt giảm từ 70 đến 80% tổng chi phí đầu tư**, giúp việc nhân rộng về các khu dân cư trở nên hoàn toàn khả thi."*
 
@@ -106,9 +106,9 @@
 ### 🟢 SLIDE 8: LỘ TRÌNH THỬ NGHIỆM & KẾT LUẬN (2:40 – 3:00 | 20 giây)
 *(Màn hình hiển thị: 3 giai đoạn lộ trình & Lời cảm ơn của SingleNode)*
 
-> *"Về lộ trình, nhóm em chọn cách đi từng bước thực tế: Trước mắt là thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
+> *"Về lộ trình, em chọn cách đi từng bước thực tế: Trước mắt là thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
 > 
-> *Đội **SingleNode** xin chân thành cảm ơn Thầy Cô và các bạn, và chúng em rất mong nhận được các câu hỏi và góp ý từ Thầy Cô ạ!"*
+> *Đội **SingleNode** xin chân thành cảm ơn Thầy Cô và các bạn, và em rất mong nhận được các câu hỏi và góp ý từ Thầy Cô ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 
