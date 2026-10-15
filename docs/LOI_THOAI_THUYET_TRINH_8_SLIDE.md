@@ -40,9 +40,9 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: Đầu tiên là các con đường nhỏ và ngõ hẻm hay bị ngập sâu làm xe chết máy hàng loạt, và thứ hai là những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
+> *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai vấn đề rất rõ: Đầu tiên là những con đường hay bị **ngập sâu làm xe chết máy**; và thứ hai là những vụ trượt ngã xe trong ngõ vắng ban đêm **khuất tầm nhìn**, rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
-> *Thế nhưng, ta không thể gắn camera AI khắp các con đường nhỏ và ngõ hẻm được: mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
+> *Thế nhưng, hạ tầng hiện nay lại gặp phải một **nút thắt cổ chai rất lớn** như sơ đồ phía dưới: Mua camera AI chuyên dụng thì quá đắt đỏ; còn dùng camera thường kéo video 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 
@@ -121,6 +121,7 @@
 1. **Giữ nhịp thở đều, nói điềm tĩnh:** Đừng cố nói quá nhanh. 3 phút là đủ thoải mái cho khoảng 350 - 400 từ nếu bạn nói với tốc độ vừa phải.
 2. **Ánh mắt hướng vào Giám khảo:** Hãy nhìn trực diện vào các thầy cô trong Hội đồng, chỉ liếc nhìn slide 1 - 2 giây khi bấm chuyển trang để kiểm tra hình.
 3. **Chỉ tay vào điểm nhấn hình ảnh:** 
+   - Ở Slide 2: Chỉ tay vào 2 bức ảnh trên khi nói về ngập nước và ngã xe, sau đó chỉ xuống sơ đồ nút thắt cổ chai ở dưới.
    - Ở Slide 4: Chỉ tay vào hình bánh xe có 3 vạch xanh - vàng - đỏ.
    - Ở Slide 5: Chỉ tay từ trái qua phải theo 4 khối: Cân bằng sáng -> Dáng nằm sát xe -> Đếm 5 giây -> Bắn cảnh báo.
    - Ở Slide 6: Chỉ tay vào mũi tên video trút vào biểu tượng thùng rác khi nói câu *"xóa sạch trong RAM"*.
