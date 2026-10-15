@@ -53,7 +53,7 @@
 
 > *"Để giải bài toán chi phí này, nhóm em đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**:*  
 > 
-> *Hình ảnh từ **camera có sẵn** ở khu dân cư sẽ được đưa vào **máy trạm CPU thông thường**, chạy mô hình **YOLOv8-nano siêu nhẹ** — hoàn toàn không cần GPU đắt tiền. Máy tính sẽ tự phân tích tại chỗ, và chỉ phát đi một **gói tin cảnh báo siêu nhẹ** về Telegram và Bản đồ số khi thực sự có sự cố."*
+> *Hình ảnh từ **camera có sẵn** ở khu dân cư sẽ được đưa vào **máy trạm CPU thông thường**, chạy mô hình **YOLOv8-nano gọn nhẹ** — hoàn toàn không cần GPU đắt tiền. Máy tính sẽ tự phân tích tại chỗ, và chỉ gửi một **tin nhắn cảnh báo** về Telegram và Bản đồ số khi thực sự có sự cố."*
 
 *(Bấm chuyển Slide 4)*
 
