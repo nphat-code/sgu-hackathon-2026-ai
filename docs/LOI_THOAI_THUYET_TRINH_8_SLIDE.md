@@ -31,7 +31,7 @@
 
 > *"Chào Thầy Cô và các bạn, em là Phát đến từ đội **SingleNode**.*  
 > 
-> *Hôm nay, nhóm em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những tuyến đường nhánh và khu dân cư bình dị nhất."*
+> *Hôm nay, nhóm em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
 
 *(Bấm chuyển Slide 2)*
 
@@ -40,7 +40,7 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: những con đường nhỏ và ngõ hẻm hay bị ngập sâu làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
+> *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: Đầu tiên là các con đường nhỏ và ngõ hẻm hay bị ngập sâu làm xe chết máy hàng loạt, và thứ hai là những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
 > *Thế nhưng, ta không thể gắn camera AI khắp các con đường nhỏ và ngõ hẻm được: dùng camera chuyên dụng thì quá đắt đỏ, còn nếu truyền hàng ngàn luồng video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
