@@ -71,11 +71,11 @@
 ---
 
 ### 🟢 SLIDE 5: NHẬN DIỆN SỰ CỐ NGÃ XE (1:30 – 1:55 | 25 giây)
-*(Màn hình hiển thị: Quy trình 4 bước: W/H > 1.15 -> Cự ly -> Bộ đếm 5s -> Xác nhận)*
+*(Màn hình hiển thị: Quy trình lọc 4 bước: CLAHE -> Khung bao ngang W/H > 1.15 gần xe máy -> Bộ đếm bất động liên tục > 5s -> Kích hoạt cảnh báo)*
 
-> *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, nhóm em áp dụng **bộ đếm thời gian 5 giây**.*  
+> *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, nhóm em áp dụng **quy trình lọc 4 bước** như trên màn hình:*  
 > 
-> *Cụ thể, khi AI phát hiện **người bị ngã nằm dài trên mặt đường ngay sát cạnh xe máy**, bộ đếm sẽ kích hoạt. Chỉ khi người đó nằm bất động liên tục **quá 5 giây** mà không đứng dậy, hệ thống mới phát cảnh báo. Ngoài ra, thuật toán **CLAHE** cũng được tích hợp sẵn để tăng độ sáng rõ khi trời tối."*
+> *Đầu tiên, thuật toán **CLAHE** tự động cân bằng sáng để nhìn rõ trong đêm tối. Tiếp theo, AI nhận diện **dáng người nằm ngang sát cạnh xe máy**. Và quan trọng nhất là **bộ đếm 5 giây**: Chỉ khi người đó nằm bất động liên tục quá 5 giây mà không đứng dậy, hệ thống mới kích hoạt cảnh báo, gửi hình ảnh và tọa độ để ứng cứu kịp thời."*
 
 *(Bấm chuyển Slide 6)*
 
@@ -122,5 +122,6 @@
 2. **Ánh mắt hướng vào Giám khảo:** Hãy nhìn trực diện vào các thầy cô trong Hội đồng, chỉ liếc nhìn slide 1 - 2 giây khi bấm chuyển trang để kiểm tra hình.
 3. **Chỉ tay vào điểm nhấn hình ảnh:** 
    - Ở Slide 4: Chỉ tay vào hình bánh xe có 3 vạch xanh - vàng - đỏ.
+   - Ở Slide 5: Chỉ tay từ trái qua phải theo 4 khối: Cân bằng sáng -> Dáng nằm sát xe -> Đếm 5 giây -> Bắn cảnh báo.
    - Ở Slide 6: Chỉ tay vào mũi tên video trút vào biểu tượng thùng rác khi nói câu *"xóa sạch trong RAM"*.
 4. **Chuẩn bị sẵn tâm thế trả lời Q&A:** Lắng nghe hết câu hỏi của giám khảo, gật đầu cảm ơn *"Dạ cảm ơn câu hỏi rất hay của Thầy/Cô ạ"*, sau đó trả lời đúng trọng tâm kỹ thuật như đã chuẩn bị trong tài liệu.
