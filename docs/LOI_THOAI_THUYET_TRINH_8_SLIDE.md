@@ -51,9 +51,9 @@
 ### 🟢 SLIDE 3: TIẾP CẬN BẰNG EDGE AI PHÂN TÁN (0:45 – 1:05 | 20 giây)
 *(Màn hình hiển thị: Sơ đồ luồng Edge AI từ Camera -> CPU Máy trạm YOLOv8-nano -> Gói tin cảnh báo -> Telegram & Bản đồ số)*
 
-> *"Để giải bài toán chi phí này, nhóm em đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**:*  
+> *"Để giải bài toán chi phí này, nhóm em đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
 > 
-> *Hình ảnh từ **camera có sẵn** ở khu dân cư sẽ được đưa vào **máy trạm CPU thông thường**, chạy mô hình **YOLOv8-nano gọn nhẹ** — hoàn toàn không cần GPU đắt tiền. Máy tính sẽ tự phân tích tại chỗ, và chỉ gửi một **tin nhắn cảnh báo** về Telegram và Bản đồ số khi thực sự có sự cố."*
+> *Quy trình hoạt động rất đơn giản: Đầu tiên, hình ảnh từ các camera có sẵn sẽ được truyền về chiếc máy tính ở khu phố, chạy mô hình **YOLOv8-nano gọn nhẹ** mà không cần GPU đắt tiền. Tại đây, máy tính sẽ tự phân tích tại chỗ, và chỉ khi thực sự có sự cố thì mới gửi một **tin nhắn cảnh báo** về Telegram và Bản đồ số."*
 
 *(Bấm chuyển Slide 4)*
 
