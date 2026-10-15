@@ -106,11 +106,11 @@
 ### 🟢 SLIDE 8: LỘ TRÌNH THỬ NGHIỆM & KẾT LUẬN (2:40 – 3:00 | 20 giây)
 *(Màn hình hiển thị: 3 giai đoạn lộ trình & Slogan SingleNode)*
 
-> *"Về lộ trình sắp tới, nhóm em chọn cách đi từng bước thực tế: Hoàn thiện thử nghiệm trước mắt tại một khu dân cư cụ thể, để đo lường và tinh chỉnh độ chính xác trước khi nhân rộng.*  
+> *"Về lộ trình, nhóm em chọn cách đi từng bước thực tế: Trước mắt là thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
 > 
-> *Nhóm **SingleNode** mong muốn mang đến một giải pháp nhỏ gọn, gần gũi, góp phần bảo vệ sự an toàn cho bà con mỗi mùa mưa bão.*  
+> *Nhóm **SingleNode** mong muốn mang đến một giải pháp nhỏ gọn, bảo vệ sự an toàn cho bà con mỗi mùa mưa bão.*  
 > 
-> *Em xin cảm ơn Thầy Cô và các bạn đã chú ý lắng nghe, nhóm em rất mong nhận được những ý kiến đóng góp ạ!"*
+> *Em xin chân thành cảm ơn Thầy Cô và các bạn, và nhóm em đã sẵn sàng cho phần trao đổi kỹ thuật ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 
@@ -126,4 +126,5 @@
    - Ở Slide 5: Chỉ tay từ trái qua phải theo 4 khối: Cân bằng sáng -> Dáng nằm sát xe -> Đếm 5 giây -> Bắn cảnh báo.
    - Ở Slide 6: Chỉ tay sang khung bên trái vào biểu tượng RAM trút vào thùng rác, sau đó chỉ sang khung bên phải vào màn hình điện thoại Telegram.
    - Ở Slide 7: Chỉ tay từ hàng trên xuống dưới theo 2 mũi tên đỏ: Giảm 95% băng thông -> Giảm 70-80% chi phí.
+   - Ở Slide 8: Chỉ tay lướt nhẹ từ trái qua phải qua 3 mốc lộ trình, đặc biệt nhấn vào mốc Mã nguồn mở.
 4. **Chuẩn bị sẵn tâm thế trả lời Q&A:** Lắng nghe hết câu hỏi của giám khảo, gật đầu cảm ơn *"Dạ cảm ơn câu hỏi rất hay của Thầy/Cô ạ"*, sau đó trả lời đúng trọng tâm kỹ thuật như đã chuẩn bị trong tài liệu.
