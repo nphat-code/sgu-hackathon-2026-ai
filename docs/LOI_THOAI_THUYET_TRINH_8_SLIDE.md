@@ -31,7 +31,7 @@
 
 > *"Dạ em chào các thầy và mọi người trong hội trường ngày hôm nay, em là Phát đến từ đội **SingleNode**.*  
 > 
-> *Hôm nay, em xin được chia sẻ về **UrbanShield Lite** – một giải pháp nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông đô thị dựa trên kiến trúc AI biên phân tán, với mong muốn mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
+> *Hôm nay, em xin được chia sẻ về **UrbanShield Lite** – một giải pháp AI biên nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông **dân sinh**, với mong muốn mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
 
 *(Bấm chuyển Slide 2)*
 
