@@ -42,7 +42,7 @@
 
 > *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: Đầu tiên là các con đường nhỏ và ngõ hẻm hay bị ngập sâu làm xe chết máy hàng loạt, và thứ hai là những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
-> *Thế nhưng, ta không thể gắn camera AI khắp các con đường nhỏ và ngõ hẻm được: dùng camera chuyên dụng thì quá đắt đỏ, còn nếu truyền hàng ngàn luồng video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
+> *Thế nhưng, ta không thể gắn camera AI khắp các con đường nhỏ và ngõ hẻm được: mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 

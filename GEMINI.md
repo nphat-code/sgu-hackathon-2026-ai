@@ -30,6 +30,6 @@ Mỗi khi hoàn thành xong bất kỳ phần việc nào (tạo file mới, ch�
 
 ### 🧩 4. Quy chuẩn Logic & Dẫn dắt bài nói (Logic & Transitions)
 - **Chủ ngữ phải rõ ràng, không lơ lửng:** Khi nói *"tự phân tích tại chỗ"*, phải chỉ rõ chủ ngữ là ai/cái gì (ví dụ: *"chiếc máy tính ở khu phố tự phân tích..."*).
-- **So sánh phải đối xứng, chặt chẽ:** Khi nêu rào cản, phải rõ 2 vế đối lập: *"mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng"*.
+- **So sánh phải đối xứng, chặt chẽ:** Khi nêu rào cản, phải rõ 2 vế đối lập: *"mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng"*.
 - **Luôn có từ nối dẫn dắt theo sơ đồ thị giác:** Khi chuyển khối trên slide, luôn dùng từ mồi và thứ tự thời gian: *"Quy trình rất đơn giản: Đầu tiên... truyền về máy tính... Tại đây, máy tính tự phân tích... và chỉ khi có sự cố thì mới gửi tin nhắn..."*.
 - **Tránh tranh cãi con số giá tiền:** Thay vì nêu con số cụ thể dễ bị Giám khảo bắt bẻ (*15-25 triệu*), hãy đánh thẳng vào bản chất: *"camera chuyên dụng thì quá đắt đỏ"*.
