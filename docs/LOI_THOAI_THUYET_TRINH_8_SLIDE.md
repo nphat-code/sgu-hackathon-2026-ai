@@ -106,7 +106,7 @@
 ### 🟢 SLIDE 8: LỘ TRÌNH THỬ NGHIỆM & KẾT LUẬN (2:40 – 3:00 | 20 giây)
 *(Màn hình hiển thị: 3 giai đoạn lộ trình & Lời cảm ơn của SingleNode)*
 
-> *"Về lộ trình, em chọn cách đi từng bước thực tế: Trước mắt là thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
+> *"Về lộ trình sắp tới, trước mắt em sẽ thử nghiệm tại 1 đến 2 con ngõ để thu thập dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
 > 
 > *Em xin cảm ơn các thầy và mọi người đã lắng nghe, và em rất mong nhận được câu hỏi cũng như góp ý từ các thầy ạ!"*
 
