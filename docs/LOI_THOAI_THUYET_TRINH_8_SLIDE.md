@@ -84,9 +84,9 @@
 ### 🟢 SLIDE 6: KIẾN TRÚC DỮ LIỆU & QUYỀN RIÊNG TƯ (1:55 – 2:15 | 20 giây)
 *(Màn hình hiển thị: Khung Privacy-by-design bên trái và Giao diện Telegram Real UI bên phải)*
 
-> *"Về quyền riêng tư ở khung bên trái: Hệ thống **hoàn toàn không nhận diện khuôn mặt**, video chỉ lưu tạm trên RAM để phân tích rồi **hủy vĩnh viễn**, tuyệt đối không lưu ổ cứng.*  
+> *"Về quyền riêng tư: Hệ thống **hoàn toàn không nhận diện khuôn mặt**, video chỉ lưu tạm trên RAM để phân tích rồi **hủy vĩnh viễn**, tuyệt đối không lưu ổ cứng.*  
 > 
-> *Còn ở bên phải là giao diện thực tế: Chỉ khi có sự cố, hệ thống mới gửi **đúng một bức ảnh hiện trường kèm tọa độ** về Telegram để hỗ trợ ứng cứu kịp thời."*
+> *Còn về cảnh báo thực tế: Chỉ khi có sự cố, hệ thống mới gửi **đúng một bức ảnh hiện trường kèm tọa độ** về Telegram để hỗ trợ ứng cứu kịp thời."*
 
 *(Bấm chuyển Slide 7)*
 
