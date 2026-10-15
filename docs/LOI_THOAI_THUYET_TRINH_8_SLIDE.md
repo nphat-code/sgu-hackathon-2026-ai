@@ -82,11 +82,11 @@
 ---
 
 ### 🟢 SLIDE 6: KIẾN TRÚC DỮ LIỆU & QUYỀN RIÊNG TƯ (1:55 – 2:15 | 20 giây)
-*(Màn hình hiển thị: Luồng video rơi vào thùng rác trên RAM & Kênh Telegram/Bản đồ)*
+*(Màn hình hiển thị: Khung Privacy-by-design bên trái và Giao diện Telegram Real UI bên phải)*
 
-> *"Một vấn đề mà bà con ngõ xóm rất lo lắng là quyền riêng tư. Vì vậy, nhóm em **đặt quyền riêng tư lên hàng đầu**:*  
+> *"Về quyền riêng tư ở khung bên trái: Nhóm em **hoàn toàn không nhận diện khuôn mặt**, video chỉ lưu tạm trên RAM để phân tích rồi **hủy vĩnh viễn**, tuyệt đối không lưu ổ cứng.*  
 > 
-> *Toàn bộ video chỉ được lưu tạm trên RAM để AI phân tích rồi **xóa sạch ngay lập tức**, không lưu bất kỳ một byte nào vào ổ cứng. Hệ thống hoàn toàn không nhận diện khuôn mặt người dân. Chỉ duy nhất khi có tai nạn hoặc ngập lụt, đúng một bức ảnh hiện trường kèm tọa độ GPS mới được gửi về bot Telegram của đội cứu hộ và cập nhật lên bản đồ điều hành."*
+> *Còn ở bên phải là giao diện thực tế: Chỉ khi có sự cố, hệ thống mới gửi **đúng một bức ảnh hiện trường kèm tọa độ** về Telegram để hỗ trợ ứng cứu kịp thời."*
 
 *(Bấm chuyển Slide 7)*
 
@@ -122,7 +122,7 @@
 2. **Ánh mắt hướng vào Giám khảo:** Hãy nhìn trực diện vào các thầy cô trong Hội đồng, chỉ liếc nhìn slide 1 - 2 giây khi bấm chuyển trang để kiểm tra hình.
 3. **Chỉ tay vào điểm nhấn hình ảnh:** 
    - Ở Slide 2: Chỉ tay vào 2 bức ảnh trên khi nói về ngập nước và ngã xe, sau đó chỉ xuống sơ đồ nút thắt cổ chai ở dưới.
-   - Ở Slide 4: Chỉ tay vào hình bánh xe có 3 vạch xanh - vàng - đỏ.
+   - Ở Slide 4: Chỉ tay vào hình bánh xe có 3 dải màu xanh - vàng - đỏ.
    - Ở Slide 5: Chỉ tay từ trái qua phải theo 4 khối: Cân bằng sáng -> Dáng nằm sát xe -> Đếm 5 giây -> Bắn cảnh báo.
-   - Ở Slide 6: Chỉ tay vào mũi tên video trút vào biểu tượng thùng rác khi nói câu *"xóa sạch trong RAM"*.
+   - Ở Slide 6: Chỉ tay sang khung bên trái vào biểu tượng RAM trút vào thùng rác, sau đó chỉ sang khung bên phải vào màn hình điện thoại Telegram.
 4. **Chuẩn bị sẵn tâm thế trả lời Q&A:** Lắng nghe hết câu hỏi của giám khảo, gật đầu cảm ơn *"Dạ cảm ơn câu hỏi rất hay của Thầy/Cô ạ"*, sau đó trả lời đúng trọng tâm kỹ thuật như đã chuẩn bị trong tài liệu.
