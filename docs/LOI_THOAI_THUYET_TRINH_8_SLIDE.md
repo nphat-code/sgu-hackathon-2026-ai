@@ -49,11 +49,11 @@
 ---
 
 ### 🟢 SLIDE 3: TIẾP CẬN BẰNG EDGE AI PHÂN TÁN (0:45 – 1:05 | 20 giây)
-*(Màn hình hiển thị: So sánh Hệ thống tập trung vs Hệ thống phân tán UrbanShield Lite)*
+*(Màn hình hiển thị: Sơ đồ luồng Edge AI từ Camera -> CPU Máy trạm YOLOv8-nano -> Gói tin cảnh báo -> Telegram & Bản đồ số)*
 
-> *"Để giải bài toán chi phí này, nhóm em không gom video về máy chủ trung tâm nữa, mà đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
+> *"Để giải bài toán chi phí này, nhóm em đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**:*  
 > 
-> *Nhóm em chọn mô hình **YOLOv8-nano siêu nhẹ**, chạy mượt ngay trên **CPU máy tính bình thường**; tận dụng camera có sẵn ở khu dân cư, tự phân tích tại chỗ và chỉ báo về khi thực sự có sự cố."*
+> *Hình ảnh từ **camera có sẵn** ở khu dân cư sẽ được đưa vào **máy trạm CPU thông thường**, chạy mô hình **YOLOv8-nano siêu nhẹ** — hoàn toàn không cần GPU đắt tiền. Máy tính sẽ tự phân tích tại chỗ, và chỉ phát đi một **gói tin cảnh báo siêu nhẹ** về Telegram và Bản đồ số khi thực sự có sự cố."*
 
 *(Bấm chuyển Slide 4)*
 
