@@ -24,12 +24,13 @@ Mỗi khi hoàn thành xong bất kỳ phần việc nào (tạo file mới, ch�
 - **Cấm tiệt từ ngữ hành chính / quan liêu:**
   - Không nói *"tuyến đường nhánh trũng thấp"* $\rightarrow$ Nói: *"những con đường nhỏ và ngõ hẻm hay bị ngập sâu"*.
   - Không nói *"đưa công nghệ xuống từng con đường"* $\rightarrow$ Nói: *"gắn camera AI / lắp camera AI khắp các con đường nhỏ và ngõ hẻm"*.
-- **Gọt bỏ từ ghép ngô nghê, sến súa:**
-  - Không nói *"an toàn xăm xắp"*, không nói *"cây thước đo"* (chỉ nói *"làm thước đo"*).
+- **Gọt bỏ từ ghép ngô nghê, lượng từ rườm rà, sến súa:**
+  - Không dùng lượng từ thừa: Bỏ *"chiếc máy tính"* $\rightarrow$ Nói *"máy tính"*; bỏ *"cây thước đo"* $\rightarrow$ Nói *"thước đo"*; bỏ *"mắt camera"* $\rightarrow$ Nói *"camera"*.
+  - Không nói *"an toàn xăm xắp"*. Dùng từ thuần khẩu ngữ mộc mạc: *"rất nhẹ"*.
   - Không nói văn thơ phim tài liệu: *"Bởi vì ở chính những nơi ấy..."* $\rightarrow$ Nói văn nói: *"Thực tế là mỗi khi mùa mưa đến..."*.
 
 ### 🧩 4. Quy chuẩn Logic & Dẫn dắt bài nói (Logic & Transitions)
-- **Chủ ngữ phải rõ ràng, không lơ lửng:** Khi nói *"tự phân tích tại chỗ"*, phải chỉ rõ chủ ngữ là ai/cái gì (ví dụ: *"chiếc máy tính ở khu phố tự phân tích..."*).
+- **Chủ ngữ phải rõ ràng, không lơ lửng:** Khi nói *"tự phân tích tại chỗ"*, phải chỉ rõ chủ ngữ là ai/cái gì (ví dụ: *"máy tính ở khu phố tự phân tích..."*).
 - **So sánh phải đối xứng, chặt chẽ:** Khi nêu rào cản, phải rõ 2 vế đối lập: *"mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng"*.
 - **Luôn có từ nối dẫn dắt theo sơ đồ thị giác:** Khi chuyển khối trên slide, luôn dùng từ mồi và thứ tự thời gian: *"Quy trình rất đơn giản: Đầu tiên... truyền về máy tính... Tại đây, máy tính tự phân tích... và chỉ khi có sự cố thì mới gửi tin nhắn..."*.
 - **Tránh tranh cãi con số giá tiền:** Thay vì nêu con số cụ thể dễ bị Giám khảo bắt bẻ (*15-25 triệu*), hãy đánh thẳng vào bản chất: *"camera chuyên dụng thì quá đắt đỏ"*.
