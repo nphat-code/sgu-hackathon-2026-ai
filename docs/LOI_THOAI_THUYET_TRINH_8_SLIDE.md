@@ -42,7 +42,7 @@
 
 > *"Thực tế là mỗi khi mùa mưa đến, chúng ta lại thấy hai vấn đề rất rõ: Đầu tiên là những con đường hay bị **ngập sâu làm xe chết máy**; và thứ hai là những vụ trượt ngã xe trong ngõ vắng ban đêm **khuất tầm nhìn**, rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
-> *Thế nhưng, hạ tầng hiện nay lại gặp phải một **nút thắt cổ chai rất lớn** như sơ đồ phía dưới: Mua camera AI chuyên dụng thì quá đắt đỏ; còn dùng camera thường kéo video 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
+> *Thế nhưng, hạ tầng hiện nay lại gặp phải một **nút thắt cổ chai rất lớn** như sơ đồ phía dưới: Mua camera AI chuyên dụng thì quá đắt đỏ; còn dùng camera thường kéo video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 
