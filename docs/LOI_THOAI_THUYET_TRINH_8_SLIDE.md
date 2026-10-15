@@ -40,7 +40,7 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Bởi vì ở chính những nơi ấy, mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất dễ bị bỏ lỡ thời gian vàng cứu hộ.*  
+> *"Bởi vì ở chính những nơi ấy, mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
 > *Thế nhưng, ta không thể đưa camera AI xuống từng con hẻm nhỏ được: dùng camera chuyên dụng thì quá đắt đỏ, còn nếu truyền hàng ngàn luồng video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
@@ -53,7 +53,7 @@
 
 > *"Để giải bài toán chi phí này, nhóm em không gom video về máy chủ trung tâm nữa, mà đưa AI về xử lý trực tiếp ngay tại chỗ — tức là **Edge AI**.*  
 > 
-> *Bằng cách tối ưu mô hình **YOLOv8-nano** chạy mượt trên CPU máy tính phổ thông, hệ thống tận dụng ngay camera có sẵn ở khu dân cư, tự phân tích hình ảnh tại chỗ và chỉ phát tín hiệu báo động khi thực sự có sự cố."*
+> *Nhóm em chọn mô hình **YOLOv8-nano siêu nhẹ**, chạy mượt ngay trên **CPU máy tính bình thường**; tận dụng camera có sẵn ở khu dân cư, tự phân tích tại chỗ và chỉ báo về khi thực sự có sự cố."*
 
 *(Bấm chuyển Slide 4)*
 
@@ -75,7 +75,7 @@
 
 > *"Còn với sự cố ngã xe ban đêm: Để tránh báo nhầm khi người dân chỉ cúi nhặt đồ hay ngồi nghỉ, nhóm em áp dụng **bộ đếm thời gian 5 giây**.*  
 > 
-> *Cụ thể, khi AI phát hiện dáng người chuyển sang tư thế nằm ngang ngay sát cạnh xe máy, bộ đếm sẽ kích hoạt. Chỉ khi người đó nằm bất động liên tục **quá 5 giây** mà không đứng dậy, hệ thống mới phát cảnh báo. Ngoài ra, thuật toán **CLAHE** cũng được tích hợp sẵn để tăng độ sáng rõ khi trời tối."*
+> *Cụ thể, khi AI phát hiện **người bị ngã nằm dài trên mặt đường ngay sát cạnh xe máy**, bộ đếm sẽ kích hoạt. Chỉ khi người đó nằm bất động liên tục **quá 5 giây** mà không đứng dậy, hệ thống mới phát cảnh báo. Ngoài ra, thuật toán **CLAHE** cũng được tích hợp sẵn để tăng độ sáng rõ khi trời tối."*
 
 *(Bấm chuyển Slide 6)*
 
@@ -84,7 +84,7 @@
 ### 🟢 SLIDE 6: KIẾN TRÚC DỮ LIỆU & QUYỀN RIÊNG TƯ (1:55 – 2:15 | 20 giây)
 *(Màn hình hiển thị: Luồng video rơi vào thùng rác trên RAM & Kênh Telegram/Bản đồ)*
 
-> *"Một vấn đề mà bà con ngõ xóm rất lo lắng là quyền riêng tư. Vì vậy, nhóm em cam kết bảo vệ dữ liệu ngay từ thiết kế:*  
+> *"Một vấn đề mà bà con ngõ xóm rất lo lắng là quyền riêng tư. Vì vậy, nhóm em **đặt quyền riêng tư lên hàng đầu**:*  
 > 
 > *Toàn bộ video chỉ được lưu tạm trên RAM để AI phân tích rồi **xóa sạch ngay lập tức**, không lưu bất kỳ một byte nào vào ổ cứng. Hệ thống hoàn toàn không nhận diện khuôn mặt người dân. Chỉ duy nhất khi có tai nạn hoặc ngập lụt, đúng một bức ảnh hiện trường kèm tọa độ GPS mới được gửi về bot Telegram của đội cứu hộ và cập nhật lên bản đồ điều hành."*
 
