@@ -95,9 +95,9 @@
 ### 🟢 SLIDE 7: PHÂN TÍCH TÍNH KHẢ THI KINH TẾ TCO (2:15 – 2:40 | 25 giây)
 *(Màn hình hiển thị: Bảng so sánh kinh tế TCO và Mô hình trạm cụm 20-30 camera)*
 
-> *"Để nhân rộng giải pháp này vào đời sống, nhóm em áp dụng **mô hình trạm cụm rất đơn giản**: Chỉ cần một máy tính phổ thông đặt tại văn phòng khu phố là có thể xử lý cho 20 đến 30 camera xung quanh.*  
+> *"Để giải pháp có tính khả thi cao, nhóm em áp dụng **mô hình trạm cụm như bảng so sánh trên màn hình**: Thay vì đầu tư máy chủ GPU đắt đỏ, chỉ cần một máy tính CPU phổ thông đặt tại khu phố là đã xử lý được cho **20 đến 30 camera** xung quanh.*  
 > 
-> *Cách làm này giúp cắt giảm từ **70 đến 80% chi phí đầu tư ban đầu**, do tận dụng lại camera có sẵn và không cần máy chủ GPU đắt đỏ. Đồng thời, hệ thống **tiết kiệm hơn 95% đường truyền mạng** vì không phải phát video liên tục 24/7."*
+> *Nhờ xử lý tại chỗ, hệ thống **tiết kiệm hơn 95% băng thông** mạng; và quan trọng nhất là **cắt giảm từ 70 đến 80% tổng chi phí đầu tư**, giúp việc nhân rộng về các khu dân cư trở nên hoàn toàn khả thi."*
 
 *(Bấm chuyển Slide 8)*
 
@@ -125,4 +125,5 @@
    - Ở Slide 4: Chỉ tay vào hình bánh xe có 3 dải màu xanh - vàng - đỏ.
    - Ở Slide 5: Chỉ tay từ trái qua phải theo 4 khối: Cân bằng sáng -> Dáng nằm sát xe -> Đếm 5 giây -> Bắn cảnh báo.
    - Ở Slide 6: Chỉ tay sang khung bên trái vào biểu tượng RAM trút vào thùng rác, sau đó chỉ sang khung bên phải vào màn hình điện thoại Telegram.
+   - Ở Slide 7: Chỉ tay từ hàng trên xuống dưới theo 2 mũi tên đỏ: Giảm 95% băng thông -> Giảm 70-80% chi phí.
 4. **Chuẩn bị sẵn tâm thế trả lời Q&A:** Lắng nghe hết câu hỏi của giám khảo, gật đầu cảm ơn *"Dạ cảm ơn câu hỏi rất hay của Thầy/Cô ạ"*, sau đó trả lời đúng trọng tâm kỹ thuật như đã chuẩn bị trong tài liệu.
