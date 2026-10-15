@@ -40,9 +40,9 @@
 ### 🟢 SLIDE 2: THỰC TRẠNG & RÀO CẢN HẠ TẦNG (0:20 – 0:45 | 25 giây)
 *(Màn hình hiển thị: Nút thắt cổ chai băng thông và 2 vấn đề dân sinh)*
 
-> *"Bởi vì ở chính những nơi ấy, mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: các tuyến đường nhánh trũng thấp bị ngập cục bộ làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
+> *"Bởi vì ở chính những nơi ấy, mỗi khi mùa mưa đến, chúng ta lại thấy hai rủi ro rất quen thuộc: những con đường nhỏ và ngõ hẻm hay bị ngập sâu làm xe chết máy hàng loạt, và những vụ trượt ngã xe trong ngõ vắng ban đêm rất khó được phát hiện kịp thời để giúp đỡ.*  
 > 
-> *Thế nhưng, ta không thể đưa camera AI xuống từng con hẻm nhỏ được: dùng camera chuyên dụng thì quá đắt đỏ, còn nếu truyền hàng ngàn luồng video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
+> *Thế nhưng, ta không thể đưa camera AI xuống từng con đường nhỏ hay ngõ xóm được: dùng camera chuyên dụng thì quá đắt đỏ, còn nếu truyền hàng ngàn luồng video liên tục 24/7 về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng."*
 
 *(Bấm chuyển Slide 3)*
 
