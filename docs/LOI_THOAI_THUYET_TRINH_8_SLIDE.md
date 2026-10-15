@@ -62,9 +62,9 @@
 ### 🟢 SLIDE 4: ƯỚC LƯỢNG NGẬP QUA HÌNH HỌC (1:05 – 1:30 | 25 giây)
 *(Màn hình hiển thị: Bánh xe máy 50cm và 3 mức nước nét đứt Xanh - Vàng - Đỏ)*
 
-> *"Cụ thể với bài toán ngập nước: Thay vì gắn cảm biến dưới cống rất dễ bị rác làm nghẹt, nhóm em tận dụng chính bánh xe máy lưu thông trên đường làm thước đo.*  
+> *"Cụ thể với bài toán ngập nước: Thay vì gắn cảm biến dưới cống rất dễ bị nghẹt rác và hỏng hóc, nhóm em tận dụng chính bánh xe máy lưu thông trên đường làm thước đo.*  
 > 
-> *Với đường kính bánh xe khoảng 50cm, hệ thống sẽ nhìn vào phần bánh xe bị nước che khuất để chia làm ba mức cảnh báo: dưới 10cm là an toàn, xe chạy bình thường; từ 10 đến 20cm là nước chạm mép ống xả; và trên 20cm là ngập sâu, xe rất dễ bị chết máy."*
+> *Với đường kính bánh xe khoảng 50cm, hệ thống sẽ nhìn vào phần bánh xe bị nước che khuất để chia làm ba mức cảnh báo **như ba dải màu trên màn hình**: Dưới 10cm là an toàn, xe chạy bình thường; từ 10 đến 20cm là nước chạm mép ống xả; và trên 20cm là ngập sâu, xe rất dễ bị chết máy."*
 
 *(Bấm chuyển Slide 5)*
 
