@@ -22,6 +22,20 @@
 
 ---
 
+### 🧠 CUE CARDS: BẢNG TỪ KHÓA BỎ TÚI (DÀNH CHO 3 PHÚT TRÊN SÂN KHẤU)
+*(Khi đứng trên bục, chỉ cần nhớ 2 - 3 keyword này cho mỗi slide là tự khắc nói trôi chảy, không sợ quên bài)*
+
+- **Slide 1:** `UrbanShield Lite` | `AI biên nhỏ gọn` | `Dân sinh ngõ hẻm bình dị`
+- **Slide 2:** `2 vấn đề: Ngập xe chết máy + Ngã xe đêm khuất tầm nhìn` | `Nút thắt cổ chai: Cam đắt + Nghẽn mạng 24/7`
+- **Slide 3:** `Giải quyết chi phí: Edge AI tại chỗ` | `Camera cũ -> CPU máy tính khu phố (YOLOv8-nano)` | `Chỉ gửi tin nhắn sự cố`
+- **Slide 4:** `Không cảm biến cống` | `Thước đo bánh xe 50cm` | `3 dải màu: <10cm an toàn | 10-20cm ống xả | >20cm chết máy`
+- **Slide 5:** `4 bước chống báo nhầm:` `CLAHE ban đêm` -> `Dáng nằm ngang sát xe` -> `Bộ đếm bất động >5s` -> `Bắn cảnh báo`
+- **Slide 6:** `Privacy: Không nhận diện mặt` | `Video hủy vĩnh viễn trên RAM` | `Telegram: Đúng 1 ảnh + Tọa độ`
+- **Slide 7:** `Bảng TCO: Trạm cụm 1 CPU gom 20-30 cam` | `Giảm 95% băng thông` | `Cắt giảm 70-80% tổng chi phí`
+- **Slide 8:** `Nếu có cơ hội: Thử nghiệm 1-2 ngõ` -> `Tinh chỉnh thuật toán` -> `Mở mã nguồn cộng đồng` | `Cảm ơn & Lắng nghe những câu hỏi`
+
+---
+
 ## 🗣️ LỜI THOẠI TỪNG CÂU CHO TỪNG SLIDE
 
 ---
@@ -108,7 +122,7 @@
 
 > *"Nếu có cơ hội được phát triển tiếp, em mong muốn được thử nghiệm thực địa tại 1 đến 2 con ngõ để thu thập thêm dữ liệu và tinh chỉnh thuật toán; sau đó sẽ **mở mã nguồn hoàn toàn** để phục vụ cộng đồng.*  
 > 
-> *Em xin cảm ơn các thầy và mọi người đã lắng nghe, và em rất mong nhận được câu hỏi cũng như góp ý từ các thầy ạ!"*
+> *Em xin cảm ơn các thầy và mọi người đã lắng nghe, và em rất mong nhận được **những câu hỏi** cũng như góp ý từ các thầy ạ!"*
 
 *(Cúi chào nhẹ và mỉm cười chờ Ban Giám khảo đặt câu hỏi)*
 
