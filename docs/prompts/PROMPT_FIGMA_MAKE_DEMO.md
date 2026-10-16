@@ -1,73 +1,69 @@
-# 🎨 PROMPT TẠO GIAO DIỆN DEMO Ý TƯỞNG TRỰC QUAN (FIGMA MAKE)
+# 🎨 PROMPT TẠO GIAO DIỆN DEMO Ý TƯỞNG TẬP TRUNG (FIGMA MAKE / AI PROTOTYPE)
 ## DỰ ÁN: URBANSHIELD LITE – NHÓM SINGLENODE (HACKATHON SGU 2026)
 
-> **Định hướng thiết kế:** Vào thẳng trọng tâm giao diện **Sản phẩm Giám sát Thực tế** (Dashboard 1 màn hình tập trung tương tác thử nghiệm tính năng ngập nước & ngã xe), **loại bỏ hoàn toàn các tab lý thuyết / sơ đồ pipeline rườm rà**.  
-> **Phong cách:** **Clean Light Mode** (nền sáng Apple-style, thẻ trắng viền xám nhẹ tinh tế).  
-> **Giới hạn độ dài:** Cả 2 bản đều kiểm soát nghiêm ngặt **dưới 1.800 ký tự** (chuẩn < 2.000 ký tự của Figma Make).
+> **Mục tiêu:** Cung cấp prompt tinh gọn, tập trung 100% vào **Giao diện Camera mô phỏng trực quan** và **2 tính năng tương tác thực tế** (Đo ngập bánh xe & Thử nghiệm ngã xe 5s).  
+> **Lược bỏ triệt để:** Không còn các thẻ thông số kỹ thuật rườm rà (Model, CPU, RAM-Only, FPS, IP...) gây xao nhãng ở thanh tiêu đề.  
+> **Phong cách:** **Clean Light Mode** (nền sáng Apple-style, thẻ trắng viền xám nhẹ tinh tế, độ dài dưới 1.600 ký tự).
 
 ---
 
-## 🚀 1. PROMPT TIẾNG ANH (1.743 KÝ TỰ - TẬP TRUNG 100% VÀO SẢN PHẨM & TƯƠNG TÁC)
-*(Dán trực tiếp vào ô "What do you want to make?" trên Figma Make):*
+## 🚀 1. PROMPT TIẾNG ANH (1.472 KÝ TỰ - KHUYÊN DÙNG CHO FIGMA MAKE)
+*(Dán trực tiếp vào ô prompt của Figma Make / AI Prototype):*
 
 ```text
-Build a focused, interactive civic-tech live monitoring demo dashboard for "UrbanShield Lite" (AI camera system for alleyway flood and fall detection by SingleNode). Clean Apple-style light theme (White #FFFFFF, Canvas #F8FAFC, Slate borders #E2E8F0, Accent Blue #2563EB).
+Create a clean, focused interactive demo for "UrbanShield Lite" - a civic alert system for street flooding and motorbike fall detection. Minimalist light theme (Clean white background, no clutter, no technical spec cards).
 
-Layout: Single-screen dashboard split into 2 main sections:
+Top Header (Minimal):
+- Title: "UrbanShield Lite"
+- Subtitle: "Demo giám sát ngập nước & ngã xe máy"
+- (DO NOT add any technical badges, specs, IP addresses, or metadata cards in the header).
 
-1. Main AI Camera Viewport (Interactive Playground):
-- Video screen simulating a live alleyway camera feed with AI bounding boxes (person, motorbike, wheels).
-- Top scenario toggles: [Flood Scenario] [Fall Accident Scenario]
+Main Interface (2 Columns):
 
-* In [Flood Scenario]:
-  - Interactive water slider (0 to 40 cm).
-  - Real-time visual: Water rises over the motorbike wheel.
-  - Dynamic AI overlay on wheel shows: "Wheel Ø50cm | Depth: [X]cm" with status:
-    • <10cm Green: "An toàn (Bình thường)"
-    • 10-20cm Amber: "Chú ý chạm pô xe"
-    • >20cm Red pulsing: "Nguy cơ chết máy!" -> triggers instant alert.
+1. Left: Interactive Alley Camera Viewport
+- Simulated alley scene with motorbike and person with AI bounding boxes.
+- Two interactive control modes at the bottom:
+  * Mode 1: [Thử nghiệm Ngập nước]
+    - Slider from 0cm to 40cm.
+    - Water level visually rises over the motorbike wheel.
+    - Real-time indicator on wheel:
+      • Under 10cm: Green badge "Bình thường"
+      • 10 - 20cm: Amber badge "Nước chạm ống xả"
+      • Over 20cm: Red flashing badge "Nguy cơ chết máy!" -> triggers alert.
+  * Mode 2: [Thử nghiệm Ngã xe]
+    - Button: "Mô phỏng ngã xe" -> Person posture turns horizontal (red box), starts 5s countdown timer.
+    - Interactive action: Button "Người tự đứng dậy" (immediately cancels alarm, shows green toast "Đã hủy cảnh báo: Tránh báo giả") OR let countdown reach 0 (triggers red emergency alarm).
 
-* In [Fall Accident Scenario]:
-  - Button: "Simulate Motorbike Fall".
-  - Shows red horizontal AI box on fallen person (Fall W/H: 1.35), with live 5-second countdown timer on screen: "Kiểm tra bất động: 5s... 4s...".
-  - 2 interactive test buttons:
-    a) "Người đứng dậy": cancels countdown, turns box green, displays toast "Hủy cảnh báo: Chống báo giả thành công!".
-    b) Let timer expire: triggers flashing red SOS emergency alert.
-
-2. Real-Time Incident Panel & Map:
-- Live Telegram alert feed: dynamically pops up an incident card when triggered (with frame snapshot, address "Hẻm 254 Nguyễn Văn Cừ, Q5", GPS, timestamp, and "Điều phối hỗ trợ" button).
-- Clean alley mini-map with camera node pin changing color (Green -> Amber -> Red).
-- Status bar: "Trạm 01 - Hẻm 254 NVC | YOLOv8n CPU | 28.5 FPS | RAM Buffer".
+2. Right: Live Alert Notification & Mini Map
+- Telegram Bot preview card: Pops up automatically when water > 20cm or when fall countdown finishes. Shows snapshot, alert type, and "Xem vị trí" button.
+- Simple clean map showing alley camera pin changing color (Green -> Amber -> Red).
 ```
 
 ---
 
-## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.719 KÝ TỰ - NGẮN GỌN, TRỰC DIỆN)
+## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.448 KÝ TỰ - BẢN THUẦN VIỆT TƯƠNG ĐƯƠNG)
 
 ```text
-Tạo giao diện web demo trực quan, tương tác trực tiếp cho hệ thống "UrbanShield Lite" (Camera AI theo dõi ngập nước & ngã xe ngõ hẻm của SingleNode). Phong cách Light Theme sáng sạch kiểu Apple (Nền #F8FAFC, Thẻ trắng #FFFFFF, Viền xám #E2E8F0, Nhấn xanh #2563EB).
+Tạo giao diện demo tương tác gọn gàng, tập trung cho "UrbanShield Lite" (Hệ thống cảnh báo ngập nước & ngã xe máy ngõ hẻm). Phong cách giao diện sáng (Light mode) tối giản, sạch sẽ, không chèn các thẻ thông số kỹ thuật gây xao nhãng.
 
-Bố cục 1 màn hình tập trung hoàn toàn vào tương tác thực tế (không làm trang lý thuyết):
+Thanh tiêu đề (Rất đơn giản, không thẻ phụ):
+- Tên ứng dụng: "UrbanShield Lite"
+- Phụ đề: "Mô phỏng giám sát ngập nước & ngã xe máy"
+- TUYỆT ĐỐI KHÔNG thêm các thẻ thông số như Model, CPU, RAM, FPS, IP hay vị trí ở thanh trên cùng.
 
-1. Màn hình Camera AI Giám sát (Khu vực tương tác chính):
-- Khung hình camera ngõ hẻm với các khung nhận diện AI (người, xe máy, bánh xe).
-- 2 nút chọn kịch bản nhanh trên thanh công cụ:
-  * KỊCH BẢN ĐO NGẬP:
-    - Thanh trượt mực nước từ 0 đến 40cm.
-    - Mực nước dâng lên trên bánh xe theo thời gian thực.
-    - Khung AI trên bánh xe hiển thị: "Bánh xe Ø50cm | Mức ngập: [X]cm" kèm nhãn đổi màu tự động:
-      • <10cm Xanh: "An toàn (Lưu thông bình thường)"
-      • 10-20cm Vàng: "Chú ý (Nước chạm mép pô)"
-      • >20cm Đỏ nhấp nháy: "Nguy hiểm (Nguy cơ chết máy)" -> Kích hoạt gửi cảnh báo ngay.
-  * KỊCH BẢN NGÃ XE:
-    - Nút bấm: "Mô phỏng người ngã xe".
-    - Khung AI chuyển đỏ quanh người nằm ngang kèm bộ đếm ngược 5 giây chạy trực tiếp trên camera: "Kiểm tra bất động: 5s... 4s...".
-    - 2 nút tương tác:
-      a) Bấm "Người tự đứng dậy": Dừng đếm ngược, khung chuyển xanh, hiện thông báo: "Hủy cảnh báo: Tránh báo giả thành công!".
-      b) Để hết 5 giây: Nháy còi SOS đỏ khẩn cấp.
+Bố cục chính (2 Cột):
+1. Cột trái: Màn hình mô phỏng Camera ngõ hẻm (Khu vực tương tác chính)
+- Hình ảnh ngõ hẻm có người và xe máy kèm khung nhận diện AI.
+- 2 công cụ tương tác ngay dưới màn hình:
+  * Tương tác ngập nước:
+    - Thanh trượt mực nước 0 - 40cm.
+    - Nước dâng lên bánh xe theo thời gian thực.
+    - Nhãn trên bánh xe tự đổi màu: Dưới 10cm hiện Xanh "Bình thường", 10-20cm hiện Vàng "Nước chạm ống xả", Trên 20cm hiện Đỏ nhấp nháy "Nguy cơ chết máy" -> tự kích hoạt cảnh báo.
+  * Tương tác ngã xe:
+    - Nút "Mô phỏng ngã xe": Dáng người ngã ngang, hiện bộ đếm ngược 5 giây.
+    - Nút "Người tự đứng dậy": Bấm vào dừng đếm ngay, báo "Đã hủy: Tránh báo giả thành công". Nếu để hết 5s thì kích hoạt chuông báo động đỏ.
 
-2. Bảng Cảnh Báo Telegram & Bản Đồ Ngõ Hẻm:
-- Khung mô phỏng tin nhắn Telegram tự động bật ra khi có sự cố (kèm ảnh chụp hiện trường, địa chỉ "Hẻm 254 Nguyễn Văn Cừ", tọa độ GPS, nút "Xem vị trí cứu hộ").
-- Bản đồ ngõ xóm thu nhỏ có điểm ghim camera đổi màu Xanh -> Vàng -> Đỏ theo sự cố.
-- Thanh thông số trạm: "Trạm 01 - Hẻm 254 NVC | Edge CPU YOLOv8n | 28.5 FPS".
+2. Cột phải: Khung tin nhắn cảnh báo Telegram & Bản đồ nhỏ
+- Thẻ tin nhắn Telegram tự bật ra khi có sự cố (kèm ảnh hiện trường và nút xem vị trí).
+- Bản đồ ngõ hẻm thu nhỏ đổi màu điểm camera (Xanh -> Vàng -> Đỏ).
 ```
