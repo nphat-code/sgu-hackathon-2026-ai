@@ -43,7 +43,7 @@
 ### 🟢 SLIDE 1: GIỚI THIỆU ĐỀ ÁN (0:00 – 0:20 | 20 giây)
 *(Màn hình hiển thị: UrbanShield Lite – Theo dõi ngập nước & sự cố giao thông)*
 
-> *"Dạ em chào các thầy và mọi người trong hội trường ngày hôm nay, em là Phát đến từ đội **SingleNode**.*  
+> *"Dạ em chào hai anh chị và mọi người trong phòng ngày hôm nay, em là Phát đến từ đội **SingleNode**.*  
 > 
 > *Hôm nay, em xin được chia sẻ về **UrbanShield Lite** – một giải pháp AI biên nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông **dân sinh**, với mong muốn của em là mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
 
