@@ -43,7 +43,7 @@
 ### 🟢 SLIDE 1: GIỚI THIỆU ĐỀ ÁN (0:00 – 0:20 | 20 giây)
 *(Màn hình hiển thị: UrbanShield Lite – Theo dõi ngập nước & sự cố giao thông)*
 
-> *"Dạ em chào hai anh chị và mọi người trong phòng ngày hôm nay, em là Phát đến từ đội **SingleNode**.*  
+> *"Dạ em chào hai anh chị cùng mọi người, em là Phát đến từ đội **SingleNode**.*  
 > 
 > *Hôm nay, em xin được chia sẻ về **UrbanShield Lite** – một giải pháp AI biên nhỏ gọn hỗ trợ theo dõi ngập nước và an toàn giao thông **dân sinh**, với mong muốn của em là mang công nghệ an toàn đến với những con đường nhỏ và khu dân cư bình dị nhất."*
 
@@ -91,7 +91,28 @@
 > 
 > *Đầu tiên, thuật toán **CLAHE** tự động cân bằng sáng để nhìn rõ vào ban đêm. Tiếp theo, mô hình nhận diện **dáng người nằm ngang sát cạnh xe máy**. Và quan trọng nhất là **bộ đếm 5 giây**: Chỉ khi người đó nằm bất động liên tục quá 5 giây mà không đứng dậy, hệ thống mới kích hoạt cảnh báo, gửi hình ảnh và tọa độ để ứng cứu kịp thời."*
 
-*(Bấm chuyển Slide 6)*
+*(Bấm chuyển sang Tab Trình duyệt Demo Prototype)*
+
+---
+
+### 💻 PHẦN THAO DIỄN NGUYÊN MẪU TRỰC TIẾP (LIVE PROTOTYPE DEMO | 60 – 75 giây)
+*(Màn hình trình chiếu giao diện UrbanShield Lite Dashboard)*
+
+> *"Dạ, để hai anh chị hình dung rõ nhất cách hệ thống vận hành trong thực tế, em xin phép thao tác trực tiếp hai kịch bản trên bản demo prototype:*
+>
+> *(Thao tác 1: Kịch bản Đo ngập nước – bấm nút [15cm Chạm pô xe])*  
+> *Đầu tiên là bài toán ngập nước: Khi mực nước ở mức 15cm, nước dâng ngập khoảng một phần ba bánh xe và chạm mép pô, hệ thống lập tức bật cảnh báo màu cam. Đồng thời ở góc phải, tuyến Hẻm 254 trên bản đồ số cũng tự động đổi sang màu vàng cam để bà con biết tránh đi vào.*
+>
+> *(Thao tác 2: Bấm nút [26cm Ngập sâu])*  
+> *Còn khi nước dâng vượt quá 20cm – tức là hơn nửa bánh xe, hệ thống sẽ chuyển sang cảnh báo đỏ nguy cơ chết máy. Ngay lập tức, một mẩu tin cảnh báo tự động bắn về Telegram cho Tổ Dân Phố kèm định vị chính xác con hẻm.*
+>
+> *(Thao tác 3: Chuyển sang tab [Thử nghiệm Ngã xe] – bấm nút đỏ [Mô phỏng ngã xe])*  
+> *Kịch bản thứ hai là sự cố ngã xe ban đêm: Khi xe ngã, camera bắt được dáng người nằm ngang sát cạnh xe và kích hoạt bộ đếm 5 giây ở góc trên.*
+>
+> *(Thao tác 4: Bấm nút [Người tự đứng dậy])*  
+> *Nếu người dân tự đứng dậy được trước 5 giây – ví dụ như người ta chỉ cúi nhặt đồ hay ngồi nghỉ, cảnh báo sẽ tự hủy ngay lập tức để triệt tiêu báo động giả. Còn nếu người đó bất động liên tục quá 5 giây, chuông SOS đỏ sẽ reo và mẩu tin cứu trợ khẩn cấp sẽ được phát đi ngay lập tức."*
+
+*(Bấm Alt+Tab chuyển lại Slide PowerPoint – Chuyển Slide 6)*
 
 ---
 
