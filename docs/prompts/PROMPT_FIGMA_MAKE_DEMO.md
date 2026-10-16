@@ -1,30 +1,32 @@
 # 🎨 BỘ PROMPT TẠO GIAO DIỆN DEMO Ý TƯỞNG & LUỒNG ACTIVITY (FIGMA MAKE)
 ## DỰ ÁN: URBANSHIELD LITE – NHÓM SINGLENODE (HACKATHON SGU 2026)
 
-> **Tiêu chuẩn UI/UX:** Áp dụng hệ thống **Bento Grid**, bảng màu **Dark Mode chuẩn WCAG AA (4.5:1+)**, phân cấp thị giác **Progressive Disclosure**, font pairing **Inter + JetBrains Mono**, và mô hình tương tác **Direct Manipulation**.  
-> **Độ dài:** Cả 2 bản đều được tối ưu hóa nghiêm ngặt **dưới 2.000 ký tự** để vừa vặn khung prompt của Figma Make.
+> **Tiêu chuẩn UI/UX:** Phong cách **Clean Light Theme (Apple-style Civic Tech)** tinh tế, sáng sủa, độ tin cậy cao.  
+> **Kiến trúc giao diện:** **Bento Grid**, tương phản chuẩn **WCAG AA (4.5:1+)**, phân cấp **Progressive Disclosure**, font pairing **Inter + JetBrains Mono**, mô hình tương tác **Direct Manipulation**.  
+> **Giới hạn độ dài:** Cả 2 bản đều kiểm soát nghiêm ngặt **dưới 2.000 ký tự** để vừa vặn ô nhập của Figma Make.
 
 ---
 
-## 🚀 1. PROMPT TIẾNG ANH (1.855 KÝ TỰ - CHUẨN UI/UX PRO MAX, KHUYÊN DÙNG)
+## 🚀 1. PROMPT TIẾNG ANH (1.969 KÝ TỰ - CLEAN LIGHT MODE, KHUYÊN DÙNG CHO FIGMA MAKE)
 *(Dán trực tiếp vào ô "What do you want to make?" trên Figma Make):*
 
 ```text
 Build an interactive civic-tech web prototype for "UrbanShield Lite" - an Edge-AI flood & fall detection alert system for alleyways by SingleNode.
 
-UI/UX & Design System (Bento Grid + Dark Mode):
-- Colors: BG #0B0F17, Cards #1E293B, Border #334155, Accent Sky #0EA5E9, Safe Emerald #10B981, Warning Amber #F59E0B, Danger Rose #F43F5E.
-- Typography: Inter (UI) + JetBrains Mono (metrics/telemetry).
-- UX Standards: WCAG AA (4.5:1+), 44px touch targets, dual-indicator badges (icon + text), 16px rounded cards, 200ms smooth transitions.
+UI/UX & Design System (Clean Light Mode + Bento Grid):
+- Theme: Apple-style clean light theme, civic trust aesthetic.
+- Colors: Canvas #F8FAFC, Cards #FFFFFF, Borders #E2E8F0, Text #0F172A, Accent Blue #2563EB, Safe Emerald #059669, Warning Amber #D97706, Danger Rose #DC2626.
+- Typography: Inter (UI) + JetBrains Mono (telemetry).
+- UX Standards: WCAG AA (4.5:1+), 44px touch targets, dual-indicator badges (icon + text), 16px rounded cards, subtle shadows, 200ms transitions.
 
 Header (Bento Bar):
-- Brand: "UrbanShield Lite | SingleNode"
-- Live telemetry: "Local CPU (YOLOv8n)", "RAM-Only (Zero Disk Video)", "28.5 FPS", "3 Nodes Online".
-- Tab switcher: [Activity Flow] [Interactive Sandbox] [Alerts & Map]
+- Brand: "UrbanShield Lite | SingleNode" with shield icon.
+- Telemetry: "Local CPU (YOLOv8n)", "RAM-Only (Zero Video Storage)", "28.5 FPS", "3 Nodes Online".
+- Tabs: [Activity Flow] [Interactive Sandbox] [Alerts & Map]
 
 Tab 1: [Interactive Activity Pipeline]
 - Horizontal interactive stepper (Local Cam -> Edge YOLOv8n -> Decision Fork [Water Depth / Fall 5s Debounce] -> Incident Trigger -> Alert Dispatch).
-- Node UX: Hover glow & active state. Clicking a node opens a slide-over panel with technical logic, thresholds, and pseudocode.
+- Node UX: Clean white cards with hover lift. Clicking a node opens a slide-over panel with technical logic, thresholds, and pseudocode.
 
 Tab 2: [Interactive Sandbox - Direct Manipulation]
 - 2-column Bento playground:
@@ -33,24 +35,25 @@ Tab 2: [Interactive Sandbox - Direct Manipulation]
 
 Tab 3: [Alert Dispatch & Telemetry]
 - Simulated mobile Telegram card: incident photo thumbnail, GPS tag ("Hẻm 254 Nguyễn Văn Cừ"), severity badge, and action chips.
-- Interactive vector dark map with 3 colored pulsing node pins.
+- Interactive vector clean light map with 3 colored pulsing node pins.
 ```
 
 ---
 
-## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.792 KÝ TỰ - CHUẨN UI/UX)
+## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.937 KÝ TỰ - CLEAN LIGHT THEME)
 
 ```text
 Tạo web prototype tương tác cho "UrbanShield Lite" - Hệ thống Edge-AI giám sát ngập nước & ngã xe ngõ hẻm (SingleNode).
 
-Hệ thống UI/UX (Bento Grid + Dark Mode):
-- Bảng màu: Nền #0B0F17, Thẻ #1E293B, Viền #334155, Nhấn #0EA5E9, An toàn #10B981, Cảnh báo #F59E0B, Báo động #F43F5E.
+Hệ thống UI/UX (Clean Light Mode + Bento Grid):
+- Phong cách: Giao diện sáng (Light Theme) tinh tế kiểu Apple, thanh lịch, độ tin cậy cao.
+- Bảng màu: Nền #F8FAFC, Thẻ trắng #FFFFFF, Viền #E2E8F0, Chữ #0F172A, Nhấn Xanh #2563EB, An toàn #059669, Chú ý #D97706, Báo động #DC2626.
 - Typography: Inter (giao diện) + JetBrains Mono (thông số kỹ thuật).
-- Chuẩn UX: Tương phản WCAG AA (4.5:1+), nút bấm >= 44px, nhãn trạng thái kép (icon + chữ), bo góc 16px, hiệu ứng 200ms mượt mà.
+- Chuẩn UX: Tương phản WCAG AA (4.5:1+), nút bấm >= 44px, nhãn trạng thái kép (icon + chữ), bo góc 16px, đổ bóng nhẹ, hiệu ứng 200ms mượt mà.
 
 Header (Thanh trạng thái Bento):
-- Thương hiệu: "UrbanShield Lite | SingleNode".
-- Chỉ số trực tiếp: "CPU phổ thông (YOLOv8n)", "Bộ đệm RAM (Không lưu video)", "28.5 FPS", "3 Trạm Online".
+- Thương hiệu: "UrbanShield Lite | SingleNode" kèm icon khiên bảo hộ.
+- Chỉ số: "CPU phổ thông (YOLOv8n)", "Bộ đệm RAM (Không lưu video)", "28.5 FPS", "3 Trạm Online".
 - 3 Tab điều hướng: [Sơ đồ Luồng Activity] [Thử Nghiệm Tương Tác] [Bản Đồ & Telegram]
 
 Tab 1: [Sơ đồ Luồng Activity Tương Tác]
@@ -64,5 +67,5 @@ Tab 2: [Thử Nghiệm Tương Tác - Trực Quan Hóa]
 
 Tab 3: [Bản Đồ Ngõ Hẻm & Cảnh Báo Telegram]
 - Khung mô phỏng Telegram trên di động: Tin nhắn sự cố kèm ảnh chụp, tọa độ Hẻm 254 Nguyễn Văn Cừ và nút phản hồi nhanh.
-- Bản đồ ngõ xóm tối màu với 3 ghim camera đổi màu động.
+- Bản đồ ngõ xóm nền sáng với 3 ghim camera đổi màu động.
 ```
