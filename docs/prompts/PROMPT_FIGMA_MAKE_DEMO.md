@@ -1,71 +1,73 @@
-# 🎨 BỘ PROMPT TẠO GIAO DIỆN DEMO Ý TƯỞNG & LUỒNG ACTIVITY (FIGMA MAKE)
+# 🎨 PROMPT TẠO GIAO DIỆN DEMO Ý TƯỞNG TRỰC QUAN (FIGMA MAKE)
 ## DỰ ÁN: URBANSHIELD LITE – NHÓM SINGLENODE (HACKATHON SGU 2026)
 
-> **Tiêu chuẩn UI/UX:** Phong cách **Clean Light Theme (Apple-style Civic Tech)** tinh tế, sáng sủa, độ tin cậy cao.  
-> **Kiến trúc giao diện:** **Bento Grid**, tương phản chuẩn **WCAG AA (4.5:1+)**, phân cấp **Progressive Disclosure**, font pairing **Inter + JetBrains Mono**, mô hình tương tác **Direct Manipulation**.  
-> **Giới hạn độ dài:** Cả 2 bản đều kiểm soát nghiêm ngặt **dưới 2.000 ký tự** để vừa vặn ô nhập của Figma Make.
+> **Định hướng thiết kế:** Vào thẳng trọng tâm giao diện **Sản phẩm Giám sát Thực tế** (Dashboard 1 màn hình tập trung tương tác thử nghiệm tính năng ngập nước & ngã xe), **loại bỏ hoàn toàn các tab lý thuyết / sơ đồ pipeline rườm rà**.  
+> **Phong cách:** **Clean Light Mode** (nền sáng Apple-style, thẻ trắng viền xám nhẹ tinh tế).  
+> **Giới hạn độ dài:** Cả 2 bản đều kiểm soát nghiêm ngặt **dưới 1.800 ký tự** (chuẩn < 2.000 ký tự của Figma Make).
 
 ---
 
-## 🚀 1. PROMPT TIẾNG ANH (1.969 KÝ TỰ - CLEAN LIGHT MODE, KHUYÊN DÙNG CHO FIGMA MAKE)
+## 🚀 1. PROMPT TIẾNG ANH (1.743 KÝ TỰ - TẬP TRUNG 100% VÀO SẢN PHẨM & TƯƠNG TÁC)
 *(Dán trực tiếp vào ô "What do you want to make?" trên Figma Make):*
 
 ```text
-Build an interactive civic-tech web prototype for "UrbanShield Lite" - an Edge-AI flood & fall detection alert system for alleyways by SingleNode.
+Build a focused, interactive civic-tech live monitoring demo dashboard for "UrbanShield Lite" (AI camera system for alleyway flood and fall detection by SingleNode). Clean Apple-style light theme (White #FFFFFF, Canvas #F8FAFC, Slate borders #E2E8F0, Accent Blue #2563EB).
 
-UI/UX & Design System (Clean Light Mode + Bento Grid):
-- Theme: Apple-style clean light theme, civic trust aesthetic.
-- Colors: Canvas #F8FAFC, Cards #FFFFFF, Borders #E2E8F0, Text #0F172A, Accent Blue #2563EB, Safe Emerald #059669, Warning Amber #D97706, Danger Rose #DC2626.
-- Typography: Inter (UI) + JetBrains Mono (telemetry).
-- UX Standards: WCAG AA (4.5:1+), 44px touch targets, dual-indicator badges (icon + text), 16px rounded cards, subtle shadows, 200ms transitions.
+Layout: Single-screen dashboard split into 2 main sections:
 
-Header (Bento Bar):
-- Brand: "UrbanShield Lite | SingleNode" with shield icon.
-- Telemetry: "Local CPU (YOLOv8n)", "RAM-Only (Zero Video Storage)", "28.5 FPS", "3 Nodes Online".
-- Tabs: [Activity Flow] [Interactive Sandbox] [Alerts & Map]
+1. Main AI Camera Viewport (Interactive Playground):
+- Video screen simulating a live alleyway camera feed with AI bounding boxes (person, motorbike, wheels).
+- Top scenario toggles: [Flood Scenario] [Fall Accident Scenario]
 
-Tab 1: [Interactive Activity Pipeline]
-- Horizontal interactive stepper (Local Cam -> Edge YOLOv8n -> Decision Fork [Water Depth / Fall 5s Debounce] -> Incident Trigger -> Alert Dispatch).
-- Node UX: Clean white cards with hover lift. Clicking a node opens a slide-over panel with technical logic, thresholds, and pseudocode.
+* In [Flood Scenario]:
+  - Interactive water slider (0 to 40 cm).
+  - Real-time visual: Water rises over the motorbike wheel.
+  - Dynamic AI overlay on wheel shows: "Wheel Ø50cm | Depth: [X]cm" with status:
+    • <10cm Green: "An toàn (Bình thường)"
+    • 10-20cm Amber: "Chú ý chạm pô xe"
+    • >20cm Red pulsing: "Nguy cơ chết máy!" -> triggers instant alert.
 
-Tab 2: [Interactive Sandbox - Direct Manipulation]
-- 2-column Bento playground:
-  * Water Depth: Slider (0-35cm) with dynamic SVG 50cm wheel submersion. Status card: <10cm Green (Safe), 10-20cm Amber (Exhaust warning), >20cm Rose pulsing (Stall danger -> auto-triggers alert package).
-  * Fall Detection: "Simulate Fall" starts a 5s circular countdown badge. Two micro-interactions: "Stand Up" button immediately resets timer with green feedback toast ("False Alarm Prevented") OR let timer reach 0 to trigger pulsing SOS emergency modal.
+* In [Fall Accident Scenario]:
+  - Button: "Simulate Motorbike Fall".
+  - Shows red horizontal AI box on fallen person (Fall W/H: 1.35), with live 5-second countdown timer on screen: "Kiểm tra bất động: 5s... 4s...".
+  - 2 interactive test buttons:
+    a) "Người đứng dậy": cancels countdown, turns box green, displays toast "Hủy cảnh báo: Chống báo giả thành công!".
+    b) Let timer expire: triggers flashing red SOS emergency alert.
 
-Tab 3: [Alert Dispatch & Telemetry]
-- Simulated mobile Telegram card: incident photo thumbnail, GPS tag ("Hẻm 254 Nguyễn Văn Cừ"), severity badge, and action chips.
-- Interactive vector clean light map with 3 colored pulsing node pins.
+2. Real-Time Incident Panel & Map:
+- Live Telegram alert feed: dynamically pops up an incident card when triggered (with frame snapshot, address "Hẻm 254 Nguyễn Văn Cừ, Q5", GPS, timestamp, and "Điều phối hỗ trợ" button).
+- Clean alley mini-map with camera node pin changing color (Green -> Amber -> Red).
+- Status bar: "Trạm 01 - Hẻm 254 NVC | YOLOv8n CPU | 28.5 FPS | RAM Buffer".
 ```
 
 ---
 
-## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.937 KÝ TỰ - CLEAN LIGHT THEME)
+## 🇻🇳 2. PROMPT TIẾNG VIỆT (1.719 KÝ TỰ - NGẮN GỌN, TRỰC DIỆN)
 
 ```text
-Tạo web prototype tương tác cho "UrbanShield Lite" - Hệ thống Edge-AI giám sát ngập nước & ngã xe ngõ hẻm (SingleNode).
+Tạo giao diện web demo trực quan, tương tác trực tiếp cho hệ thống "UrbanShield Lite" (Camera AI theo dõi ngập nước & ngã xe ngõ hẻm của SingleNode). Phong cách Light Theme sáng sạch kiểu Apple (Nền #F8FAFC, Thẻ trắng #FFFFFF, Viền xám #E2E8F0, Nhấn xanh #2563EB).
 
-Hệ thống UI/UX (Clean Light Mode + Bento Grid):
-- Phong cách: Giao diện sáng (Light Theme) tinh tế kiểu Apple, thanh lịch, độ tin cậy cao.
-- Bảng màu: Nền #F8FAFC, Thẻ trắng #FFFFFF, Viền #E2E8F0, Chữ #0F172A, Nhấn Xanh #2563EB, An toàn #059669, Chú ý #D97706, Báo động #DC2626.
-- Typography: Inter (giao diện) + JetBrains Mono (thông số kỹ thuật).
-- Chuẩn UX: Tương phản WCAG AA (4.5:1+), nút bấm >= 44px, nhãn trạng thái kép (icon + chữ), bo góc 16px, đổ bóng nhẹ, hiệu ứng 200ms mượt mà.
+Bố cục 1 màn hình tập trung hoàn toàn vào tương tác thực tế (không làm trang lý thuyết):
 
-Header (Thanh trạng thái Bento):
-- Thương hiệu: "UrbanShield Lite | SingleNode" kèm icon khiên bảo hộ.
-- Chỉ số: "CPU phổ thông (YOLOv8n)", "Bộ đệm RAM (Không lưu video)", "28.5 FPS", "3 Trạm Online".
-- 3 Tab điều hướng: [Sơ đồ Luồng Activity] [Thử Nghiệm Tương Tác] [Bản Đồ & Telegram]
+1. Màn hình Camera AI Giám sát (Khu vực tương tác chính):
+- Khung hình camera ngõ hẻm với các khung nhận diện AI (người, xe máy, bánh xe).
+- 2 nút chọn kịch bản nhanh trên thanh công cụ:
+  * KỊCH BẢN ĐO NGẬP:
+    - Thanh trượt mực nước từ 0 đến 40cm.
+    - Mực nước dâng lên trên bánh xe theo thời gian thực.
+    - Khung AI trên bánh xe hiển thị: "Bánh xe Ø50cm | Mức ngập: [X]cm" kèm nhãn đổi màu tự động:
+      • <10cm Xanh: "An toàn (Lưu thông bình thường)"
+      • 10-20cm Vàng: "Chú ý (Nước chạm mép pô)"
+      • >20cm Đỏ nhấp nháy: "Nguy hiểm (Nguy cơ chết máy)" -> Kích hoạt gửi cảnh báo ngay.
+  * KỊCH BẢN NGÃ XE:
+    - Nút bấm: "Mô phỏng người ngã xe".
+    - Khung AI chuyển đỏ quanh người nằm ngang kèm bộ đếm ngược 5 giây chạy trực tiếp trên camera: "Kiểm tra bất động: 5s... 4s...".
+    - 2 nút tương tác:
+      a) Bấm "Người tự đứng dậy": Dừng đếm ngược, khung chuyển xanh, hiện thông báo: "Hủy cảnh báo: Tránh báo giả thành công!".
+      b) Để hết 5 giây: Nháy còi SOS đỏ khẩn cấp.
 
-Tab 1: [Sơ đồ Luồng Activity Tương Tác]
-- Chuỗi quy trình ngang (Camera -> Edge AI YOLOv8n -> Rẽ nhánh [Đo ngập bánh xe 50cm / Ngã xe & Bộ đếm 5s] -> Đóng gói sự cố -> Bắn cảnh báo).
-- Trải nghiệm tương tác: Bấm vào từng bước mở ngăn trượt bên phải hiển thị chi tiết logic xử lý, ngưỡng kích hoạt và mã giả.
-
-Tab 2: [Thử Nghiệm Tương Tác - Trực Quan Hóa]
-- Bố cục Bento 2 cột:
-  * Đo ngập: Thanh trượt 0 - 35cm kèm đồ họa bánh xe 50cm chìm dần theo thời gian thực. Thẻ trạng thái đổi màu linh hoạt: <10cm Xanh (An toàn), 10-20cm Vàng (Chú ý pô xe), >20cm Đỏ nhấp nháy (Nguy cơ chết máy).
-  * Ngã xe & Chống báo giả: Nút "Mô phỏng ngã xe" kích hoạt đếm ngược 5s. Hai thao tác: Bấm "Người tự đứng dậy" (hủy báo động ngay, hiện thông báo xanh: "Tránh báo giả thành công") HOẶC để hết 5s (kích hoạt cảnh báo SOS đỏ).
-
-Tab 3: [Bản Đồ Ngõ Hẻm & Cảnh Báo Telegram]
-- Khung mô phỏng Telegram trên di động: Tin nhắn sự cố kèm ảnh chụp, tọa độ Hẻm 254 Nguyễn Văn Cừ và nút phản hồi nhanh.
-- Bản đồ ngõ xóm nền sáng với 3 ghim camera đổi màu động.
+2. Bảng Cảnh Báo Telegram & Bản Đồ Ngõ Hẻm:
+- Khung mô phỏng tin nhắn Telegram tự động bật ra khi có sự cố (kèm ảnh chụp hiện trường, địa chỉ "Hẻm 254 Nguyễn Văn Cừ", tọa độ GPS, nút "Xem vị trí cứu hộ").
+- Bản đồ ngõ xóm thu nhỏ có điểm ghim camera đổi màu Xanh -> Vàng -> Đỏ theo sự cố.
+- Thanh thông số trạm: "Trạm 01 - Hẻm 254 NVC | Edge CPU YOLOv8n | 28.5 FPS".
 ```
