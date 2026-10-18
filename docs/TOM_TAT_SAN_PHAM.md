@@ -44,3 +44,12 @@ graph TD
 | **Chống báo giả ngã xe** | Dễ báo nhầm khi người cúi nhặt đồ | Bộ đếm bất động > 5s + Thuật toán sáng ban đêm |
 | **Quyền riêng tư** | Lưu trữ video dài ngày trên ổ cứng | **Zero-Disk:** Phân tích xong hủy ngay trên RAM |
 | **Chi phí đầu tư** | Tốn kém chi phí thiết bị và bảo trì | **Tiết kiệm 70% - 80% chi phí** toàn hệ thống |
+
+---
+
+### 🛠️ Công Nghệ Sử Dụng
+
+* **AI & Thị giác máy tính:** `YOLOv8-nano` (Ultralytics, mô hình ~6.5MB tối ưu trên CPU), `OpenCV` (thuật toán cân bằng sáng thích ứng CLAHE ban đêm).
+* **Máy trạm tại biên (Edge Service):** `Python 3.10+`, `FastAPI`, `Uvicorn` (bất đồng bộ, gọn nhẹ, tiêu thụ ít RAM).
+* **Kênh gửi cảnh báo:** `Telegram Bot API` (gửi mẩu tin cảnh báo kèm ảnh hiện trường và tọa độ GPS tức thì).
+* **Bảng điều khiển & Bản đồ:** `React`, `Vite`, `Leaflet`, `OpenStreetMap` (bản đồ nguồn mở, không tốn phí dịch vụ).
