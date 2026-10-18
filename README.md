@@ -49,6 +49,7 @@ HackathonSGU2026/
 ## 📑 Danh mục tài liệu & Tài nguyên dự thi
 
 ### 1. Tài liệu thuyết minh:
+* 📋 **Tóm tắt giải pháp sản phẩm:** [docs/TOM_TAT_SAN_PHAM.md](file:///c:/Competition/HackathonSGU2026/docs/TOM_TAT_SAN_PHAM.md)
 * 📄 **Đề án ý tưởng giải pháp:** [docs/DE_AN_Y_TUONG_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/docs/DE_AN_Y_TUONG_URBANSHIELD_LITE.md)
 * 🎙️ **Kịch bản thuyết trình ý tưởng & Bộ Q&A:** [docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
 * 🗣️ **Lời thoại thuyết trình chi tiết 8 slide (3 phút):** [docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md](file:///c:/Competition/HackathonSGU2026/docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md)
