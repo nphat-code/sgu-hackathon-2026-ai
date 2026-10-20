@@ -14,11 +14,21 @@ Hệ thống **không cần cảm biến dưới cống** (dễ nghẹt rác, t�
 - **Công nghệ:** Thư viện `ultralytics` chạy trên CPU máy tính khu phố.
 - **Cách làm:** Phát hiện người và xe máy (`class 3: motorcycle`). Lấy tọa độ hộp nhận diện (Bounding Box) của xe máy, xác định vùng bánh xe tiếp xúc mặt đường $(x_1, y_1, x_2, y_2)$.
 
-### Bước 2: Tách ranh giới mặt nước (Waterline Edge Detection) bằng OpenCV
-- **Công nghệ:** `OpenCV (cv2)` + `NumPy`.
-- **Đặc trưng thị giác:** Mặt nước ngập trong ngõ hẻm có hai đặc tính quang học:
-  1. **Không gian màu HSV:** Bề mặt ngập nước phản xạ ánh sáng bầu trời hoặc đèn đường, tạo vùng có độ bão hòa màu rất thấp ($S < 45$) và độ sáng cao ($V > 70$).
-  2. **Đường cắt ranh giới (Waterline):** Dùng thuật toán **Canny Edge Detection** hoặc bộ lọc vi sai **Sobel** cắt ngang bánh xe để tìm đường ranh giới giao giữa không khí và mặt nước ($y_{water}$).
+### Bước 2: Tách ranh giới mặt nước & Khử bóng phản xạ (Water Reflection Suppression)
+Khi bánh xe đi vào vùng ngập, mặt nước đóng vai trò như một tấm gương tạo ra **bóng phản xạ ngược (Specular / Mirror Reflection)** của bánh xe. Nếu không xử lý, bóng này sẽ làm bánh xe trông dài ra hoặc làm sai lệch điểm tiếp xúc mặt nước. Hệ thống xử lý triệt để qua 3 kỹ thuật:
+
+1. **Khớp cung tròn RANSAC từ phần bánh xe trên cạn (RANSAC Circle Fitting - Cốt lõi):**
+   - Bánh xe máy luôn có vành tròn chuẩn. Khi xe đi vào vũng nước, **phần bánh xe nổi trên cạn luôn là một cung tròn (Circular Arc)** hoàn hảo không bị nước che khuất.
+   - Thuật toán trích xuất các điểm biên (Edge points) của cung tròn phía trên và dùng **RANSAC Circle Fitting** để khôi phục lại toàn bộ đường tròn $(x - a)^2 + (y - b)^2 = R^2$.
+   - Từ tâm $(a, b)$ và bán kính $R$, hệ thống suy ra chính xác tọa độ đáy bánh xe $y_{bottom} = b + R$ mà **không bị đánh lừa bởi bóng phản xạ dập dềnh phía dưới**.
+
+2. **Dò đường ranh giới mặt nước (Waterline Horizontal Gradient):**
+   - Mặt nước luôn là mặt phẳng ngang. Ranh giới cắt giữa lốp xe cao su màu đen và mặt nước tạo ra một bước nhảy độ sáng rất lớn theo trục thẳng đứng.
+   - Áp dụng toán tử vi sai **Sobel theo trục $Y$ ($G_y$)**: Tìm đường cắt ngang có gradient cực đại ($\partial I / \partial y = \max$) xuyên qua bánh xe. Tọa độ này chính là mực nước thực tế ($y_{water}$).
+
+3. **Phân tích độ mờ & độ tương phản (Blur & Contrast Analysis):**
+   - Bóng phản xạ trên mặt nước luôn bị suy giảm độ sắc nét (độ biến thiên Laplacian giảm hơn 50%) và bị méo mó do gợn sóng nước.
+   - Thuật toán so sánh độ sắc nét phía trên và phía dưới đường ranh giới; toàn bộ vùng ảnh mờ đối xứng phía dưới bị gắn cờ là vùng phản xạ (Reflection mask) và bị triệt tiêu khỏi tính toán.
 
 ### Bước 3: Khử biến dạng phối cảnh (Inverse Perspective Mapping - IPM / Homography)
 - **Vấn đề:** Camera lắp chéo từ trên cao nhìn xuống (Perspective distortion), khiến bánh xe ở xa nhìn nhỏ, ở gần nhìn to; mặt phẳng thẳng đứng bị nghiêng.
@@ -27,10 +37,10 @@ Hệ thống **không cần cảm biến dưới cống** (dễ nghẹt rác, t�
 
 ### Bước 4: Ánh xạ tỉ lệ Centimet qua vật thể chuẩn 50cm (Reference Metric Scaling)
 - **Vật thể tham chiếu thực tế:** Toàn bộ xe máy phổ thông tại Việt Nam (Wave Alpha, Sirius, Vision, Lead, Exciter) đều dùng vành 14–17 inch kèm lốp, có đường kính chuẩn thực tế dao động từ **48cm đến 52cm** (chuẩn hóa lấy mốc **50 cm**).
-- **Công thức ánh xạ:**
-  $$\text{Tỉ lệ (cm/pixel)} = \frac{50\text{ cm}}{H_{wheel\_pixel}}$$
-  $$\text{Độ sâu ngập (cm)} = (y_{ground} - y_{water}) \times \text{Tỉ lệ (cm/pixel)}$$
-- **Lọc sóng nước (Temporal Median Filter):** Mặt nước ngập khi xe chạy qua sẽ bị sóng sánh dập dềnh. Thuật toán lấy giá trị trung vị (Median) qua 10 khung hình liên tiếp (~2 giây) để loại bỏ nhiễu sóng, giữ độ sâu ổn định.
+- **Công thức tính độ ngập:**
+  $$\text{Tỉ lệ (cm/pixel)} = \frac{50\text{ cm}}{2 \times R_{pixel}}$$
+  $$\text{Độ sâu ngập (cm)} = (y_{bottom} - y_{water}) \times \text{Tỉ lệ (cm/pixel)}$$
+- **Lọc trung vị theo chuỗi khung hình (Temporal Median Filter):** Khi xe di chuyển, sóng nước làm bóng phản xạ rung lắc liên tục qua từng frame. Lấy giá trị trung vị (Median) qua 5–10 khung hình liên tiếp (~1-2 giây) để loại bỏ hoàn toàn nhiễu sóng nước dập dềnh, giữ số đo độ ngập ổn định.
 
 ---
 
