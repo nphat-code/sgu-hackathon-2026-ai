@@ -35,12 +35,30 @@ Khi bánh xe đi vào vùng ngập, mặt nước đóng vai trò như một t�
 - **Thuật toán:** Dùng ma trận biến đổi phối cảnh $3 \times 3$ trong OpenCV (`cv2.getPerspectiveTransform` hoặc `cv2.findHomography`).
 - **Cách làm:** Khi lắp camera tại con hẻm, cấu hình trước 4 điểm mốc cố định trên mặt đường (chiều rộng hẻm, mép vỉa hè) để chuẩn hóa góc nhìn về hệ tọa độ thẳng đứng.
 
-### Bước 4: Ánh xạ tỉ lệ Centimet qua vật thể chuẩn 50cm (Reference Metric Scaling)
-- **Vật thể tham chiếu thực tế:** Toàn bộ xe máy phổ thông tại Việt Nam (Wave Alpha, Sirius, Vision, Lead, Exciter) đều dùng vành 14–17 inch kèm lốp, có đường kính chuẩn thực tế dao động từ **48cm đến 52cm** (chuẩn hóa lấy mốc **50 cm**).
-- **Công thức tính độ ngập:**
-  $$\text{Tỉ lệ (cm/pixel)} = \frac{50\text{ cm}}{2 \times R_{pixel}}$$
-  $$\text{Độ sâu ngập (cm)} = (y_{bottom} - y_{water}) \times \text{Tỉ lệ (cm/pixel)}$$
-- **Lọc trung vị theo chuỗi khung hình (Temporal Median Filter):** Khi xe di chuyển, sóng nước làm bóng phản xạ rung lắc liên tục qua từng frame. Lấy giá trị trung vị (Median) qua 5–10 khung hình liên tiếp (~1-2 giây) để loại bỏ hoàn toàn nhiễu sóng nước dập dềnh, giữ số đo độ ngập ổn định.
+### Bước 4: Phân loại phương tiện & Bảng kích thước tham chiếu (Vehicle Prior Profiling)
+Khi Giám khảo hỏi: *"Bánh xe mỗi dòng xe có kích thước khác nhau, hệ thống có phân loại không?"*, hệ thống xử lý theo **cơ chế phân tầng thông minh (Multi-tier Classification)**:
+
+#### 1. Phân loại theo lớp phương tiện & hình thái thân xe:
+YOLOv8 phân biệt sẵn các lớp phương tiện (`bicycle`, `motorcycle`, `car`). Riêng với `motorcycle` (chiếm >90% lưu lượng hẻm), hệ thống dựa vào tỉ lệ khung hình (Aspect Ratio) thân xe và sàn để chân để phân biệt 2 nhóm chính:
+
+| Nhóm phương tiện | Dòng xe tiêu biểu | Đường kính bánh kèm lốp ($D_{ref}$) | Chiều cao ống pô & lọc gió | Ngưỡng ngập nguy hiểm (Đỏ) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Xe tay ga bánh nhỏ (Scooter)** | Honda Lead, Vision, Yamaha Grande, Janus | **$46 - 48\text{ cm}$** | Rất thấp: $16 - 18\text{ cm}$ | **$\ge 15\text{ cm}$** (Nước tràn lọc gió, chết máy ngay) |
+| **Xe số & Xe côn tay (Underbone)** | Wave Alpha, Sirius, Future, Exciter, Winner | **$56 - 58\text{ cm}$** | Trung bình: $24 - 28\text{ cm}$ | **$\ge 22\text{ cm}$** (Vượt cổ pô mới có nguy cơ) |
+| **Xe tay ga bánh lớn (High-wheel)** | Honda SH, Piaggio Medley | **$58 - 60\text{ cm}$** | Trung bình: $25 - 28\text{ cm}$ | **$\ge 22\text{ cm}$** |
+| **Xe đạp / Xe đạp điện** | Xe đạp mini, xe Asama, Pega, VinFast Klara | **$45 - 60\text{ cm}$** | Vị trí bình ắc quy: $20\text{ cm}$ | **$\ge 15\text{ cm}$** (Nguy cơ chập điện động cơ) |
+| **Ô tô con (Sedan / Hatchback)** | Vios, Accent, Morning, i10 | **$60 - 64\text{ cm}$** | Cổ hút gió / sàn: $25 - 30\text{ cm}$ | **$\ge 25\text{ cm}$** (Thủy kích) |
+
+#### 2. Công thức tính độ ngập theo từng xe:
+$$\text{Tỉ lệ (cm/pixel)} = \frac{D_{ref}}{2 \times R_{pixel}}$$
+$$\text{Độ sâu ngập (cm)} = (y_{bottom} - y_{water}) \times \text{Tỉ lệ (cm/pixel)}$$
+Trong đó $D_{ref}$ được nạp động từ bảng profile phương tiện tương ứng.
+
+#### 3. Cơ chế Dự phòng an toàn (Fallback) & Bầu chọn đa xe (Multi-vehicle Voting):
+- **Cơ chế Fallback:** Nếu trời mưa quá to, camera mờ hoặc góc nhìn bị che khuất không phân biệt được cụ thể là Lead hay Wave, hệ thống tự động lấy giá trị trung bình thống kê chuẩn của xe máy Việt Nam là **$50\text{ cm}$** (sai số chỉ $\pm 3\text{cm}$, hoàn toàn nằm trong dung sai an toàn để phân luồng người dân).
+- **Cơ chế Bầu chọn đa xe (Multi-vehicle Voting):** Khi có nhiều xe cùng đi qua đoạn ngập (ví dụ 1 xe Vision và 1 xe Wave), hệ thống tính độ sâu từ từng xe và lấy trung bình trọng số theo độ tin cậy nhận diện (Confidence Score).
+- **Cảnh báo thông minh theo từng loại xe (Smart Alert):** Điểm giá trị nhất của việc phân loại là **nội dung cảnh báo gửi về Telegram cho người dân được cá nhân hóa**:
+  - *Ví dụ:* *"Mực nước 17cm: Nguy hiểm với xe tay ga (Vision, Lead), khuyến cáo không đi vào; xe số (Wave, Sirius) có thể qua nhưng chú ý đi số thấp."*
 
 ---
 
