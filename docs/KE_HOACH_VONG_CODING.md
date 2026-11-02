@@ -45,10 +45,13 @@
 ### 🏁 SPRINT 0: CHUẨN HÓA GITHUB SPEC KIT & PHÂN RÃ CẤU TRÚC (Giờ 00 - Giờ 02)
 *Mục tiêu: Đặt nền móng dự án chuẩn kỹ sư phần mềm chuyên nghiệp theo đúng hướng dẫn của Mentor Anh Cảnh.*
 
-- [ ] **Task 0.1:** Khởi tạo thư mục `.spec/` theo chuẩn **GitHub Spec Kit**:
-  - `.spec/functional-spec.md`: Đặc tả chi tiết các tác vụ nghiệp vụ (giám sát ngõ hẻm, đo ngập, cảnh báo té ngã, bảo vệ đời tư).
-  - `.spec/technical-spec.md`: Thiết kế kiến trúc Modular Edge-First, Minimal API contract, schema dữ liệu GeoJSON và luồng RAM không lưu đĩa.
+- [x] **Task 0.1:** Khởi tạo thư mục `.spec/` và `.specify/` theo chuẩn **GitHub Spec Kit**:
+  - `.spec/constitution.md`: Hiến chương dự án, nguyên tắc bất biến (Anti-hype, Privacy RAM, CPU-first).
+  - `.spec/spec.md` & `.spec/functional-spec.md`: Đặc tả chi tiết các tác vụ nghiệp vụ & User Stories.
+  - `.spec/plan.md` & `.spec/technical-spec.md`: Thiết kế kiến trúc Modular Edge-First, Minimal API contract.
+  - `.spec/tasks.md`: Danh mục nhiệm vụ nguyên tử (atomic tasks) cho cả 5 sprint.
   - `.spec/live-demo-spec.md`: Kịch bản điều phối Live Demo 3 phút từng thao tác cụ thể.
+  - `.specify/manifest.json`: Siêu dữ liệu chuẩn hóa công cụ Spec Kit.
 - [ ] **Task 0.2:** Rà soát và cấu hình môi trường phát triển (Python 3.10+ venv, Node.js 18+, Docker).
 - [ ] **Task 0.3:** Cập nhật tài liệu điều phối dự án và phân công trách nhiệm rõ ràng.
 

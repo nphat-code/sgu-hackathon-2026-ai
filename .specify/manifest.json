@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "name": "UrbanShield Lite",
+  "repository": "sgu-hackathon-2026-ai",
+  "team": "SingleNode",
+  "framework": "Spec-Driven Development (GitHub Spec Kit)",
+  "spec_directory": ".spec",
+  "artifacts": {
+    "constitution": ".spec/constitution.md",
+    "specification": ".spec/spec.md",
+    "plan": ".spec/plan.md",
+    "tasks": ".spec/tasks.md",
+    "functional_spec": ".spec/functional-spec.md",
+    "technical_spec": ".spec/technical-spec.md",
+    "live_demo_spec": ".spec/live-demo-spec.md"
+  },
+  "constraints": {
+    "hardware": "Commodity x86 CPU without discrete GPU",
+    "privacy": "Zero-Disk storage, volatile RAM only, no facial recognition",
+    "bandwidth": "Event-driven payload < 150 bytes",
+    "anti_false_positive": "Stationary debounce timer >= 5.0 seconds"
+  }
+}
