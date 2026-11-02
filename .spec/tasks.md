@@ -1,7 +1,7 @@
-# 📋 DANH MỤC CÔNG VIỆC CHI TIẾT (TASKS.MD)
+# 📋 DANH MỤC CÔNG VIỆC THỰC CHIẾN (TASKS.MD)
 ## DỰ ÁN: URBANSHIELD LITE – HỆ THỐNG GIÁM SÁT NGẬP NƯỚC & SỰ CỐ NGÕ HẺM BẰNG EDGE AI
-### REPOSITORY: sgu-hackathon-2026-ai | ĐỘI THI: SINGLENODE
-### QUY CHUẨN: GITHUB SPEC KIT (SPEC-DRIVEN DEVELOPMENT)
+### REPOSITORY: sgu-hackathon-2026-ai | ĐỘI THI: SINGLENODE (1 THÀNH VIÊN)
+### LỊCH THI MỚI: 07/11/2026 | NỀN TẢNG CLOUD: GOOGLE CLOUD RUN
 
 > **Ký hiệu trạng thái:**
 > - `[x]` Đã hoàn thành
@@ -9,60 +9,75 @@
 
 ---
 
-## 🏁 SPRINT 0: CHUẨN HÓA SPEC KIT & THIẾT LẬP MÔI TRƯỜNG (GIỜ 00 - 02)
+## 🛠️ GIAI ĐOẠN CHUẨN BỊ (02/11 – 06/11) - KHÔNG CODE VÀO REPO THI
 
-- [x] **TASK-001:** Thiết lập toàn diện thư mục `.spec/` theo quy chuẩn GitHub Spec Kit (100% Tiếng Việt):
-  - [x] `constitution.md`: Hiến chương dự án, nguyên tắc chống phóng đại & bảo vệ quyền riêng tư người dân.
-  - [x] `spec.md` & `functional-spec.md`: Đặc tả yêu cầu người dùng, tiêu chuẩn nghiệm thu & tình huống biên.
-  - [x] `plan.md` & `technical-spec.md`: Bản thiết kế kiến trúc phân tầng, Minimal API contract & bảo mật.
-  - [x] `tasks.md`: Danh mục nhiệm vụ nguyên tử cho cả 5 sprint.
-  - [x] `live-demo-spec.md`: Kịch bản trình diễn trực tiếp 3 phút trước Ban Giám khảo.
-- [ ] **TASK-002:** Rà soát và cấu hình môi trường phát triển (Python 3.10+ virtualenv, gói frontend Node.js).
-- [ ] **TASK-003:** Khởi tạo file `.specify/manifest.json` định danh chuẩn công cụ Spec Kit.
-
----
-
-## 🧠 SPRINT 1: NÂNG CẤP CORE AI ENGINE & THUẬT TOÁN THỊ GIÁC BIÊN (GIỜ 02 - 07)
-
-- [ ] **TASK-010:** Tinh chỉnh thuật toán đo ngập hình học qua tỷ lệ che khuất bánh xe máy chuẩn ~50cm.
-- [ ] **TASK-011:** Triển khai bộ phát hiện ngã xe đa tầng với bộ đếm bất động liên tục nghiêm ngặt $\ge 5.0\text{ giây}$.
-- [ ] **TASK-012:** Tích hợp thuật toán cân bằng sáng thích ứng CLAHE cho camera hẻm ban đêm và trời mưa.
-- [ ] **TASK-013:** Kiểm chứng vòng đời khung hình chỉ nạp trên RAM tạm thời và hủy ngay (`Zero-Disk write`).
+- [x] **PREP-01 (02/11):** Chốt kế hoạch thực chiến bản 2 và chuẩn bị danh sách câu hỏi xác nhận với BTC / Mentor.
+- [ ] **PREP-02 (03/11):** Thu thập và gán nhãn dữ liệu đánh giá:
+  - Gom 20–30 clip ngắn (10–30s) hẻm ngập và sự cố trượt ngã tại TP.HCM kèm các clip dễ báo nhầm (dắt xe, cúi nhặt đồ).
+  - Lập file gán nhãn `labels.csv` và tài liệu nguồn gốc `docs/DATA.md` (không đẩy video lên repo).
+- [ ] **PREP-03 (04/11):** Thử nghiệm và đo đạc kỹ thuật trên máy tính:
+  - Đo FPS thực tế của YOLOv8n trên CPU ở `imgsz=320` và `640`.
+  - Thử nghiệm tracking bằng ByteTrack (`model.track()`) để duy trì ID đếm bất động 5s.
+  - Chốt công thức đo ngập theo tỷ lệ che khuất bánh xe máy (~50cm) khi xe di chuyển ngang.
+- [ ] **PREP-04 (05/11):** Chuẩn bị sẵn hạ tầng Google Cloud:
+  - Khởi tạo Google Cloud Project, bật Cloud Run, Artifact Registry, Cloud SQL PostgreSQL và Secret Manager.
+  - Tạo Telegram Bot, lấy Token và Chat ID, lưu vào Secret Manager.
+  - Tạo Service Account cấp quyền deploy cho GitHub Actions.
+  - Cài đặt sẵn môi trường cục bộ: `uv`, `specify-cli`, Docker Desktop, Node 20, Python 3.11, tải sẵn `yolov8n.pt`.
+- [ ] **PREP-05 (06/11):** Diễn tập quy trình code nhanh trong 6–8 tiếng trên repo nháp và hoàn thiện khung slide thuyết trình.
 
 ---
 
-## ⚡ SPRINT 2: MINIMAL API & BỘ SINH BÁO CÁO VĂN BẢN (GIỜ 07 - 12)
+## ⏱️ GIAI ĐOẠN VÒNG THI 21H CODE (12:00 NGÀY 07/11 – 09:00 NGÀY 08/11)
 
-- [ ] **TASK-020:** Chuẩn hóa các endpoint FastAPI thành Minimal API với kích thước mẩu tin sự cố nghiêm ngặt $< 150\text{ bytes}$.
-- [ ] **TASK-021:** Xây dựng module `reporting.py` tự động sinh Mẫu cảnh báo tức thời (Mẫu A) và Mẫu tổng kết ca trực (Mẫu B).
-- [ ] **TASK-022:** Tích hợp cổng Telegram Bot Dispatcher bắn cảnh báo kèm tọa độ GPS và văn bản ngắn gọn.
-- [ ] **TASK-023:** Cung cấp endpoint `/health` trả về nhịp tim hệ thống, thời gian hoạt động (uptime), FPS và dung lượng RAM sử dụng.
+### Khối 1: Khởi tạo Repo & Spec Kit (12:00 – 12:45)
+- [ ] **HACK-01:** Chạy `specify init`, tạo nhanh `.specify/` và các file `specs/` (Constitution, Spec, Plan, Tasks).
+- [ ] **HACK-02:** Thiết lập cây thư mục chuẩn (`edge/`, `server/`, `web/`, `tests/`, `docs/`), cấu hình `.gitignore` và `ruff`.
 
----
+### Khối 2: Edge Vision Engine trên CPU (12:45 – 16:30)
+- [ ] **HACK-03:** Module `edge/capture.py`: Đọc video/webcam, cơ chế chỉ giữ khung hình trên RAM tạm thời (`Zero-Disk write`).
+- [ ] **HACK-04:** Module `edge/detector.py`: YOLOv8n + ByteTrack chạy ở 5 FPS trên CPU.
+- [ ] **HACK-05:** Module `edge/flood.py`: Thuật toán đo ngập theo tỷ lệ bánh xe máy 50cm, phân loại 3 cấp độ (<10cm, 10-20cm, >20cm).
+- [ ] **HACK-06:** Module `edge/fall.py`: Máy trạng thái ngã xe với tỷ lệ khung nằm ngang $W/H > 1.15$ và bộ đếm bất động $\ge 5.0\text{s}$.
+- [ ] **HACK-07:** Module `edge/sender.py`: Gửi mẩu tin sự cố JSON $< 150\text{ bytes}$ kèm hàng đợi offline (SQLite) khi mất mạng.
+- [ ] **HACK-08:** Viết unit test cho các module của Edge với `pytest`.
 
-## 🗺️ SPRINT 3: BẢNG ĐIỀU KHIỂN WEBGIS & BỘ ĐIỀU PHỐI LIVE DEMO (GIỜ 12 - 16)
+### Khối 3: Server FastAPI & Điều phối cảnh báo (16:30 – 19:30)
+- [ ] **HACK-09:** Xây dựng FastAPI app: endpoint `/health`, `/api/v1/incidents`, `/api/v1/nodes`.
+- [ ] **HACK-10:** Cơ chế xác thực mẩu tin qua khóa API riêng cho từng trạm camera ngõ hẻm.
+- [ ] **HACK-11:** Tích hợp SQLAlchemy kết nối PostgreSQL (Cloud SQL) và SQLite khi test.
+- [ ] **HACK-12:** Module `server/reporting.py`: Bộ sinh báo cáo văn bản mộc mạc (Mẫu A: Cảnh báo tức thời, Mẫu B: Tổng kết ca trực).
+- [ ] **HACK-13:** Module `server/notify.py`: Tự động gửi cảnh báo tới Telegram Bot kèm thông số đo đạc thực tế.
 
-- [ ] **TASK-030:** Nâng cấp bản đồ Leaflet OpenStreetMap với cơ chế đổi màu động các tuyến hẻm (Xanh: an toàn, Vàng: ngập nhẹ, Đỏ: ngập sâu/tai nạn).
-- [ ] **TASK-031:** Xây dựng bộ nút chuyển đổi 3 kịch bản mô phỏng phục vụ Live Demo (Bình thường, Ngập nước 22.5cm, Ngã xe > 5s).
-- [ ] **TASK-032:** Tích hợp đồng hồ đo đạc phần cứng trực tiếp (Đo FPS trên CPU, kiểm tra RAM sạch không ghi đĩa).
-- [ ] **TASK-033:** Tạo nút "Sao chép Báo cáo văn bản" trên giao diện để gửi nhanh vào Zalo/Tin nhắn cho cán bộ dân phòng.
+### Khối 4: Container hóa & Deploy Google Cloud Run sớm (19:30 – 20:30)
+- [ ] **HACK-14:** Viết `Dockerfile` tối ưu kết hợp Backend API và Dashboard tĩnh.
+- [ ] **HACK-15:** Deploy lần đầu lên Google Cloud Run, kết nối Cloud SQL và Secret Manager.
+- [ ] **HACK-16:** Kiểm tra URL công khai `https://...run.app/health` trả về kết quả thành công.
 
----
+### Khối 5: Bảng điều khiển WebGIS Dashboard (20:30 – 00:30)
+- [ ] **HACK-17:** Giao diện Vite + React + Leaflet: Bản đồ hiển thị các trạm và tuyến hẻm.
+- [ ] **HACK-18:** Cơ chế polling hỏi dữ liệu mỗi 2 giây, cập nhật trạng thái sự cố mượt mà trên điện thoại.
+- [ ] **HACK-19:** Màn hình xem Text Report trực tiếp và Widget thống kê "Băng thông mạng đã tiết kiệm".
+- [ ] **HACK-20:** Build static bundle tích hợp vào container server.
 
-## 🧪 SPRINT 4: KIỂM THỬ TỰ ĐỘNG & BÁO CÁO TEST REPORT (MANDATORY) (GIỜ 16 - 20)
+### Khối 6: CI/CD Pipeline với GitHub Actions (00:30 – 01:30)
+- [ ] **HACK-21:** Viết workflow `.github/workflows/ci.yml`: tự động chạy linter, chạy test pytest.
+- [ ] **HACK-22:** Cấu hình tự động build container image và trigger deploy lên Google Cloud Run khi push nhánh `main`.
 
-- [ ] **TASK-040:** Viết bộ kiểm thử đơn vị cho thuật toán đo ngập bánh xe 50cm (`tests/test_flood_depth.py`).
-- [ ] **TASK-041:** Viết bộ kiểm thử đơn vị cho bộ phát hiện ngã xe và bộ đếm 5s (`tests/test_fall_detection.py`).
-- [ ] **TASK-042:** Viết bộ kiểm thử cho các endpoint Minimal API và kiểm tra kích thước payload $< 150\text{ bytes}$ (`tests/test_minimal_api.py`).
-- [ ] **TASK-043:** Viết bộ kiểm thử cho module sinh báo cáo văn bản (`tests/test_text_report.py`).
-- [ ] **TASK-044:** Tự động hóa quy trình chạy kiểm thử và xuất file báo cáo minh bạch [`docs/TEST_REPORT.md`](file:///c:/Competition/HackathonSGU2026/docs/TEST_REPORT.md).
+### Nghỉ ngơi & Nạp năng lượng (01:30 – 03:00)
+- [ ] **HACK-23:** Chợp mắt 1.5 tiếng để duy trì sự tỉnh táo, hạn chế lỗi cú pháp lúc rạng sáng.
 
----
+### Khối 7: Đánh giá mô hình & Xuất Test Report (03:00 – 05:00)
+- [ ] **HACK-24:** Chạy script `edge/eval/run_eval.py` trên tập clip có nhãn đã chuẩn bị.
+- [ ] **HACK-25:** Thu thập chỉ số thật: Precision, Recall, F1-score, độ trễ xử lý (latency ms).
+- [ ] **HACK-26:** Tự động xuất file báo cáo minh bạch [`docs/TEST_REPORT.md`](file:///c:/Competition/HackathonSGU2026/docs/TEST_REPORT.md) có số liệu thật.
 
-## 🐳 SPRINT 5: ĐÓNG GÓI DOCKER, CI/CD & TRIỂN KHAI CLOUD (GIỜ 20 - 24)
+### Khối 8: Hoàn thiện tài liệu & Khóa tính năng (05:00 – 06:30)
+- [ ] **HACK-27:** Hoàn thiện `docs/DATA.md` (nguồn gốc clip, quy trình gán nhãn).
+- [ ] **HACK-28:** Cập nhật `README.md` đầy đủ: kiến trúc, lý do chọn giải pháp, ranh giới bảo vệ đời tư, phân tích chi phí.
+- [ ] **HACK-29:** **06:30 Khóa toàn bộ tính năng**, chỉ sửa lỗi nếu có.
 
-- [ ] **TASK-050:** Xây dựng Dockerfile tối ưu cho Backend và Frontend (`backend/Dockerfile`, `frontend/Dockerfile`).
-- [ ] **TASK-051:** Tạo file `docker-compose.yml` khởi động toàn bộ hệ thống bằng đúng 1 câu lệnh (`docker compose up -d`).
-- [ ] **TASK-052:** Thiết lập quy trình tự động hóa GitHub Actions CI (`.github/workflows/ci.yml`).
-- [ ] **TASK-053:** Biên soạn hướng dẫn triển khai Cloud ([`docs/CLOUD_DEPLOYMENT_GUIDE.md`](file:///c:/Competition/HackathonSGU2026/docs/CLOUD_DEPLOYMENT_GUIDE.md)) trên AWS / Google Cloud.
-- [ ] **TASK-054:** Tổng duyệt kịch bản Live Demo 3 phút khớp từng giây theo `.spec/live-demo-spec.md`.
+### Khối 9: Diễn tập Live Demo & Hoàn thiện Slide (06:30 – 09:00)
+- [ ] **HACK-30:** Bật `min-instances=1` trên Cloud Run để tránh khởi động nguội lúc demo.
+- [ ] **HACK-31:** Diễn tập 3 lần liên tục luồng Live Demo 3 phút trên video thật.
+- [ ] **HACK-32:** Cập nhật số liệu đo đạc thực tế vào slide trình chiếu và nộp slide trước 09:30.

@@ -44,7 +44,7 @@
   - **Cơ chế đếm bất động liên tục:** Nạn nhân phải giữ trạng thái nằm trên đường liên tục $\ge 5.0\text{ giây}$.
   - Nếu người tự đứng dậy hoặc chuyển động trước 5 giây, bộ đếm tự động xóa về 0, không phát sinh bất kỳ cảnh báo giả nào.
 
-### AC-03: Mẩu tin truyền mạng siêu nhẹ (< 150 Bytes)
+### AC-03: Mẩu tin cảnh báo gọn nhẹ (< 150 Bytes)
 - Toàn bộ dữ liệu gửi từ máy tính khu phố lên máy chủ hoặc Telegram Bot phải có kích thước dưới 150 bytes:
   ```json
   {"node_id":"hem_254_q4","type":"FLOOD","val":22.5,"unit":"cm","time":1729145700}

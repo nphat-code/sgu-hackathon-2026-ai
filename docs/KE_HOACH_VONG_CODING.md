@@ -1,202 +1,178 @@
-# 🚀 KẾ HOẠCH TỔNG THỂ VÒNG THỬ THÁCH (24H CODING)
-## DỰ ÁN: URBANSHIELD LITE – ĐỘI SINGLENODE
-### CUỘC THI: SGU HACKATHON 2026 – TRƯỜNG ĐẠI HỌC SÀI GÒN
+# 🚀 KẾ HOẠCH VÒNG THỬ THÁCH 24H – URBANSHIELD LITE (BẢN 2)
 
-> **Mục tiêu:** Hoàn thiện giải pháp UrbanShield Lite từ bản thử nghiệm ban đầu thành một sản phẩm thực tế, chạy ổn định, có cấu trúc kỹ thuật bài bản; đáp ứng trọn vẹn **100/100 điểm theo 8 tiêu chí đánh giá của Ban Tổ chức** và hiện thực hóa các **định hướng chỉ đạo của Mentor Ban Giám khảo (Anh Cảnh)**.
+> **Đội:** SingleNode (1 thành viên: Phát)
+> **Lịch thi:** 07/11/2026 (đã dời từ 31/10). *Giả định khung giờ giữ như thể lệ cũ: 12:00 (07/11) bắt đầu → 09:00 (08/11) dừng code → trước 09:30 nộp slide → 10:00 demo & phản biện. Cần xác nhận lại ở buổi phổ biến quy chế.*
+> **Cloud:** Google Cloud Run (đã có tài khoản/credit)
+> **Thời gian code thực tế:** khoảng **21 giờ**, làm một mình → phải cắt phạm vi thật gọn, ưu tiên theo điểm.
 
 ---
 
-## 🎯 MA TRẬN MỤC TIÊU & CHỈ ĐẠO BAN GIÁM KHẢO
+## ⚠️ 0. NHỮNG RÀNG BUỘC QUYẾT ĐỊNH KẾ HOẠCH
 
-| Trụ cột đánh giá (100đ) | Kỳ vọng của Mentor BGK (Anh Cảnh) | Đầu ra kỹ thuật cam kết của UrbanShield Lite |
+| Ràng buộc (theo thể lệ & barem) | Hệ quả cho kế hoạch |
+| :--- | :--- |
+| Repo thi phải **trống 100%**, chỉ tính commit trong 24h, **cấm push hàng loạt code soạn sẵn** | Code trong repo hiện tại (`backend/`, `frontend/`) **chỉ để luyện tập**. Vào giờ thi phải viết lại từ đầu, commit nhỏ, đều đặn. |
+| Làm một mình | Gộp API + Dashboard vào **1 container** trên Cloud Run để đỡ việc hạ tầng. Không làm microservice thật, chỉ tách module rõ ràng trong code. |
+| Tiêu chí VII (10đ) đòi **deploy thật**, có URL công khai, HTTPS, biến môi trường | Deploy Cloud Run **sớm** (khoảng giờ thứ 8), không để tới cuối. |
+| Tiêu chí III (20đ) đòi dữ liệu minh bạch, đánh giá mô hình tái lập được, có chỉ số | Chuẩn bị **bộ clip đánh giá có gán nhãn** trước ngày thi và viết script đánh giá trong giờ thi. |
+| Code cũ đang **gán cứng** độ ngập 26cm khi chọn kịch bản "flood" ([detector.py](file:///c:/Competition/HackathonSGU2026/backend/detector.py#L101-L107)) | Bản thi phải đo thật trên video. Kịch bản demo dùng **video thật** chứ không dùng nút "giả lập kết quả". |
+
+---
+
+## 🧭 1. KIẾN TRÚC CHỌN CHO VÒNG THI
+
+```
+ MÁY TÍNH KHU PHỐ (laptop lúc demo)                    GOOGLE CLOUD RUN (URL công khai, HTTPS)
+┌──────────────────────────────────┐                 ┌───────────────────────────────────────┐
+│ edge/  (Python)                  │  JSON < 150B    │ server/ (FastAPI)                     │
+│ • Đọc video / webcam             │ ──────────────► │ • REST API + xác thực khóa từng trạm  │
+│ • YOLOv8n + tracking (CPU)       │  + heartbeat    │ • Lưu sự cố (PostgreSQL / Cloud SQL)  │
+│ • Đo ngập theo bánh xe ~50cm     │                 │ • Gửi Telegram + sinh Text Report     │
+│ • Ngã xe: tỷ lệ khung + đếm 5s   │                 │ • Phục vụ Dashboard (React + Leaflet) │
+│ • Khung hình chỉ nằm trên RAM    │                 │ • Log JSON → Cloud Logging            │
+│ • Hàng đợi offline (SQLite)      │                 └───────────────────────────────────────┘
+└──────────────────────────────────┘                        │                     │
+                                                    Dashboard trên điện thoại   Telegram dân phòng
+```
+
+**Vì sao chọn như vậy (để trả lời phản biện):**
+- **Phần AI chạy tại chỗ, không đưa lên Cloud:** đúng với câu chuyện "không kéo video về máy chủ". Cloud chỉ nhận mẩu tin, nên gói Cloud Run nhỏ nhất là đủ, chi phí thấp.
+- **Dashboard trên Cloud không hiện video:** đây là chủ ý bảo vệ đời tư. Video có khung nhận diện chỉ hiện trên màn hình của máy tính khu phố.
+- **Phân tích khoảng 5 khung hình/giây thay vì 30:** ngập và ngã xe đều diễn ra trong vài giây, nên xử lý 5 FPS là đủ. Nhờ vậy CPU nhẹ hơn và một máy tính gánh được nhiều camera hơn. Đây là điểm cộng cho tiêu chí VI (tiết kiệm chi phí), và có số đo thật để chứng minh.
+- **PostgreSQL trên Cloud SQL, SQLite khi chạy test:** dùng SQLAlchemy nên chỉ cần đổi `DATABASE_URL`, khớp gợi ý của anh Cảnh về thiết kế cơ sở dữ liệu.
+- **Dashboard hỏi dữ liệu mỗi 2 giây (polling) thay vì WebSocket:** trên Cloud Run cách này ổn định hơn và ít lỗi khi demo. Đặt `min-instances=1` trong buổi demo để không bị khởi động nguội.
+
+---
+
+## 🎯 2. BẢNG ĐỐI CHIẾU: BAREM → SẢN PHẨM → BẰNG CHỨNG CHO GIÁM KHẢO
+
+| Tiêu chí | Điểm | Làm gì trong 24h | Bằng chứng đưa ra lúc chấm |
+| :--- | :---: | :--- | :--- |
+| I. Sáng tạo | 10 | Đo ngập theo bánh xe chạy thật trên video | Demo video thật, số cm hiện trên khung hình |
+| II. Thực tiễn | 10 | Text Report gửi Telegram cho dân phòng | Điện thoại nhận tin trong lúc demo |
+| III.1 Dữ liệu | 5 | `docs/DATA.md`: nguồn từng clip, cách gán nhãn, không đưa video lên repo | Bảng nguồn + file nhãn `labels.csv` |
+| III.2 Mô hình | 5 | Giải thích chọn YOLOv8n, ngưỡng, giới hạn | Mục "Giới hạn mô hình" trong README |
+| III.3 An toàn AI | 5 | Đếm 5s chống báo giả, CLAHE ban đêm, mỗi cảnh báo kèm **lý do**, không nhận diện mặt/biển số | Mẩu tin hiện rõ "vì sao báo" |
+| III.4 Kiểm thử mô hình | 5 | `edge/eval/run_eval.py` chạy trên clip có nhãn → Precision/Recall/F1, độ trễ | `docs/TEST_REPORT.md` |
+| IV.1 Cấu trúc | 3 | `edge/`, `server/`, `web/`, `tests/` tách rõ, có ruff | Cây thư mục trong README |
+| IV.2 FE/UI | 3 | Bản đồ + danh sách sự cố + trang báo cáo, xem tốt trên điện thoại | Giám khảo mở URL trên điện thoại |
+| IV.3 BE & hiệu suất | 5 | REST chuẩn, schema DB, index theo thời gian, đo thời gian phản hồi | Swagger `/docs` + số đo latency |
+| IV.4 CI/CD | 3 | GitHub Actions: lint → test → build → deploy Cloud Run | Tab Actions màu xanh |
+| IV.5 Bảo mật | 3 | Khóa API cho từng trạm, secret trong Secret Manager, kiểm tra dữ liệu vào bằng Pydantic, không gửi ảnh | Mục Security trong README |
+| IV.6 Hoàn thiện | 3 | Docker, `docker compose up` chạy local, demo không lỗi | Demo trực tiếp |
+| V. Cộng đồng | 10 | (Phần thuyết trình) + hướng dẫn cài đặt cho phường | README phần "Triển khai cho một phường" |
+| VI. Tiết kiệm chi phí AI | 10 | Edge đếm byte đã gửi; Dashboard so với lượng dữ liệu nếu phải gửi video | Widget "Băng thông đã dùng" với số đo thật |
+| VII. Cloud | 10 | Cloud Run + Cloud SQL + Secret Manager + Artifact Registry | URL `https://...run.app` |
+| VIII. Thuyết trình | 10 | Kịch bản demo 3 phút + bộ Q&A | Diễn tập 3 lần trước 09:00 |
+
+---
+
+## 📅 3. GIAI ĐOẠN CHUẨN BỊ (02/11 – 06/11): KHÔNG VIẾT CODE NỘP THI
+
+> Nguyên tắc: chuẩn bị **dữ liệu, hạ tầng, kiến thức, thử nghiệm**. Có thể thử code trong repo luyện tập này để học, nhưng **không mang file code sang repo thi**.
+
+### 02/11 (hôm nay): Chốt kế hoạch & hỏi BTC
+- [ ] Gửi câu hỏi cho BTC/anh Cảnh (xem mục 6).
+- [ ] Chốt kế hoạch này.
+
+### 03/11: Dữ liệu đánh giá (phục vụ III.1 và III.4)
+- [ ] Gom **20–30 clip ngắn** (10–30 giây): hẻm ngập có xe máy chạy qua, xe máy trượt ngã, và **clip "dễ báo nhầm"** (người cúi nhặt đồ, dắt xe, dừng xe chống chân).
+- [ ] Gán nhãn vào `labels.csv`: `clip, loai (FLOOD/FALL/NONE), muc_ngap (1/2/3), giay_bat_dau_nga, ghi_chu`.
+- [ ] Ghi rõ nguồn từng clip (link, thời điểm). Video **không đưa lên GitHub** (đời tư và bản quyền).
+- [ ] Nói thật trong tài liệu: mức ngập được gán nhãn **bằng mắt theo phần bánh xe bị che**, nên chấm theo cấp độ (1/2/3), không chấm sai số tính bằng cm.
+
+### 04/11: Thử nghiệm thuật toán (rủi ro kỹ thuật lớn nhất)
+- [ ] Đo tốc độ YOLOv8n trên CPU laptop ở `imgsz=320` và `640` → ghi lại **số thật**, không dùng con số 25–30 FPS nếu chưa đo được.
+- [ ] Thử cách đo ngập: so chiều cao khung xe máy nhìn thấy với chiều cao dự kiến (tính theo bề ngang khung, khi xe quay ngang). Ghi lại những trường hợp không đo được (xe quay thẳng vào camera, bị che).
+- [ ] Thử `model.track()` (ByteTrack có sẵn trong ultralytics) để giữ ID người khi đếm 5 giây.
+- [ ] Chốt các ngưỡng: `W/H > 1.15`, khoảng cách người–xe, 5 giây, ngưỡng mức ngập.
+
+### 05/11: Hạ tầng Google Cloud & công cụ
+- [ ] Tạo GCP project, bật Cloud Run, Artifact Registry, Cloud SQL, Secret Manager.
+- [ ] Tạo Cloud SQL PostgreSQL loại nhỏ nhất (tạo mất khoảng 10 phút, nên làm trước).
+- [ ] Tạo service account cho GitHub Actions (quyền deploy Cloud Run, đẩy image).
+- [ ] Tạo Telegram Bot, lấy `BOT_TOKEN` và `CHAT_ID`, lưu vào Secret Manager.
+- [ ] Deploy thử một app "hello" lên Cloud Run từ repo nháp để chắc chắn quy trình chạy được.
+- [ ] Cài sẵn: `uv` + `specify-cli` (GitHub Spec Kit), Docker Desktop, Node 20, Python 3.11, `gcloud`; tải sẵn `yolov8n.pt` và các Docker base image.
+
+### 06/11: Tổng duyệt
+- [ ] Chạy thử 6–8 tiếng theo đúng lịch mục 4 trên repo nháp để căn thời gian.
+- [ ] Khung slide sẵn, chừa chỗ điền số đo thật lúc 08:00 ngày thi.
+- [ ] Chuẩn bị đồ: sạc, 4G dự phòng, video demo trong ổ cứng, tài khoản đã đăng nhập sẵn.
+- [ ] **Ngủ đủ.**
+
+---
+
+## ⏱️ 4. LỊCH 21 GIỜ CODE (07/11 12:00 → 08/11 09:00)
+
+> Quy tắc: commit + push mỗi 20–40 phút, message dạng `feat: ...`, `test: ...`, `fix: ...`. Mỗi mốc có **điều kiện xong** rõ ràng; trễ quá 30 phút thì cắt bớt theo mục 5.
+
+| Giờ | Khối việc | Điều kiện xong |
 | :--- | :--- | :--- |
-| **1. Planning & Quản lý (10đ)** | Sử dụng GitHub Spec Kit (`spec-kit`), chia nhỏ milestone, sprint rõ ràng. | Cấu trúc thư mục `.spec/` chuẩn mực, định nghĩa rõ ràng yêu cầu chức năng, phi chức năng và kịch bản demo. |
-| **2. Dữ liệu & Mô hình AI (20đ)** | Giải thích lý do chọn mô hình, hạn chế báo giả, an toàn AI, có **Test Report** minh bạch. | YOLOv8-nano gọn nhẹ trên CPU phổ thông; đo ngập bánh xe 50cm; bộ đếm bất động 5s chống báo giả; bộ test tự động xuất `TEST_REPORT.md`. |
-| **3. Cấu trúc, Triển khai & Hoàn thiện (20đ)** | Phân tách module (Microservice/Modular), Minimal API, CI/CD, Privacy-by-design, Docker 1 lệnh. | Tách Edge Vision, Minimal API (<150 bytes), Text Report Engine, Docker Compose 1 lệnh, GitHub Actions CI. |
-| **4. Tiết kiệm chi phí AI & Hạ tầng (10đ)** | Đánh giá mức độ tối ưu ngân sách, không lãng phí tài nguyên. | Xử lý tại chỗ trên CPU máy tính cũ khu phố (0đ GPU đắt đỏ), chỉ gửi mẩu tin khi có sự cố (giảm 99.9% băng thông mạng). |
-| **5. Ứng dụng Cloud (AWS / Google) (10đ)** | Triển khai Dashboard và API lên hạ tầng Cloud có IP/Domain công khai, an toàn bảo mật. | Cấu hình Docker container production sẵn sàng deploy lên AWS EC2 / Google Cloud Run, lưu trữ lịch sử báo cáo an toàn. |
-| **6. Trình diễn & Phản biện (10đ)** | Ưu tiên 100% Live Demo tương tác thực tế trên sản phẩm đang chạy thay vì chỉ chiếu slide. | Kịch bản tương tác 3 phút: Nạp video hẻm $\rightarrow$ Đo ngập tức thì $\rightarrow$ Báo ngã xe $\rightarrow$ Bắn tin Telegram trong 1.5s $\rightarrow$ Bằng chứng RAM. |
+| **12:00 – 12:45** | **Khởi tạo + Spec Kit:** `specify init`, viết constitution/spec/plan/tasks ngắn gọn, cây thư mục, README khung, `.gitignore`, ruff | Commit đầu tiên có `.specify/` và `specs/` |
+| **12:45 – 16:30** | **Edge (phần AI):** đọc video, YOLOv8n + tracking ở 5 FPS, đo ngập theo bánh xe, máy trạng thái ngã xe 5s, CLAHE, gửi sự kiện kèm hàng đợi offline. Viết unit test song song | Chạy trên 1 clip ngập và 1 clip ngã ra đúng sự kiện; test pass |
+| **16:30 – 19:30** | **Server:** FastAPI, model DB (`nodes`, `incidents`, `heartbeats`), endpoint, khóa API từng trạm, Telegram, Text Report, `/health`, log JSON | Edge gửi sự kiện → lưu DB → Telegram nhận tin (chạy local) |
+| **19:30 – 20:30** | Ăn tối + **Dockerfile + deploy Cloud Run lần đầu** (kết nối Cloud SQL, gắn secret) | URL `https://...run.app/health` trả về `ok` |
+| **20:30 – 00:30** | **Dashboard:** Vite + React + Leaflet; bản đồ trạm, danh sách sự cố, trang Text Report, widget băng thông/FPS; build vào cùng container | Mở URL trên điện thoại thấy sự cố mới sau khoảng 2 giây |
+| **00:30 – 01:30** | **CI/CD:** GitHub Actions lint → pytest → build → deploy | Push lên `main` tự deploy, tab Actions xanh |
+| **01:30 – 03:00** | **Nghỉ / ngủ ngắn** (bắt buộc, làm một mình rất dễ sai lúc 4h sáng) | |
+| **03:00 – 05:00** | **Đánh giá mô hình:** `run_eval.py` chạy trên bộ clip có nhãn → Precision/Recall/F1, ma trận nhầm lẫn, độ trễ; xuất `TEST_REPORT.md`. Thêm 1–2 test Playwright cho Dashboard | `docs/TEST_REPORT.md` có số thật |
+| **05:00 – 06:30** | Sửa lỗi, viết `DATA.md`, README (kiến trúc, lý do chọn, giới hạn, bảo mật, chi phí) | **06:30 khóa tính năng**, sau đó chỉ sửa lỗi |
+| **06:30 – 07:30** | Diễn tập demo 3 lần trên URL thật; đặt `min-instances=1` | Chạy trọn 3 phút không lỗi |
+| **07:30 – 09:00** | Điền số đo thật vào slide, kiểm tra lại repo, commit cuối | Nộp slide trước 09:30 |
 
 ---
 
-## ⏱️ LỘ TRÌNH 5 SPRINT TRIỂN KHAI TRONG 24 GIỜ
+## ✂️ 5. THỨ TỰ CẮT BỚT NẾU TRỄ
 
+Cắt từ trên xuống:
+1. Test Playwright (giữ pytest)
+2. Tô màu tuyến hẻm bằng GeoJSON (dùng chấm màu tại trạm là đủ)
+3. Bản tin tổng hợp ca trực (giữ mẫu cảnh báo tức thời)
+4. CLAHE (ghi vào phần "hướng phát triển")
+5. Cloud SQL → chuyển sang SQLite trong container (chấp nhận mất dữ liệu khi khởi động lại, và nói thật điều này)
+
+**Không bao giờ cắt:** phát hiện chạy thật trên video, deploy Cloud Run, Telegram, pytest + `TEST_REPORT.md`, CI.
+
+---
+
+## 🛟 6. RỦI RO & PHƯƠNG ÁN DỰ PHÒNG
+
+| Rủi ro | Phương án |
+| :--- | :--- |
+| Đo ngập theo bánh xe sai nhiều trên một số góc camera | Chỉ đo khi xe quay ngang; báo "không đủ điều kiện đo" thay vì đoán bừa; nói rõ giới hạn khi phản biện |
+| Mạng ở trường yếu lúc demo | 4G dự phòng; Edge có hàng đợi offline, mất mạng vẫn chạy và gửi bù khi có mạng lại (đây cũng là một điểm để demo) |
+| Cloud Run lỗi lúc demo | `docker compose up` chạy toàn bộ trên laptop làm phương án B |
+| Telegram chậm hoặc bị chặn | Dashboard vẫn hiện sự cố; Text Report xem trực tiếp trên web |
+| Mệt, code lỗi về sáng | Ngủ 01:30–03:00, khóa tính năng lúc 06:30 |
+
+**Câu hỏi cần hỏi BTC / anh Cảnh trước 07/11:**
+1. Có được dùng **bộ clip và file nhãn chuẩn bị trước** không? (dữ liệu, không phải code)
+2. Có được dùng trọng số pretrained `yolov8n.pt` và **công cụ AI hỗ trợ viết code** không?
+3. Hạ tầng Cloud (project, Cloud SQL, service account) tạo sẵn trước có được không?
+4. Khung giờ ngày 07/11 có giữ như thể lệ cũ (12:00 → 09:00) không?
+
+---
+
+## 📦 7. CẤU TRÚC REPO THI DỰ KIẾN
+
+```text
+urbanshield-lite/
+├── .specify/ , specs/          # GitHub Spec Kit (tạo bằng `specify init`)
+├── edge/                       # Chạy tại máy tính khu phố
+│   ├── capture.py              # Đọc video/webcam, khung hình chỉ nằm trên RAM
+│   ├── detector.py             # YOLOv8n + tracking
+│   ├── flood.py                # Đo ngập theo bánh xe
+│   ├── fall.py                 # Máy trạng thái ngã xe, đếm 5s
+│   ├── sender.py               # Gửi sự kiện + hàng đợi offline
+│   └── eval/run_eval.py        # Đánh giá trên clip có nhãn
+├── server/                     # Chạy trên Cloud Run
+│   ├── main.py , api/ , models.py , db.py
+│   ├── reporting.py            # Text Report
+│   └── notify.py               # Telegram
+├── web/                        # React + Leaflet
+├── tests/                      # pytest (+ Playwright)
+├── docs/  DATA.md  TEST_REPORT.md
+├── Dockerfile , docker-compose.yml
+└── .github/workflows/ci.yml
 ```
-┌────────────────────────────────────────────────────────────────────────────────┐
-│                          LỘ TRÌNH 24 GIỜ VÒNG CODING                            │
-└────────────────────────────────────────────────────────────────────────────────┘
- [Giờ 00 - 02] Sprint 0: Chuẩn hóa GitHub Spec Kit & Phân rã cấu trúc dự án
-       │
- [Giờ 02 - 07] Sprint 1: Tinh chỉnh Core AI Engine & Thuật toán Edge Vision
-       │
- [Giờ 07 - 12] Sprint 2: Minimal API (<150B), Text Report Engine & Telegram Dispatcher
-       │
- [Giờ 12 - 16] Sprint 3: Tối ưu WebGIS Dashboard & Công cụ trực quan hóa Live Demo
-       │
- [Giờ 16 - 20] Sprint 4: Xây dựng Test Suite tự động & Xuất Test Report (Mandatory)
-       │
- [Giờ 20 - 24] Sprint 5: Đóng gói Docker Compose, GitHub Actions CI/CD & Cloud Deployment
-```
-
----
-
-## 📋 CHI TIẾT CÁC HẠNG MỤC CÔNG VIỆC THEO TỪNG SPRINT
-
-### 🏁 SPRINT 0: CHUẨN HÓA GITHUB SPEC KIT & PHÂN RÃ CẤU TRÚC (Giờ 00 - Giờ 02)
-*Mục tiêu: Đặt nền móng dự án chuẩn kỹ sư phần mềm chuyên nghiệp theo đúng hướng dẫn của Mentor Anh Cảnh.*
-
-- [x] **Task 0.1:** Khởi tạo thư mục `.spec/` và `.specify/` theo chuẩn **GitHub Spec Kit**:
-  - `.spec/constitution.md`: Hiến chương dự án, nguyên tắc bất biến (Anti-hype, Privacy RAM, CPU-first).
-  - `.spec/spec.md` & `.spec/functional-spec.md`: Đặc tả chi tiết các tác vụ nghiệp vụ & User Stories.
-  - `.spec/plan.md` & `.spec/technical-spec.md`: Thiết kế kiến trúc Modular Edge-First, Minimal API contract.
-  - `.spec/tasks.md`: Danh mục nhiệm vụ nguyên tử (atomic tasks) cho cả 5 sprint.
-  - `.spec/live-demo-spec.md`: Kịch bản điều phối Live Demo 3 phút từng thao tác cụ thể.
-  - `.specify/manifest.json`: Siêu dữ liệu chuẩn hóa công cụ Spec Kit.
-- [ ] **Task 0.2:** Rà soát và cấu hình môi trường phát triển (Python 3.10+ venv, Node.js 18+, Docker).
-- [ ] **Task 0.3:** Cập nhật tài liệu điều phối dự án và phân công trách nhiệm rõ ràng.
-
----
-
-### 🧠 SPRINT 1: TINH CHỈNH CORE AI ENGINE & THUẬT TOÁN EDGE VISION (Giờ 02 - Giờ 07)
-*Mục tiêu: Đạt độ chính xác cao trên CPU phổ thông, triệt tiêu báo động giả và bảo đảm Privacy-by-design.*
-
-- [ ] **Task 1.1 - Thuật toán đo ngập hình học qua bánh xe máy 50cm:**
-  - Hoàn thiện công thức ánh xạ tỷ lệ che khuất bánh xe máy:
-    $$D_{\text{ngập}} = 50\text{ cm} \times \left(1 - \frac{H_{\text{hiển thị}}}{H_{\text{gốc}}}\right)$$
-  - Phân loại rõ 3 cấp độ thực tế:
-    - Mức 1: $< 10\text{ cm}$ (Rất nhẹ - Xe máy đi bình thường).
-    - Mức 2: $10 - 20\text{ cm}$ (Chú ý - Mép pô xe máy).
-    - Mức 3: $> 20\text{ cm}$ (Nguy hiểm - Nước tràn buồng máy, dễ chết máy).
-- [ ] **Task 1.2 - Thuật toán phát hiện ngã xe đa tầng chống báo giả:**
-  - Tầng 1: Kiểm tra tỷ lệ khung bao nằm ngang người và xe máy ($W/H > 1.15$).
-  - Tầng 2: Kiểm tra cự ly không gian giữa người và xe đổ ($\text{Distance} < 180\text{ px}$).
-  - Tầng 3: **Bộ đếm bất động liên tục > 5 giây** (Debounce timer) để loại trừ người dừng xe dắt bộ, người cúi nhặt đồ hoặc dỡ hàng hóa.
-- [ ] **Task 1.3 - Thuật toán cân bằng sáng thích ứng CLAHE:**
-  - Tự động tăng cường độ tương phản cục bộ khi camera ghi nhận điều kiện mưa đêm hoặc hẻm thiếu sáng.
-- [ ] **Task 1.4 - Xác thực cơ chế Privacy-by-design:**
-  - Cơ chế giải mã frame video trực tiếp trong bộ nhớ RAM tạm thời và giải phóng ngay sau khi inference (`Zero-Disk write`).
-  - Không thu thập đặc trưng khuôn mặt hoặc biển số xe chi tiết của người dân.
-
----
-
-### ⚡ SPRINT 2: MINIMAL API, TEXT REPORT ENGINE & TELEGRAM DISPATCHER (Giờ 07 - Giờ 12)
-*Mục tiêu: Tối ưu hiệu năng, gói tin siêu nhẹ phù hợp hạ tầng mạng ngõ hẻm và tự động gửi tin nhắn cho cơ sở.*
-
-- [ ] **Task 2.1 - Tinh giản API thành Minimal API:**
-  - Giảm thiểu tối đa middleware thừa, thiết kế phi trạng thái.
-  - Chuẩn hóa payload mẩu tin sự cố **dưới 150 bytes**:
-    ```json
-    {
-      "node_id": "hem_254_q4",
-      "type": "FLOOD",
-      "val": 22.5,
-      "unit": "cm",
-      "time": 1729145700
-    }
-    ```
-  - Các endpoint cốt lõi:
-    - `GET /health` (Heartbeat node & Uptime).
-    - `POST /api/v1/incidents/flood` (Cập nhật mực nước).
-    - `POST /api/v1/incidents/accident` (Cảnh báo ngã xe khẩn cấp).
-    - `GET /api/v1/reports/summary` (Xuất Text Report).
-    - `GET /api/v1/nodes` (Danh sách các trạm giám sát).
-- [ ] **Task 2.2 - Xây dựng Text Report Engine (Báo cáo dạng văn bản):**
-  - **Mẫu A (Instant Alert):** Mẩu tin ngắn gọn gửi ngay khi phát hiện sự cố (nêu rõ hẻm nào, ngập bao nhiêu cm, ngã xe bao lâu, đề xuất hành động).
-  - **Mẫu B (Shift / Daily Digest):** Báo cáo tổng hợp ca trực tóm tắt số vụ ngập, đỉnh triều, số vụ trượt ngã và tỷ lệ uptime của các camera.
-- [ ] **Task 2.3 - Module Telegram Alert Dispatcher:**
-  - Tích hợp gửi tin tức thời qua Telegram Bot API (gửi kèm tọa độ GPS và thông điệp văn bản chuẩn hóa).
-  - Hỗ trợ gửi ảnh sự cố có che mờ/bảo vệ đời tư (nếu cần thiết cho xác minh cứu nạn).
-
----
-
-### 🗺️ SPRINT 3: TỐI ƯU WEBGIS DASHBOARD & CÔNG CỤ LIVE DEMO (Giờ 12 - Giờ 16)
-*Mục tiêu: Giao diện trực quan, nhẹ, mượt mà trên điện thoại và tối ưu cho phần thuyết trình trực tiếp.*
-
-- [ ] **Task 3.1 - Nâng cấp bản đồ số Leaflet GIS:**
-  - Thể hiện các tuyến ngõ hẻm trực quan bằng LineString GeoJSON đổi màu theo thời gian thực (Xanh lá: An toàn, Vàng: Ngập nhẹ, Đỏ: Ngập sâu/Có người ngã).
-  - Ghim các điểm camera (Trạm 01, Trạm 02, Trạm 03) kèm thông số hoạt động.
-- [ ] **Task 3.2 - Bộ chuyển đổi 3 kịch bản Demo tương tác:**
-  - Tạo các nút chuyển trạng thái một chạm:
-    - *Kịch bản 1:* "Đường khô ráo, giao thông thông thoáng" (Normal).
-    - *Kịch bản 2:* "Mưa lớn triều cường, nước ngập 24cm" (Flood).
-    - *Kịch bản 3:* "Sự cố trượt bánh ngã xe, nằm bất động 5s" (Accident).
-- [ ] **Task 3.3 - Bổ sung các widget kiểm tra kỹ thuật (Technical Proofs):**
-  - Widget đo đếm FPS thực tế trên CPU (25 - 30 FPS).
-  - Widget "Kiểm tra bộ nhớ RAM & Zero-Disk" (chứng minh không lưu trữ video người dân).
-  - Nút bấm "Xem & Sao chép Text Report" để tải báo cáo gửi ngay vào Zalo/Tin nhắn.
-- [ ] **Task 3.4 - Hoàn thiện giao diện Responsive:**
-  - Đảm bảo hiển thị tối ưu trên màn hình lớn của hội đồng thi và trên màn hình di động của cán bộ dân phòng.
-
----
-
-### 🧪 SPRINT 4: XÂY DỰNG TEST SUITE TỰ ĐỘNG & TEST REPORT (MANDATORY) (Giờ 16 - Giờ 20)
-*Mục tiêu: Đạt điểm tối đa phần Kiểm thử mô hình (Tiêu chí III.4 & Lời dặn sống còn của Mentor Anh Cảnh).*
-
-- [ ] **Task 4.1 - Viết bộ Unit Tests (pytest):**
-  - `tests/test_flood_depth.py`:
-    - Test công thức ánh xạ hình học với bánh xe 50cm.
-    - Test phân loại 3 ngưỡng mực nước (<10cm, 10-20cm, >20cm).
-    - Test xử lý giá trị biên (độ sâu âm, vượt quá 100cm).
-  - `tests/test_fall_detection.py`:
-    - Test tỷ lệ khung bao nằm ngang ($W/H > 1.15$).
-    - Test cự ly người - phương tiện.
-    - Test bộ đếm bất động liên tục: < 5s không báo động, đủ 5s kích hoạt còi báo.
-  - `tests/test_minimal_api.py`:
-    - Test kiểm tra phản hồi `/health`.
-    - Test tiếp nhận sự kiện ngập nước và ngã xe.
-    - Test kích thước payload phản hồi $< 150\text{ bytes}$.
-  - `tests/test_text_report.py`:
-    - Test tự động sinh văn bản báo cáo theo định dạng mộc mạc, không chứa từ ngữ báo chí kịch tính.
-- [ ] **Task 4.2 - Viết Integration Test & Mock End-to-End:**
-  - Kiểm thử toàn bộ chuỗi: Nhận diện frame $\rightarrow$ Kích hoạt logic $\rightarrow$ Tạo bản tin Text Report $\rightarrow$ Dispatch sang Telegram.
-- [ ] **Task 4.3 - Tạo lệnh tự động chạy Test và xuất Báo cáo:**
-  - Viết script `run_tests.py` hoặc lệnh pytest xuất file `docs/TEST_REPORT.md` kèm bảng tổng kết: số lượng test passed 100%, thời gian phản hồi, độ trễ xử lý.
-
----
-
-### 🐳 SPRINT 5: CONTAINERIZATION, CI/CD PIPELINE & CLOUD READINESS (Giờ 20 - Giờ 24)
-*Mục tiêu: Đạt điểm tối đa Tiêu chí IV (Cấu trúc & Triển khai) và Tiêu chí VII (Công nghệ Cloud).*
-
-- [ ] **Task 5.1 - Đóng gói Docker & Docker Compose:**
-  - `backend/Dockerfile`: Tối ưu hóa base image Python slim, cài đặt OpenCV headless và YOLOv8n.
-  - `frontend/Dockerfile`: Multi-stage build với Node.js và Nginx phục vụ static bundle siêu nhẹ.
-  - `docker-compose.yml`: Khởi chạy toàn bộ hệ thống bằng đúng 1 câu lệnh (`docker compose up -d`).
-- [ ] **Task 5.2 - Thiết lập GitHub Actions CI Pipeline:**
-  - Tạo `.github/workflows/ci.yml`:
-    - Tự động kích hoạt khi push code.
-    - Chạy linter kiểm tra code sạch.
-    - Chạy toàn bộ bộ test `pytest` và kiểm tra pass 100%.
-    - Thử nghiệm build Docker container.
-- [ ] **Task 5.3 - Cấu hình Cloud Deployment Readiness (AWS / Google Cloud):**
-  - Viết tài liệu và kịch bản triển khai lên Google Cloud Run hoặc AWS EC2/ECS.
-  - Cấu hình file biến môi trường production (`.env.example`) và hướng dẫn trỏ Domain/HTTPS.
-- [ ] **Task 5.4 - Tổng duyệt Kịch bản Live Demo 3 phút:**
-  - Diễn tập mượt mà theo 5 bước: Khởi động hệ thống $\rightarrow$ Trình diễn đo ngập $\rightarrow$ Phát hiện ngã xe $\rightarrow$ Nhận tin Telegram $\rightarrow$ Minh chứng RAM sạch.
-
----
-
-## 📊 BẢNG THEO DÕI ĐẦU RA SẢN PHẨM (DELIVERABLES CHECKLIST)
-
-| STT | Tên tài nguyên / Module | Đường dẫn file dự kiến | Trạng thái |
-| :---: | :--- | :--- | :---: |
-| 1 | GitHub Spec Kit Overview | `.spec/functional-spec.md` | Chờ thực hiện |
-| 2 | Technical Spec & API Contract | `.spec/technical-spec.md` | Chờ thực hiện |
-| 3 | Kịch bản Live Demo 3 phút | `.spec/live-demo-spec.md` | Chờ thực hiện |
-| 4 | Core AI Detector (Edge) | `backend/detector.py` | Sẵn sàng nâng cấp |
-| 5 | Minimal API & Dispatcher | `backend/main.py` | Sẵn sàng nâng cấp |
-| 6 | Text Report Generator | `backend/reporting.py` | Tạo mới |
-| 7 | Dashboard WebGIS | `frontend/src/App.jsx` | Sẵn sàng nâng cấp |
-| 8 | Bộ Unit Tests & Integration | `backend/tests/` | Tạo mới |
-| 9 | Báo cáo kiểm thử tự động | `docs/TEST_REPORT.md` | Tạo mới |
-| 10 | Dockerfile Backend & Frontend | `backend/Dockerfile`, `frontend/Dockerfile` | Tạo mới |
-| 11 | Docker Compose chạy 1 lệnh | `docker-compose.yml` | Tạo mới |
-| 12 | GitHub Actions CI Workflow | `.github/workflows/ci.yml` | Tạo mới |
-| 13 | Hướng dẫn triển khai Cloud | `docs/CLOUD_DEPLOYMENT_GUIDE.md` | Tạo mới |
-
----
-
-## 🏆 KẾ HOẠCH NÀY ĐẢM BẢO CHIẾN THẮNG BẰNG CÁCH NÀO?
-
-1. **Khóa chặt lời dặn của Ban Giám khảo:** Bắt buộc có **Test Report** chứng minh sản phẩm chạy thật; dùng **GitHub Spec Kit** làm việc bài bản; ứng dụng **Minimal API** và **Text Report** giải quyết đúng nhu cầu cán bộ cơ sở.
-2. **Không bánh vẽ, không cường điệu (Anti-hype):** Toàn bộ kỹ thuật đều dựa trên thực tế: CPU phổ thông, bánh xe 50cm, bộ đếm 5s, RAM sạch không lưu video người dân.
-3. **Chuẩn bị hoàn hảo cho 3 phút Live Demo:** Giám khảo được trực tiếp nhìn thấy AI xử lý, chuông kêu, bản đồ đổi màu và điện thoại cá nhân nhận tin nhắn cảnh báo trong chưa đầy 2 giây.

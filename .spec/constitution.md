@@ -37,7 +37,7 @@
 
 1. **Chỉ gửi mẩu tin khi có sự cố (< 150 Bytes):**
    - Các máy tính khu phố tuyệt đối không kéo hay phát luồng video liên tục về máy chủ trung tâm để tránh làm nghẽn toàn bộ đường truyền mạng ngõ xóm.
-   - Chỉ khi phát hiện sự cố ngập sâu hoặc ngã xe, hệ thống mới gửi đi một mẩu tin văn bản siêu nhẹ với kích thước **dưới 150 bytes**.
+   - Chỉ khi phát hiện sự cố ngập sâu hoặc ngã xe, hệ thống mới gửi đi một mẩu tin cảnh báo với kích thước **dưới 150 bytes**.
 
 2. **Bộ đếm thời gian triệt tiêu báo động giả:**
    - Mọi cảnh báo tai nạn ngã xe phải đi qua bộ lọc kiểm tra bất động:

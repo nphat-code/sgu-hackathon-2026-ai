@@ -65,7 +65,7 @@
 - **Nội dung bản tin:**
   > `🚨 [CẢNH BÁO SỰ CỐ NGÕ HẺM] - Hẻm 254 Bến Vân Đồn: Phát hiện người ngã xe bất động quá 5 giây lúc 09:15. Đề nghị dân quân hỗ trợ ngay!`
 - **Lời nói tự nhiên:**
-  > *"Ngay khi xác định sự cố, hệ thống chỉ gửi một mẩu tin văn bản siêu nhẹ chưa tới 150 bytes sang Telegram cho lực lượng dân phòng. Không truyền video nặng nề, vừa tiết kiệm mạng vừa tới tay người cứu trợ ngay lập tức."*
+  > *"Ngay khi xác định sự cố, hệ thống chỉ gửi một mẩu tin cảnh báo chưa tới 150 bytes sang Telegram cho dân phòng. Không gửi video, nên vừa đỡ tốn mạng, vừa tới tay người hỗ trợ nhanh."*
 
 ---
 

@@ -12,7 +12,7 @@
 - Vào ban đêm hoặc lúc mưa to gió lớn, tầm nhìn hạn chế, người đi xe máy rất dễ bị trượt ngã hoặc sụp hố ga. Khi xảy ra sự cố trong ngõ hẻm vắng, người bị nạn khó được phát hiện kịp thời để giúp đỡ.
 
 ### 1.2. Rào cản công nghệ & hạ tầng hiện nay:
-- **Chi phí đắt đỏ:** Lắp đặt camera AI chuyên dụng tốn từ 15 đến 25 triệu đồng mỗi mắt camera; trang bị cảm biến đo ngập dưới cống tốn từ 10 đến 18 triệu đồng và rất nhanh bị rác thải, bùn đất làm hỏng.
+- **Chi phí đắt đỏ:** Mua camera AI chuyên dụng thì quá đắt đỏ; còn cảm biến đo ngập đặt dưới cống thì cũng tốn kém và nhanh bị rác, bùn làm hỏng.
 - **Nghẽn băng thông:** Nếu dùng camera thông thường rồi kéo toàn bộ luồng video 24/7 về máy chủ trung tâm thì sẽ làm nghẽn toàn bộ đường truyền mạng dân sinh tại ngõ xóm.
 - **Rủi ro đời tư:** Việc truyền và lưu trữ video đời sống sinh hoạt của người dân trong ngõ hẻm lên máy chủ đám mây tiềm ẩn nguy cơ rò rỉ dữ liệu cá nhân nghiêm trọng.
 

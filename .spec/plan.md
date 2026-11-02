@@ -57,7 +57,7 @@ Hệ thống được thiết kế theo mô hình xử lý tại biên phân tá
    - Hỗ trợ Mẫu A (Cảnh báo tức thời gửi ngay Telegram) và Mẫu B (Bản tin tổng hợp ca trực).
 
 3. **Cổng giao tiếp Minimal API (`backend/main.py`):**
-   - Cung cấp các endpoint RESTful siêu nhẹ: `/health`, `/api/v1/incidents/flood`, `/api/v1/incidents/accident`, `/api/v1/reports/summary`.
+   - Cung cấp các endpoint RESTful gọn nhẹ: `/health`, `/api/v1/incidents/flood`, `/api/v1/incidents/accident`, `/api/v1/reports/summary`.
    - Quản lý kênh WebSocket truyền dữ liệu thời gian thực tới giao diện người dùng.
 
 4. **Giao diện Bản đồ số (`frontend/src/`):**
@@ -78,6 +78,6 @@ Hệ thống được thiết kế theo mô hình xử lý tại biên phân tá
 ## 🚀 4. KẾ HOẠCH ĐÓNG GÓI & TRIỂN KHAI CLOUD
 
 - **Container hóa Backend:** `backend/Dockerfile` sử dụng Python 3.10-slim tối ưu hóa cho CPU, không cài các thư viện thừa.
-- **Container hóa Frontend:** `frontend/Dockerfile` sử dụng quy trình multi-stage build với Node.js và máy chủ tĩnh Nginx siêu nhẹ.
+- **Container hóa Frontend:** `frontend/Dockerfile` sử dụng quy trình multi-stage build với Node.js và máy chủ tĩnh Nginx gọn nhẹ.
 - **Điều phối 1 lệnh:** File `docker-compose.yml` liên kết toàn bộ dịch vụ, chạy ngay bằng lệnh: `docker compose up -d`.
 - **Triển khai Cloud:** Chuẩn bị kịch bản sẵn sàng triển khai lên Google Cloud Run hoặc AWS EC2 có địa chỉ IP/tên miền công khai.
