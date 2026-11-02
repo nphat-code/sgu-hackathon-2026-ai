@@ -17,3 +17,14 @@
    - **Bắt buộc làm Test Report** (Playwright/pytest) có bằng chứng log/screenshot chứng minh sản phẩm chạy được.
    - Kết nối MCP với LLM để hỗ trợ code UI nhanh.
 
+## 3. Tiêu chí đánh giá Vòng Thử thách (24h) & Chung kết (100 điểm)
+*Chi tiết xem tại: [`docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md`](docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md)*
+- I. Tính sáng tạo & đổi mới (10đ)
+- II. Tính thực tiễn & khả năng áp dụng (10đ)
+- III. Dữ liệu & mô hình (20đ - Dữ liệu 5đ, Mô hình 5đ, An toàn AI 5đ, Test Report 5đ)
+- IV. Cấu trúc, chất lượng triển khai & độ hoàn thiện (20đ - Code 3đ, FE 3đ, BE 5đ, CI/CD 3đ, Bảo mật 3đ, Hoàn thiện 3đ)
+- V. Đóng góp & tính cộng đồng (10đ)
+- VI. Sử dụng AI tiết kiệm chi phí & hiệu quả (10đ)
+- VII. Ứng dụng công nghệ AWS hoặc Google Cloud (10đ)
+- VIII. Làm việc nhóm, thuyết trình & phản biện (10đ)
+

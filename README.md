@@ -54,6 +54,8 @@ HackathonSGU2026/
 * 🎙️ **Kịch bản thuyết trình ý tưởng & Bộ Q&A:** [docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
 * 🗣️ **Lời thoại thuyết trình chi tiết 8 slide (3 phút):** [docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md](file:///c:/Competition/HackathonSGU2026/docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md)
 * 📜 **Thể lệ cuộc thi:** [docs/THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/docs/THE_LE_CUOC_THI.md)
+* 🎯 **Tiêu chí Vòng Sơ loại (100đ):** [docs/TIEU_CHI_VONG_SO_LOAI.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_SO_LOAI.md)
+* 🏆 **Tiêu chí Vòng 24h & Chung kết (100đ):** [docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md)
 
 ### 2. Slide trình chiếu & Truyền thông:
 * 🖥️ **Slide PDF chính thức (16:9):** [slides/SingleNode_UrbanShieldLite.pdf](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.pdf)
