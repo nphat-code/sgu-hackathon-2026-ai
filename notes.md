@@ -28,3 +28,12 @@
 - VII. Ứng dụng công nghệ AWS hoặc Google Cloud (10đ)
 - VIII. Làm việc nhóm, thuyết trình & phản biện (10đ)
 
+## 4. Kế hoạch triển khai Vòng Coding 24H (5 Sprint)
+*Chi tiết xem tại: [`docs/KE_HOACH_VONG_CODING.md`](docs/KE_HOACH_VONG_CODING.md)*
+- **Sprint 0 (Giờ 0-2):** Chuẩn hóa GitHub Spec Kit (`.spec/`) & Phân rã cấu trúc.
+- **Sprint 1 (Giờ 2-7):** Nâng cấp Core AI Engine, đo ngập bánh xe 50cm, ngã xe 5s & CLAHE.
+- **Sprint 2 (Giờ 7-12):** Minimal API (<150B), Text Report Engine & Telegram Dispatcher.
+- **Sprint 3 (Giờ 12-16):** WebGIS Dashboard (Leaflet) & Bộ điều phối 3 kịch bản Live Demo.
+- **Sprint 4 (Giờ 16-20):** Unit/Integration Tests & Xuất `TEST_REPORT.md` (Bắt buộc).
+- **Sprint 5 (Giờ 20-24):** Docker Compose (1 lệnh), CI/CD GitHub Actions & Cloud Deployment.
+

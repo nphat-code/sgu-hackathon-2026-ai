@@ -56,6 +56,7 @@ HackathonSGU2026/
 * 📜 **Thể lệ cuộc thi:** [docs/THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/docs/THE_LE_CUOC_THI.md)
 * 🎯 **Tiêu chí Vòng Sơ loại (100đ):** [docs/TIEU_CHI_VONG_SO_LOAI.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_SO_LOAI.md)
 * 🏆 **Tiêu chí Vòng 24h & Chung kết (100đ):** [docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md)
+* 🚀 **Kế hoạch triển khai Vòng Coding (24h):** [docs/KE_HOACH_VONG_CODING.md](file:///c:/Competition/HackathonSGU2026/docs/KE_HOACH_VONG_CODING.md)
 
 ### 2. Slide trình chiếu & Truyền thông:
 * 🖥️ **Slide PDF chính thức (16:9):** [slides/SingleNode_UrbanShieldLite.pdf](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.pdf)
