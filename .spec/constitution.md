@@ -1,55 +1,56 @@
-# 📜 PROJECT CONSTITUTION (GITHUB SPEC KIT)
-## PROJECT: URBANSHIELD LITE
-### REPOSITORY: sgu-hackathon-2026-ai | TEAM: SINGLENODE
+# 📜 HIẾN CHƯƠNG DỰ ÁN (PROJECT CONSTITUTION)
+## DỰ ÁN: URBANSHIELD LITE
+### REPOSITORY: sgu-hackathon-2026-ai | ĐỘI THI: SINGLENODE
+### CUỘC THI: SGU HACKATHON 2026 – ĐẠI HỌC SÀI GÒN
 
-> **Purpose:** This document defines the non-negotiable principles, architectural invariants, privacy guardrails, and engineering standards for UrbanShield Lite. All technical specifications, development plans, and generated code MUST comply with this Constitution.
-
----
-
-## 🏛️ ARTICLE I: CORE TECHNICAL PHILOSOPHY (PROBLEM-FIRST & ANTI-HYPE)
-
-1. **Problem-First Invariant:**
-   - Every feature must directly address a proven civil pain point: localized urban flooding in low-lying alleyways and unassisted traffic accidents during adverse weather.
-   - Solutions must prioritize municipal reality and grassroots adoption over theoretical complexity.
-
-2. **Anti-Hype & Technical Honesty:**
-   - **No Superlatives:** Forbid the use of exaggerated terminology (e.g., "super-lightweight", "hyper-AI", "golden hour of rescue"). Use grounded, professional descriptions (e.g., "compact", "alert dispatch", "timely assistance").
-   - **Accessible Hardware First:** The core vision pipeline MUST run comfortably on commodity consumer x86 CPUs (e.g., Intel Core i3/i5 4th gen or newer, 25-30 FPS) without requiring discrete GPUs.
-   - **Geometric Ground-Truth:** Flood depth estimation must rely on physical optical geometry against standard motorcycle wheel dimensions (~50cm outer diameter), not unverifiable neural depth maps.
+> **Mục đích:** Tài liệu này thiết lập các nguyên tắc bất biến, ranh giới đạo đức bảo vệ quyền riêng tư của người dân, và các tiêu chuẩn kỹ thuật không thể thỏa hiệp cho giải pháp UrbanShield Lite. Mọi đặc tả kỹ thuật, kế hoạch phát triển và dòng code sinh ra BẮT BUỘC phải tuân thủ nghiêm ngặt Hiến chương này.
 
 ---
 
-## 🛡️ ARTICLE II: PRIVACY-BY-DESIGN (CIVIL LIBERTY GUARDRAIL)
+## 🏛️ ĐIỀU 1: TRIẾT LÝ KỸ THUẬT (PROBLEM-FIRST & CHỐNG PHÓNG ĐẠI)
 
-1. **Zero-Disk Video Storage:**
-   - Video frames ingested from local community cameras MUST only exist temporarily within volatile system memory (RAM).
-   - Once YOLOv8-nano inference and geometric analysis are complete, frame buffers MUST be released immediately (`del frame`).
-   - The system is constitutionally forbidden from persisting raw video streams or arbitrary frame captures to persistent disk storage.
+1. **Bắt đầu từ nỗi đau thực tế (Problem-First):**
+   - Mọi tính năng phát triển phải trực tiếp giải quyết vấn đề dân sinh có thật: ngập sâu cục bộ tại các con đường nhỏ, ngõ hẻm trũng thấp trong mùa mưa/triều cường và tai nạn trượt ngã xe máy ban đêm khó được phát hiện kịp thời để giúp đỡ.
+   - Giải pháp phải ưu tiên tính khả thi tại cơ sở (phường/xã, tổ dân phố), tuyệt đối không chạy theo các công nghệ phức tạp xa rời thực tế.
 
-2. **No Facial or PII Tracking:**
-   - The object detection model is restricted strictly to general mobility classes (`person`, `motorcycle`, `bicycle`, `car`).
-   - Facial recognition (FR), biometric tracking, and automated license plate recognition (ALPR) are strictly prohibited.
-
----
-
-## ⚡ ARTICLE III: BANDWIDTH & RESOURCE STEWARDSHIP
-
-1. **Event-Driven Telemetry (< 150 Bytes):**
-   - Edge nodes must never continuously stream video feeds to upstream servers or cloud infrastructure.
-   - Communication with upstream dispatchers is strictly event-driven: only structured JSON alerts with payload sizes strictly under **150 bytes** are transmitted upon verified incident confirmation.
-
-2. **Anti-False-Positive State Machines:**
-   - All incident detections must pass a multi-stage debounce gate:
-     - Fall detection requires a continuous stationary threshold of **> 5.0 seconds** before triggering an alert.
-     - Temporary actions (bending down, pushing a broken motorcycle, unloading cargo) must gracefully reset the debounce timer.
+2. **Trung thực kỹ thuật & Chống kịch tính hóa (Anti-hype):**
+   - **Cấm dùng từ ngữ khoa trương:** Tuyệt đối không dùng các từ như *"siêu nhẹ", "siêu AI", "thời gian vàng cứu hộ", "mắt thần đô thị"*. Thay bằng từ ngữ mộc mạc, đúng bản chất: *gọn nhẹ, mẩu tin cảnh báo, hỗ trợ kịp thời*.
+   - **Chạy trực tiếp trên phần cứng phổ thông:** Toàn bộ thuật toán thị giác cốt lõi BẮT BUỘC phải chạy mượt mà trên vi xử lý CPU máy tính văn phòng phổ thông (Intel Core i3/i5 đời cũ, tốc độ 25 - 30 FPS) mà không đòi hỏi card đồ họa rời GPU đắt tiền.
+   - **Đo lường hình học thực tế:** Phép đo ngập nước phải dựa trên cơ sở quang học và kích thước chuẩn của bánh xe máy lưu thông thực tế (~50cm đường kính ngoài), không phỏng đoán bằng mô hình chiều sâu trừu tượng.
 
 ---
 
-## 🧪 ARTICLE IV: VERIFICATION & EMPIRICAL EVIDENCE
+## 🛡️ ĐIỀU 2: BẢO VỆ QUYỀN RIÊNG TƯ NGƯỜI DÂN (PRIVACY-BY-DESIGN)
 
-1. **Mandatory Test Evidence:**
-   - No feature or optimization is considered complete without automated unit tests (`pytest`) covering happy paths, boundary conditions, and edge cases.
-   - A human-readable and machine-verifiable Test Report ([`docs/TEST_REPORT.md`](file:///c:/Competition/HackathonSGU2026/docs/TEST_REPORT.md)) must be continuously maintained and updated with pass rates and latency benchmarks.
+1. **Bộ nhớ RAM tạm thời - Không lưu video xuống ổ cứng (Zero-Disk Storage):**
+   - Luồng video trích xuất từ camera an ninh ngõ xóm CHỈ ĐƯỢC nạp tạm thời vào bộ nhớ RAM dưới dạng mảng dữ liệu số.
+   - Ngay sau khi mô hình YOLOv8-nano và thuật toán đo đạc xử lý xong từng khung hình, dữ liệu hình ảnh đó phải bị hủy vĩnh viễn ngay lập tức (`Zero-Disk write`).
+   - Nghiêm cấm hoàn toàn việc ghi lại luồng video sinh hoạt hoặc lưu trữ ảnh chụp người dân xuống ổ đĩa cứng của máy tính cơ sở hay máy chủ.
 
-2. **Zero-Downtime Live Demo:**
-   - Code artifacts must guarantee 100% stable execution during interactive live demonstrations without crashing or unhandled exceptions.
+2. **Không nhận diện khuôn mặt hay thông tin định danh cá nhân:**
+   - Mô hình AI chỉ nhận diện các lớp phương tiện và dáng người cơ bản phục vụ an toàn (`person`, `motorcycle`, `bicycle`, `car`).
+   - Tuyệt đối không tích hợp nhận diện khuôn mặt (Face Recognition), không theo dõi sinh trắc học và không nhận dạng biển số xe (ALPR) của người dân.
+
+---
+
+## ⚡ ĐIỀU 3: TIẾT KIỆM BĂNG THÔNG & TỐI ƯU TÀI NGUYÊN DÂN SINH
+
+1. **Chỉ gửi mẩu tin khi có sự cố (< 150 Bytes):**
+   - Các máy tính khu phố tuyệt đối không kéo hay phát luồng video liên tục về máy chủ trung tâm để tránh làm nghẽn toàn bộ đường truyền mạng ngõ xóm.
+   - Chỉ khi phát hiện sự cố ngập sâu hoặc ngã xe, hệ thống mới gửi đi một mẩu tin văn bản siêu nhẹ với kích thước **dưới 150 bytes**.
+
+2. **Bộ đếm thời gian triệt tiêu báo động giả:**
+   - Mọi cảnh báo tai nạn ngã xe phải đi qua bộ lọc kiểm tra bất động:
+     - Nạn nhân phải nằm bất động trên mặt đường liên tục **trên 5.0 giây** thì còi báo động mới kích hoạt.
+     - Các hành động thông thường như dừng xe chống chân, cúi nhặt đồ hay dắt xe qua đoạn trũng phải tự động đặt lại bộ đếm về 0, không kích hoạt báo động sai gây phiền toái.
+
+---
+
+## 🧪 ĐIỀU 4: KIỂM THỬ THỰC TẾ & BẰNG CHỨNG MINH BẠCH
+
+1. **Bắt buộc có báo cáo kiểm thử (Test Report):**
+   - Không một tính năng hay thuật toán nào được coi là hoàn thành nếu chưa có bộ kiểm thử tự động (`pytest`) kiểm tra toàn diện cả trường hợp bình thường lẫn trường hợp biên (edge cases).
+   - Phải duy trì liên tục file báo cáo kiểm thử minh bạch [`docs/TEST_REPORT.md`](file:///c:/Competition/HackathonSGU2026/docs/TEST_REPORT.md) có ghi rõ tỷ lệ vượt qua (100%) và độ trễ phản hồi.
+
+2. **Đảm bảo Live Demo thực tế không phát sinh lỗi:**
+   - Hệ thống mã nguồn phải bảo đảm chạy trực tiếp ổn định 100% trong phần trình diễn trực tiếp trước Ban Giám khảo, không bị crash, không đứng hình.

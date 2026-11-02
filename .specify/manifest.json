@@ -1,23 +1,23 @@
 {
   "version": "1.0.0",
-  "name": "UrbanShield Lite",
+  "ten_du_an": "UrbanShield Lite",
   "repository": "sgu-hackathon-2026-ai",
-  "team": "SingleNode",
-  "framework": "Spec-Driven Development (GitHub Spec Kit)",
-  "spec_directory": ".spec",
-  "artifacts": {
-    "constitution": ".spec/constitution.md",
-    "specification": ".spec/spec.md",
-    "plan": ".spec/plan.md",
-    "tasks": ".spec/tasks.md",
-    "functional_spec": ".spec/functional-spec.md",
-    "technical_spec": ".spec/technical-spec.md",
-    "live_demo_spec": ".spec/live-demo-spec.md"
+  "doi_thi": "SingleNode",
+  "phuong_phap": "Phat trien huong dac ta (GitHub Spec Kit - Spec-Driven Development)",
+  "thu_muc_spec": ".spec",
+  "danh_muc_tai_lieu": {
+    "hien_chuong": ".spec/constitution.md",
+    "dac_ta_san_pham": ".spec/spec.md",
+    "ke_hoach_kien_truc": ".spec/plan.md",
+    "danh_muc_cong_viec": ".spec/tasks.md",
+    "dac_ta_chuc_nang": ".spec/functional-spec.md",
+    "dac_ta_ky_thuat": ".spec/technical-spec.md",
+    "kich_ban_live_demo": ".spec/live-demo-spec.md"
   },
-  "constraints": {
-    "hardware": "Commodity x86 CPU without discrete GPU",
-    "privacy": "Zero-Disk storage, volatile RAM only, no facial recognition",
-    "bandwidth": "Event-driven payload < 150 bytes",
-    "anti_false_positive": "Stationary debounce timer >= 5.0 seconds"
+  "cac_nguyen_tac_bat_bien": {
+    "phan_cung": "CPU may tinh pho thong khong can GPU roi",
+    "quyen_rieng_tu": "Chi xu ly tren RAM tam thoi, khong luu video nguoi dan xuong o dia, khong nhan dien khuon mat",
+    "bang_thong": "Chi truyen mau tin su co sieu nhe duoi 150 bytes",
+    "chong_bao_gia": "Bo dem bat dong lien tuc tren 5.0 giay"
   }
 }
