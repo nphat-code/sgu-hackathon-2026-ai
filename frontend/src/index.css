@@ -1,15 +1,12 @@
 /* ==========================================================================
-   SOCRATICCODE AI - DESIGN SYSTEM (XCODE & STRIPE CLEAN LIGHT THEME)
-   Built with frontend-design, ui-ux-pro-max & design-system skills
-   Aesthetic: Modern Tech Studio Light (Apple Xcode / Stripe / GitHub Next)
+   URBANSHIELD LITE - MODERN TECH DESIGN SYSTEM (CLEAN STUDIO LIGHT)
+   Apple Xcode / Stripe / GitHub Next Aesthetic
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* -------------------------------------------------------------------------
-     1. Primitive Tokens (Light Palette)
-     ------------------------------------------------------------------------- */
+  /* Primitive Tokens (Light Palette) */
   --slate-50: #f8fafc;
   --slate-100: #f1f5f9;
   --slate-200: #e2e8f0;
@@ -22,13 +19,14 @@
   --slate-900: #0f172a;
   --white: #ffffff;
 
-  /* Accent Colors (High Contrast, Accessible >= 4.5:1) */
+  /* Accent Colors */
   --cobalt-500: #3b82f6;
   --cobalt-600: #2563eb;
   --cobalt-700: #1d4ed8;
 
   --emerald-50: #ecfdf5;
   --emerald-100: #d1fae5;
+  --emerald-500: #10b981;
   --emerald-600: #059669;
   --emerald-700: #047857;
 
@@ -39,53 +37,30 @@
 
   --amber-50: #fffbeb;
   --amber-100: #fef3c7;
+  --amber-500: #f59e0b;
   --amber-600: #d97706;
-  --amber-700: #b45309;
 
   --sky-50: #f0f9ff;
   --sky-100: #e0f2fe;
+  --sky-400: #38bdf8;
   --sky-600: #0284c7;
-  --sky-700: #0369a1;
 
-  --indigo-50: #eef2ff;
-  --indigo-600: #4f46e5;
+  /* Compatibility & Shared Component Tokens */
+  --bg-surface: var(--white);
+  --text-main: var(--slate-900);
+  --text-muted: var(--slate-600);
+  --text-faint: var(--slate-400);
+  --border-subtle: var(--slate-200);
+  --border-active: #0284c7;
 
-  /* -------------------------------------------------------------------------
-     2. Semantic Tokens (Clean Light Mode)
-     ------------------------------------------------------------------------- */
-  --color-background: var(--slate-50);
-  --color-surface: var(--white);
-  --color-surface-elevated: #ffffff;
-  --color-surface-hover: #f8fafc;
-
-  --color-foreground: var(--slate-900);
-  --color-foreground-muted: var(--slate-600);
-  --color-foreground-subtle: var(--slate-400);
-
-  --color-border-subtle: var(--slate-200);
-  --color-border-medium: var(--slate-300);
-  --color-border-accent: var(--cobalt-600);
-
-  --color-accent-primary: var(--cobalt-600);
-  --color-accent-success: var(--emerald-600);
-  --color-accent-danger: var(--crimson-600);
-  --color-accent-warning: var(--amber-600);
-  --color-accent-sky: var(--sky-600);
-  --color-accent-indigo: var(--indigo-600);
+  --cyan-400: #0284c7;
+  --cyan-500: #0369a1;
+  --emerald-400: #059669;
+  --rose-500: #dc2626;
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
-
-  /* Spacing Scale */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
 
   /* Radii */
   --radius-sm: 6px;
@@ -94,14 +69,10 @@
   --radius-xl: 18px;
   --radius-full: 9999px;
 
-  /* Soft Multi-layered Shadows (Stripe Studio Style) */
+  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 6px 16px 0 rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.07), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-blue: 0 8px 20px -4px rgba(37, 99, 235, 0.25);
-  --shadow-emerald: 0 8px 20px -4px rgba(5, 150, 105, 0.25);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 4px 14px 0 rgba(15, 23, 42, 0.05);
+  --shadow-card-hover: 0 8px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
 
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -116,8 +87,8 @@
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--slate-50);
+  color: var(--slate-900);
   font-family: var(--font-sans);
   min-height: 100vh;
   overflow-x: hidden;
@@ -146,15 +117,17 @@ body {
   background: var(--slate-400);
 }
 
-/* Clean Card Panel */
+/* Studio Clean Panel Card */
+.glass-panel,
 .clean-panel {
-  background: var(--white);
-  border: 1px solid var(--color-border-subtle);
+  background: #ffffff;
+  border: 1px solid var(--slate-200);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   transition: all var(--transition-normal);
 }
 
+.glass-panel:hover,
 .clean-panel:hover {
   border-color: var(--slate-300);
   box-shadow: var(--shadow-card-hover);

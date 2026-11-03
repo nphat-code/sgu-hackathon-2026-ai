@@ -12,7 +12,7 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
     if (!mapInstanceRef.current) {
       // Center near SGU An Duong Vuong, District 5, HCMC
       const map = L.map(mapContainerRef.current, {
-        center: [10.7585, 106.6820],
+        center: [10.7580, 106.6825],
         zoom: 15,
         zoomControl: false,
         attributionControl: false
@@ -35,14 +35,14 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
     // Add nodes as custom radar markers
     nodes.forEach(node => {
       let colorClass = 'marker-normal';
-      let statusColor = '#34d399'; // green
+      let statusColor = '#059669'; // Emerald green
 
-      if (node.scenario === 'accident') {
+      if (node.scenario?.includes('accident')) {
         colorClass = 'marker-sos';
-        statusColor = '#f43f5e'; // red
-      } else if (node.scenario === 'flood') {
+        statusColor = '#dc2626'; // Red
+      } else if (node.scenario?.includes('flood')) {
         colorClass = 'marker-flood';
-        statusColor = '#fbbf24'; // amber
+        statusColor = (node.scenario === 'real_flood_3' || node.scenario === 'real_flood_1') ? '#dc2626' : '#d97706';
       }
 
       const isSelected = node.id === activeNodeId;
