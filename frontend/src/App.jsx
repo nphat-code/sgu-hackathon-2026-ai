@@ -9,10 +9,9 @@ import {
   CheckCircle2, 
   MapPin, 
   Droplets, 
-  Eye,
-  Radio,
-  ServerOff,
-  Waves
+  Radio, 
+  Waves, 
+  CloudRain 
 } from 'lucide-react';
 import MapViewer from './components/MapViewer';
 import './App.css';
@@ -22,31 +21,31 @@ const API_BASE = 'http://127.0.0.1:8000';
 const INITIAL_NODES = [
   {
     id: "node-sgu-01",
-    name: "Trạm 01 - Hẻm 254 Bến Vân Đồn (Bình Thường)",
+    name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
     lat: 10.7599,
     lng: 106.6823,
     type: "Camera Dân Sinh #01",
-    scenario: "normal",
-    status: "online",
+    scenario: "real_flood_1",
+    status: "alert",
     device: "PC văn phòng + Camera USB"
   },
   {
     id: "node-sgu-02",
-    name: "Trạm 02 - Hẻm 184 Huỳnh Tấn Phát (Ngập Thực Tế)",
+    name: "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
     lat: 10.7552,
     lng: 106.6855,
     type: "Camera Dân Sinh #02",
-    scenario: "real_flood_1",
+    scenario: "real_flood_3",
     status: "alert",
     device: "Thiết bị nhúng thông dụng"
   },
   {
     id: "node-sgu-03",
-    name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Sự Cố Xe Ngã)",
+    name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
     lat: 10.7585,
     lng: 106.6790,
     type: "Camera Tổ Dân Phố #03",
-    scenario: "accident",
+    scenario: "real_accident_1",
     status: "warning",
     device: "Webcam USB tiêu chuẩn"
   }
@@ -54,7 +53,7 @@ const INITIAL_NODES = [
 
 export default function App() {
   const [nodes, setNodes] = useState(INITIAL_NODES);
-  const [activeNodeId, setActiveNodeId] = useState("node-sgu-02");
+  const [activeNodeId, setActiveNodeId] = useState("node-sgu-01");
   const [metrics, setMetrics] = useState({ 
     fps: 26.5, 
     infer_time_ms: 38.0, 
@@ -65,21 +64,31 @@ export default function App() {
   const [incidents, setIncidents] = useState([
     {
       id: "inc-001",
-      node_id: "node-sgu-02",
-      node_name: "Trạm 02 - Hẻm 184 Huỳnh Tấn Phát (Ngập Thực Tế)",
+      node_id: "node-sgu-01",
+      node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
       type: "FLOOD",
       level: "DANGER",
       message: "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
       timestamp: "10:15:30",
-      gps: "10.7552, 106.6855"
+      gps: "10.7599, 106.6823"
     },
     {
       id: "inc-002",
+      node_id: "node-sgu-02",
+      node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
+      type: "FLOOD",
+      level: "DANGER",
+      message: "Ngập sâu diện rộng trên 30cm, khuyến cáo chuyển hướng lưu thông",
+      timestamp: "10:17:45",
+      gps: "10.7552, 106.6855"
+    },
+    {
+      id: "inc-003",
       node_id: "node-sgu-03",
-      node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Sự Cố Xe Ngã)",
-      type: "ACCIDENT",
-      level: "SOS",
-      message: "Phát hiện va chạm ngã xe máy, người nằm bất động trên 5 giây",
+      node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
+      type: "WEATHER",
+      level: "WARNING",
+      message: "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
       timestamp: "10:18:12",
       gps: "10.7585, 106.6790"
     }
@@ -124,29 +133,32 @@ export default function App() {
     return () => clearInterval(interval);
   }, [activeNodeId, backendConnected]);
 
-  // Handle switching scenario
+  // Handle switching scenario between real videos
   const handleScenarioChange = async (scenario) => {
     // Optimistic UI update
     setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
     
     // Add local incident if alert
-    if (scenario.includes('flood') || scenario.includes('accident')) {
-      const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-      const isFlood = scenario.includes('flood');
-      const newInc = {
-        id: `inc-${Date.now()}`,
-        node_id: activeNode.id,
-        node_name: activeNode.name,
-        type: isFlood ? 'FLOOD' : 'ACCIDENT',
-        level: isFlood ? 'DANGER' : 'SOS',
-        message: isFlood 
-          ? 'Phát hiện ngập lụt 22.4cm tại cung đường (Vượt nửa bánh xe máy)' 
-          : 'CẢNH BÁO SOS: Phát hiện va chạm ngã xe máy ban đêm (Bất động > 5s)',
-        timestamp: new Date().toLocaleTimeString('vi-VN'),
-        gps: `${activeNode.lat}, ${activeNode.lng}`
-      };
-      setIncidents(prev => [newInc, ...prev]);
-    }
+    const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
+    const isFlood = scenario.includes('flood');
+    let incMsg = 'Phát hiện ngập lụt tại cung đường';
+    if (scenario === 'real_flood_1') incMsg = 'Phát hiện ngập triều cường 22.4cm vượt nửa bánh xe máy';
+    else if (scenario === 'real_flood_2') incMsg = 'Nước ngập 19.5cm mấp mé ống xả phương tiện';
+    else if (scenario === 'real_flood_3') incMsg = 'Ngập sâu diện rộng trên 30cm, khuyến cáo cứu hộ';
+    else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa 18.0cm, người dân lội bộ';
+    else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
+
+    const newInc = {
+      id: `inc-${Date.now()}`,
+      node_id: activeNode.id,
+      node_name: activeNode.name,
+      type: isFlood ? 'FLOOD' : 'WEATHER',
+      level: scenario === 'real_flood_3' || scenario === 'real_flood_1' ? 'DANGER' : 'WARNING',
+      message: incMsg,
+      timestamp: new Date().toLocaleTimeString('vi-VN'),
+      gps: `${activeNode.lat}, ${activeNode.lng}`
+    };
+    setIncidents(prev => [newInc, ...prev]);
 
     try {
       await fetch(`${API_BASE}/api/nodes/${activeNodeId}/scenario`, {
@@ -213,7 +225,7 @@ export default function App() {
             <div className="brand-subtitle">
               <span>Hệ Thống Giám Sát Ngập Nước & Sự Cố Ngõ Hẻm Bằng Edge AI</span>
               <span>•</span>
-              <span style={{ color: 'var(--cyan-400)' }}>Thực Nghiệm Video Thực Tế</span>
+              <span style={{ color: 'var(--cyan-400)' }}>100% Video Ghi Hình Thực Tế</span>
             </div>
           </div>
         </div>
@@ -268,7 +280,7 @@ export default function App() {
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  background: (node.scenario?.includes('accident')) ? 'var(--rose-500)' : (node.scenario?.includes('flood')) ? 'var(--amber-400)' : 'var(--emerald-400)'
+                  background: (node.scenario?.includes('accident')) ? 'var(--rose-500)' : 'var(--amber-400)'
                 }} />
               </button>
             ))}
@@ -306,13 +318,13 @@ export default function App() {
                   marginTop: '16px', 
                   padding: '6px 14px', 
                   borderRadius: '20px', 
-                  background: activeNode.scenario?.includes('accident') ? 'rgba(244,63,94,0.15)' : activeNode.scenario?.includes('flood') ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
-                  color: activeNode.scenario?.includes('accident') ? 'var(--rose-500)' : activeNode.scenario?.includes('flood') ? 'var(--amber-400)' : 'var(--emerald-400)',
+                  background: activeNode.scenario?.includes('accident') ? 'rgba(244,63,94,0.15)' : 'rgba(245,158,11,0.15)',
+                  color: activeNode.scenario?.includes('accident') ? 'var(--rose-500)' : 'var(--amber-400)',
                   fontWeight: '700',
                   fontSize: '0.8rem',
                   border: '1px solid currentColor'
                 }}>
-                  {activeNode.scenario?.includes('accident') ? '🚨 TRẠNG THÁI: SOS TAI NẠN XE NGÃ' : activeNode.scenario?.includes('flood') ? '⚠️ TRẠNG THÁI: CẢNH BÁO NGẬP NƯỚC' : '✅ TRẠNG THÁI: BÌNH THƯỜNG'}
+                  {activeNode.scenario?.includes('accident') ? '⚠️ TRẠNG THÁI: CẢNH BÁO MƯA BÃO TRƠN TRƯỢT' : '⚠️ TRẠNG THÁI: CẢNH BÁO NGẬP NƯỚC'}
                 </div>
               </div>
             )}
@@ -356,23 +368,23 @@ export default function App() {
           {/* Scenario Switching Simulator Controls */}
           <div className="scenario-controls-bar">
             <div className="scenario-label">
-              CHỌN TÌNH HUỐNG GIÁM SÁT ĐỂ ĐÁNH GIÁ THUẬT TOÁN:
+              CHỌN VIDEO THỰC TẾ ĐỂ ĐÁNH GIÁ THUẬT TOÁN:
             </div>
             <div className="scenario-buttons-grid">
               <button
-                className={`scenario-btn normal ${activeNode.scenario === 'normal' ? 'active' : ''}`}
-                onClick={() => handleScenarioChange('normal')}
-              >
-                <CheckCircle2 size={16} />
-                <span>1. Bình thường (Đường khô)</span>
-              </button>
-
-              <button
-                className={`scenario-btn flood ${activeNode.scenario === 'real_flood_1' || activeNode.scenario === 'flood' ? 'active' : ''}`}
+                className={`scenario-btn flood ${activeNode.scenario === 'real_flood_1' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_flood_1')}
               >
                 <Droplets size={16} />
-                <span>2. Ngập thực tế (Xe máy lội nước)</span>
+                <span>1. Triều cường xe máy (22-26cm)</span>
+              </button>
+
+              <button
+                className={`scenario-btn flood ${activeNode.scenario === 'real_flood_2' ? 'active' : ''}`}
+                onClick={() => handleScenarioChange('real_flood_2')}
+              >
+                <CheckCircle2 size={16} />
+                <span>2. Đoạn trũng ngập (18-22cm)</span>
               </button>
 
               <button
@@ -380,15 +392,23 @@ export default function App() {
                 onClick={() => handleScenarioChange('real_flood_3')}
               >
                 <Waves size={16} />
-                <span>3. Ngập sâu (Thuyền bè)</span>
+                <span>3. Ngập sâu cứu hộ (&gt;30cm)</span>
               </button>
 
               <button
-                className={`scenario-btn accident ${activeNode.scenario === 'accident' ? 'active' : ''}`}
-                onClick={() => handleScenarioChange('accident')}
+                className={`scenario-btn flood ${activeNode.scenario === 'real_flood_4' ? 'active' : ''}`}
+                onClick={() => handleScenarioChange('real_flood_4')}
               >
-                <AlertTriangle size={16} />
-                <span>4. Xe ngã SOS (Đếm 5s)</span>
+                <Droplets size={16} />
+                <span>4. Hẻm ngập nước (15-20cm)</span>
+              </button>
+
+              <button
+                className={`scenario-btn accident ${activeNode.scenario === 'real_accident_1' ? 'active' : ''}`}
+                onClick={() => handleScenarioChange('real_accident_1')}
+              >
+                <CloudRain size={16} />
+                <span>5. Mưa bão trơn trượt</span>
               </button>
             </div>
           </div>
@@ -421,9 +441,9 @@ export default function App() {
               {incidents.map(inc => (
                 <div 
                   key={inc.id} 
-                  className={`incident-item ${inc.level === 'SOS' ? 'sos' : 'danger'}`}
+                  className={`incident-item ${inc.level === 'DANGER' ? 'danger' : 'sos'}`}
                 >
-                  <span className={`inc-badge ${inc.level === 'SOS' ? 'sos' : 'danger'}`}>
+                  <span className={`inc-badge ${inc.level === 'DANGER' ? 'danger' : 'sos'}`}>
                     {inc.level}
                   </span>
                   <div className="inc-info">

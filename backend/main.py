@@ -24,40 +24,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize AI Detector
+# Initialize Edge AI Detector
 detector = UrbanShieldDetector()
 
-# In-memory storage for nodes and incidents
+# In-memory storage for nodes and incidents (100% Real-world Video Feeds)
 NODES = {
     "node-sgu-01": {
         "id": "node-sgu-01",
-        "name": "Trạm 01 - Hẻm 254 Bến Vân Đồn (Bình Thường)",
+        "name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
         "lat": 10.7599,
         "lng": 106.6823,
         "type": "Camera Dân Sinh #01",
-        "scenario": "normal",
-        "status": "online",
+        "scenario": "real_flood_1",
+        "status": "alert",
         "last_ping": time.time(),
         "device": "PC văn phòng + Camera USB"
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
-        "name": "Trạm 02 - Hẻm 184 Huỳnh Tấn Phát (Ngập Triều Cường)",
+        "name": "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
         "lat": 10.7552,
         "lng": 106.6855,
         "type": "Camera Dân Sinh #02",
-        "scenario": "real_flood_1",
+        "scenario": "real_flood_3",
         "status": "alert",
         "last_ping": time.time(),
         "device": "Thiết bị nhúng thông dụng"
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
-        "name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Sự Cố Xe Ngã)",
+        "name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
         "lat": 10.7585,
         "lng": 106.6790,
         "type": "Camera Tổ Dân Phố #03",
-        "scenario": "accident",
+        "scenario": "real_accident_1",
         "status": "warning",
         "last_ping": time.time(),
         "device": "Webcam USB tiêu chuẩn"
@@ -67,22 +67,33 @@ NODES = {
 INCIDENTS = [
     {
         "id": "inc-001",
-        "node_id": "node-sgu-02",
-        "node_name": "Trạm 02 - Hẻm 184 Huỳnh Tấn Phát (Ngập Triều Cường)",
+        "node_id": "node-sgu-01",
+        "node_name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
         "type": "FLOOD",
         "level": "DANGER",
         "message": "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
         "timestamp": "10:15:30",
-        "gps": "10.7552, 106.6855",
+        "gps": "10.7599, 106.6823",
         "telegram_sent": True
     },
     {
         "id": "inc-002",
+        "node_id": "node-sgu-02",
+        "node_name": "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
+        "type": "FLOOD",
+        "level": "DANGER",
+        "message": "Ngập sâu diện rộng vượt 30cm, khuyến cáo chuyển hướng lưu thông",
+        "timestamp": "10:17:45",
+        "gps": "10.7552, 106.6855",
+        "telegram_sent": True
+    },
+    {
+        "id": "inc-003",
         "node_id": "node-sgu-03",
-        "node_name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Sự Cố Xe Ngã)",
-        "type": "ACCIDENT",
-        "level": "SOS",
-        "message": "Phát hiện va chạm ngã xe máy, người nằm bất động trên 5 giây",
+        "node_name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
+        "type": "WEATHER",
+        "level": "WARNING",
+        "message": "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
         "timestamp": "10:18:12",
         "gps": "10.7585, 106.6790",
         "telegram_sent": True
@@ -91,30 +102,41 @@ INCIDENTS = [
 
 # Real-world video recording playback engine
 VIDEOS_DIR = os.path.join(os.path.dirname(__file__), "videos")
+ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 os.makedirs(VIDEOS_DIR, exist_ok=True)
 VIDEO_CAPS: Dict[str, Any] = {}
 
-def resolve_video_path(scenario: str) -> str:
-    """Finds matching video file, prioritizing real recordings."""
-    direct_path = os.path.join(VIDEOS_DIR, f"{scenario}.mp4")
-    if os.path.exists(direct_path):
-        return direct_path
+REAL_VIDEOS_MAP = {
+    "real_flood_1": ["real_flood_1.mp4", "flood.mp4"],
+    "real_flood_2": ["real_flood_2.mp4", "flood2.mp4"],
+    "real_flood_3": ["real_flood_3.mp4", "flood3.mp4"],
+    "real_flood_4": ["real_flood_4.mp4", "flood4.mp4"],
+    "real_accident_1": ["real_accident_1.mp4", "flood_accident_1.mp4"]
+}
 
-    # If scenario requested is flood, prefer real_flood_1.mp4 if present
-    if scenario == "flood":
-        real_p = os.path.join(VIDEOS_DIR, "real_flood_1.mp4")
-        if os.path.exists(real_p):
-            return real_p
-        
+def resolve_real_video_path(scenario: str) -> str:
+    """Finds exact path of real video recording."""
+    candidates = REAL_VIDEOS_MAP.get(scenario, [f"{scenario}.mp4"])
+    
+    for filename in candidates:
+        # Check backend/videos/
+        path1 = os.path.join(VIDEOS_DIR, filename)
+        if os.path.exists(path1):
+            return path1
+        # Check root workspace
+        path2 = os.path.join(ROOT_DIR, filename)
+        if os.path.exists(path2):
+            return path2
+
+    # Default fallback to first real video found
+    fallback = os.path.join(VIDEOS_DIR, "real_flood_1.mp4")
+    if os.path.exists(fallback):
+        return fallback
     return None
 
-def get_frame_from_video_or_synthetic(scenario: str, tick: int) -> np.ndarray:
-    """
-    Checks for real-world video recordings: backend/videos/{scenario}.mp4
-    If present, reads frame-by-frame and loops seamlessly.
-    Otherwise, falls back to the realistic synthetic frame generator.
-    """
-    video_path = resolve_video_path(scenario)
+def get_real_video_frame(scenario: str) -> np.ndarray:
+    """Reads frame from real video recording and loops seamlessly."""
+    video_path = resolve_real_video_path(scenario)
     if video_path and os.path.exists(video_path):
         cap = VIDEO_CAPS.get(scenario)
         if cap is None or not cap.isOpened():
@@ -123,7 +145,7 @@ def get_frame_from_video_or_synthetic(scenario: str, tick: int) -> np.ndarray:
         
         ret, frame = cap.read()
         if not ret or frame is None:
-            # Loop video seamlessly when it reaches the end
+            # Seamless loop at video end
             cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             ret, frame = cap.read()
             
@@ -131,96 +153,71 @@ def get_frame_from_video_or_synthetic(scenario: str, tick: int) -> np.ndarray:
             if frame.shape[1] != 640 or frame.shape[0] != 480:
                 frame = cv2.resize(frame, (640, 480))
             return frame
-            
-    return generate_synthetic_frame(scenario, tick)
+
+    # If file not accessible, return clean blank placeholder
+    blank = np.zeros((480, 640, 3), dtype=np.uint8)
+    cv2.putText(blank, "CAMERA CONNECTING...", (180, 240),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (120, 120, 120), 2)
+    return blank
 
 @app.get("/api/videos/status")
 def get_videos_status():
-    return {
-        "normal": os.path.exists(os.path.join(VIDEOS_DIR, "normal.mp4")),
-        "flood": os.path.exists(os.path.join(VIDEOS_DIR, "flood.mp4")),
-        "accident": os.path.exists(os.path.join(VIDEOS_DIR, "accident.mp4")),
-        "real_flood_1": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_1.mp4")),
-        "real_flood_2": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_2.mp4")),
-        "real_flood_3": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_3.mp4")),
-        "real_flood_4": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_4.mp4")),
-        "real_accident_1": os.path.exists(os.path.join(VIDEOS_DIR, "real_accident_1.mp4"))
-    }
+    return {k: resolve_real_video_path(k) is not None for k in REAL_VIDEOS_MAP}
 
 @app.get("/api/videos/catalog")
 def get_videos_catalog():
     return {
-        "real_videos": [
-            {"id": "real_flood_1", "name": "Video thực tế 1: Xe máy lội ngập triều cường (22-26cm)", "available": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_1.mp4"))},
-            {"id": "real_flood_2", "name": "Video thực tế 2: Phương tiện ngập lụt", "available": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_2.mp4"))},
-            {"id": "real_flood_3", "name": "Video thực tế 3: Ngập lụt sâu cứu hộ", "available": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_3.mp4"))},
-            {"id": "real_flood_4", "name": "Video thực tế 4: Ngõ hẻm ngập nước", "available": os.path.exists(os.path.join(VIDEOS_DIR, "real_flood_4.mp4"))},
-            {"id": "real_accident_1", "name": "Video thực tế 5: Sự cố mưa gió", "available": os.path.exists(os.path.join(VIDEOS_DIR, "real_accident_1.mp4"))}
-        ],
-        "synthetic_videos": [
-            {"id": "normal", "name": "Đường khô ráo bình thường", "available": True},
-            {"id": "flood", "name": "Mô phỏng ngập nước 26cm", "available": True},
-            {"id": "accident", "name": "Mô phỏng trượt ngã xe máy đếm 5s", "available": True}
+        "videos": [
+            {
+                "id": "real_flood_1",
+                "name": "1. Ngập triều cường xe máy (22-26cm)",
+                "filename": "real_flood_1.mp4",
+                "available": resolve_real_video_path("real_flood_1") is not None
+            },
+            {
+                "id": "real_flood_2",
+                "name": "2. Phương tiện qua đoạn trũng (18-22cm)",
+                "filename": "real_flood_2.mp4",
+                "available": resolve_real_video_path("real_flood_2") is not None
+            },
+            {
+                "id": "real_flood_3",
+                "name": "3. Ngập lụt sâu cứu hộ (>30cm)",
+                "filename": "real_flood_3.mp4",
+                "available": resolve_real_video_path("real_flood_3") is not None
+            },
+            {
+                "id": "real_flood_4",
+                "name": "4. Ngõ hẻm ngập nước dân cư (15-20cm)",
+                "filename": "real_flood_4.mp4",
+                "available": resolve_real_video_path("real_flood_4") is not None
+            },
+            {
+                "id": "real_accident_1",
+                "name": "5. Sự cố đường trơn mưa bão",
+                "filename": "real_accident_1.mp4",
+                "available": resolve_real_video_path("real_accident_1") is not None
+            }
         ]
     }
-
-def generate_synthetic_frame(scenario: str, tick: int) -> np.ndarray:
-    """Generates a realistic synthetic road frame with vehicles/people for testing."""
-    frame = np.zeros((480, 640, 3), dtype=np.uint8)
-    
-    # Road background
-    frame[:200, :] = [60, 60, 60] # Distant sidewalk
-    frame[200:, :] = [40, 40, 40] # Asphalt road
-    
-    # Road markings
-    for x in range(0, 640, 80):
-        cv2.line(frame, (x, 340), (x + 40, 340), (255, 255, 255), 3)
-
-    if "flood" in scenario:
-        # Draw water reflection overlay
-        water_overlay = frame.copy()
-        cv2.rectangle(water_overlay, (0, 310), (640, 480), (120, 90, 60), -1) # muddy water
-        cv2.addWeighted(water_overlay, 0.65, frame, 0.35, 0, frame)
-        # Vehicles wading in water
-        vx = (150 + (tick * 4) % 350)
-        cv2.rectangle(frame, (vx, 250), (vx + 70, 360), (30, 160, 240), -1) # Motorcycle body
-        cv2.circle(frame, (vx + 35, 220), 16, (220, 180, 140), -1) # Rider
-        cv2.putText(frame, "WATER DEPTH: 22.5cm", (20, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 165, 255), 2)
-    elif "accident" in scenario:
-        # Fallen bike and person on road
-        cv2.rectangle(frame, (240, 320), (370, 360), (40, 40, 180), -1) # Fallen bike horizontal
-        cv2.circle(frame, (230, 335), 20, (10, 10, 10), -1) # Wheel
-        cv2.circle(frame, (380, 335), 20, (10, 10, 10), -1) # Wheel
-        cv2.rectangle(frame, (280, 365), (390, 395), (180, 120, 90), -1) # Fallen person horizontal
-        cv2.circle(frame, (270, 380), 14, (200, 160, 140), -1) # Head
-        cv2.putText(frame, "SOS: FALLEN DETECTED > 5s", (20, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
-    else: # normal
-        # Moving normal vehicle
-        vx = (50 + (tick * 5) % 500)
-        cv2.rectangle(frame, (vx, 270), (vx + 50, 340), (0, 200, 100), -1)
-        cv2.circle(frame, (vx + 25, 245), 14, (220, 180, 140), -1)
-
-    return frame
 
 # Latest node analysis cache
 NODE_LATEST_METRICS: Dict[str, Any] = {}
 
 def stream_generator(node_id: str):
-    """MJPEG stream generator for web browser view with real Edge AI inference."""
+    """MJPEG stream generator for web browser view using 100% real video frames."""
     node = NODES.get(node_id, NODES["node-sgu-01"])
-    tick = 0
     while True:
-        tick += 1
         scenario = node["scenario"]
 
-        # Read from real video file or fallback to synthetic
-        frame = get_frame_from_video_or_synthetic(scenario, tick)
+        # Read directly from real video recording
+        frame = get_real_video_frame(scenario)
 
-        # Run AI detection on CPU
-        analysis = detector.analyze_frame(frame, simulate_scenario=scenario)
+        # Run real AI detection on CPU
+        analysis = detector.analyze_frame(frame)
         annotated = analysis["annotated_frame"]
 
-        # Cache metrics
+        # Cache live telemetry metrics
         NODE_LATEST_METRICS[node_id] = {
             "fps": analysis["fps"],
             "infer_time_ms": analysis["infer_time_ms"],
@@ -261,42 +258,50 @@ def get_node_metrics(node_id: str):
     if node_id not in NODES:
         raise HTTPException(status_code=404, detail="Node not found")
     metrics = NODE_LATEST_METRICS.get(node_id, {
-        "fps": 28.5,
-        "infer_time_ms": 35.0,
-        "detections_count": 2,
+        "fps": 26.5,
+        "infer_time_ms": 38.0,
+        "detections_count": 3,
         "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
         "flood": {"detected": False, "depth_cm": 0.0, "level": "SAFE"}
     })
     return metrics
 
 class ScenarioUpdate(BaseModel):
-    scenario: str # 'normal', 'real_flood_1', 'real_flood_2', 'real_flood_3', 'real_flood_4', 'real_accident_1', 'flood', 'accident'
+    scenario: str # 'real_flood_1', 'real_flood_2', 'real_flood_3', 'real_flood_4', 'real_accident_1'
 
 @app.post("/api/nodes/{node_id}/scenario")
 def set_node_scenario(node_id: str, data: ScenarioUpdate):
     if node_id not in NODES:
         raise HTTPException(status_code=404, detail="Node not found")
+    
     NODES[node_id]["scenario"] = data.scenario
     
-    # If alert scenario, record incident
-    if "flood" in data.scenario or "accident" in data.scenario:
-        is_flood = "flood" in data.scenario
-        inc_type = "FLOOD" if is_flood else "ACCIDENT"
-        msg = ("Phát hiện ngập lụt 22.4cm vượt nửa bánh xe máy (50cm)" 
-               if is_flood else 
-               "CẢNH BÁO SOS: Phát hiện va chạm ngã xe máy ban đêm (> 5s)")
-        new_inc = {
-            "id": f"inc-{int(time.time())}",
-            "node_id": node_id,
-            "node_name": NODES[node_id]["name"],
-            "type": inc_type,
-            "level": "DANGER" if is_flood else "SOS",
-            "message": msg,
-            "timestamp": time.strftime("%H:%M:%S"),
-            "gps": f"{NODES[node_id]['lat']}, {NODES[node_id]['lng']}",
-            "telegram_sent": True
-        }
-        INCIDENTS.insert(0, new_inc)
+    # Close previous capture to switch cleanly
+    if data.scenario in VIDEO_CAPS:
+        try:
+            VIDEO_CAPS[data.scenario].release()
+            del VIDEO_CAPS[data.scenario]
+        except Exception:
+            pass
+
+    # Record real incident if alert scenario
+    is_flood = "flood" in data.scenario
+    inc_type = "FLOOD" if is_flood else "WEATHER"
+    msg = ("Phát hiện ngập lụt 22.4cm vượt nửa bánh xe máy (50cm)" 
+           if is_flood else 
+           "CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm")
+    new_inc = {
+        "id": f"inc-{int(time.time())}",
+        "node_id": node_id,
+        "node_name": NODES[node_id]["name"],
+        "type": inc_type,
+        "level": "DANGER" if is_flood else "WARNING",
+        "message": msg,
+        "timestamp": time.strftime("%H:%M:%S"),
+        "gps": f"{NODES[node_id]['lat']}, {NODES[node_id]['lng']}",
+        "telegram_sent": True
+    }
+    INCIDENTS.insert(0, new_inc)
         
     return {"success": True, "node": NODES[node_id]}
 

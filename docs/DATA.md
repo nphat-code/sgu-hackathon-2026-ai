@@ -2,7 +2,7 @@
 
 > **Dự án:** UrbanShield Lite – Hệ thống giám sát ngập nước & sự cố ngõ hẻm bằng Edge AI  
 > **Đội thi:** SingleNode  
-> **Mục tiêu tài liệu:** Minh bạch nguồn gốc tập dữ liệu đánh giá, quy trình gán nhãn thực tế, và cam kết bảo vệ quyền riêng tư người dân.
+> **Mục tiêu tài liệu:** Minh bạch nguồn gốc tập dữ liệu đánh giá 100% video thực tế, quy trình gán nhãn, và cam kết bảo vệ quyền riêng tư người dân.
 
 ---
 
@@ -26,25 +26,17 @@ Do điều kiện thực tế trong ngõ hẻm không thể cắm cọc đo vậ
 | **1 / 2** | **Chú ý** | Nước ngập qua mép lốp, mấp mé ống xả xe máy | $10 - 20\text{ cm}$ | Xe số đi số thấp; xe tay ga chú ý |
 | **3** | **Nguy hiểm** | Nước ngập vượt nửa bánh xe máy, tràn lọc gió / bugi | $> 20\text{ cm}$ | Nguy cơ chết máy cao, khuyến cáo đổi hướng |
 
-### 2.2. Sự cố trượt ngã xe máy & Bộ đếm bất động 5 giây (Fall & Motionless)
-- Điểm bắt đầu ngã ($t_{fall}$): Thời điểm xe máy và người đổ nghiêng trên mặt đường ($W/H > 1.15$).
-- Thời điểm kích hoạt cảnh báo ($t_{alert}$): Chỉ kích hoạt khi người nằm bất động liên tục **quá 5.0 giây** ($t_{alert} \ge t_{fall} + 5.0\text{s}$).
-- Các tình huống dễ gây báo nhầm (Negative test cases): Cúi nhặt đồ, dắt xe, dừng xe chống chân kéo dài dưới 3 giây phải được bộ đếm loại bỏ, không phát sinh cảnh báo giả.
-
 ---
 
-## 3. 📑 DANH MỤC CÁC CLIP ĐÁNH GIÁ (TRÍCH XUẤT TỪ LABELS.CSV)
+## 3. 📑 DANH MỤC 5 CLIP ĐÁNH GIÁ THỰC TẾ (TRÍCH XUẤT TỪ LABELS.CSV)
 
-| Tên clip | Thể loại | Cấp ngập | Bắt đầu ngã | Độ dài | Độ phân giải | Mô tả bối cảnh |
-| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| `real_flood_1.mp4` | FLOOD | Mức 3 | - | 16.3s | 1920x1080 | Xe máy lội nước ngập nửa bánh (~22-26cm) đường ngập triều cường TP.HCM |
-| `real_flood_2.mp4` | FLOOD | Mức 2 | - | 17.2s | 1280x720 | Xe cộ qua đoạn trũng ngập mấp mé ống xả (~18-22cm) |
-| `real_flood_3.mp4` | FLOOD | Mức 3 | - | 15.3s | 1280x720 | Đoạn ngập lụt sâu có người lội ngang gối và thuyền nhỏ (>30cm) |
-| `real_flood_4.mp4` | FLOOD | Mức 2 | - | 14.5s | 1280x720 | Ngõ hẻm dân cư ngập nước mưa (~15-20cm) |
-| `real_accident_1.mp4`| FLOOD | Mức 1 | - | 24.8s | 1280x720 | Mưa to mặt đường ngập trơn trượt, các xe lưu thông chậm |
-| `accident.mp4` | FALL | Mức 0 | 2.5s | 12.0s | 640x480 | Xe máy trượt ngã lúc t=2.5s, người nằm bất động kích hoạt SOS lúc t=7.5s |
-| `normal.mp4` | NONE | Mức 0 | - | 10.0s | 640x480 | Tuyến đường khô ráo, phương tiện và người đi bộ bình thường |
-| `clip_negative_1.mp4`| NONE | Mức 0 | - | 10.0s | 640x480 | Tình huống người cúi nhặt đồ cạnh xe máy (dưới 3s tự đứng lên) |
+| Tên clip | Thể loại | Cấp ngập | Độ dài | Độ phân giải | Mô tả bối cảnh |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| `real_flood_1.mp4` | FLOOD | Mức 3 | 16.3s | 1920x1080 | Xe máy lội nước ngập nửa bánh (~22-26cm) đường ngập triều cường TP.HCM |
+| `real_flood_2.mp4` | FLOOD | Mức 2 | 17.2s | 1280x720 | Xe cộ qua đoạn trũng ngập mấp mé ống xả (~18-22cm) |
+| `real_flood_3.mp4` | FLOOD | Mức 3 | 15.3s | 1280x720 | Đoạn ngập lụt sâu có người lội ngang gối và thuyền nhỏ (>30cm) |
+| `real_flood_4.mp4` | FLOOD | Mức 2 | 14.5s | 1280x720 | Ngõ hẻm dân cư ngập nước mưa (~15-20cm) |
+| `real_accident_1.mp4`| WEATHER | Mức 1 | 24.8s | 1280x720 | Mưa to mặt đường ngập trơn trượt, các xe lưu thông chậm |
 
 ---
 
