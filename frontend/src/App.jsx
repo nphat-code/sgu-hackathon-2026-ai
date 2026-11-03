@@ -97,6 +97,16 @@ export default function App() {
   const [telegramToast, setTelegramToast] = useState(null);
   const [streamError, setStreamError] = useState(false);
 
+  // Auto-recover stream if momentarily interrupted
+  useEffect(() => {
+    if (streamError) {
+      const timer = setTimeout(() => {
+        setStreamError(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [streamError]);
+
   // Sync with backend API
   useEffect(() => {
     const fetchStatus = async () => {
@@ -135,6 +145,7 @@ export default function App() {
 
   // Handle switching scenario between real videos
   const handleScenarioChange = async (scenario) => {
+    setStreamError(false);
     // Optimistic UI update
     setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
     
@@ -290,6 +301,7 @@ export default function App() {
           <div className="video-feed-wrapper">
             {backendConnected && !streamError ? (
               <img
+                key={`${activeNode.id}-${activeNode.scenario}`}
                 src={`${API_BASE}/api/video_feed/${activeNode.id}`}
                 alt="Live Camera Feed"
                 className="video-stream-img"
