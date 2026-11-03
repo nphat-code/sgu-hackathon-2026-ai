@@ -180,31 +180,31 @@ def get_videos_catalog():
         "videos": [
             {
                 "id": "real_flood_1",
-                "name": "1. Ngập triều cường xe máy (22-26cm)",
+                "name": "1. Tuyến đường chính (Triều cường)",
                 "filename": "real_flood_1.mp4",
                 "available": resolve_real_video_path("real_flood_1") is not None
             },
             {
                 "id": "real_flood_2",
-                "name": "2. Phương tiện qua đoạn trũng (18-22cm)",
+                "name": "2. Đoạn đường trũng thấp",
                 "filename": "real_flood_2.mp4",
                 "available": resolve_real_video_path("real_flood_2") is not None
             },
             {
                 "id": "real_flood_3",
-                "name": "3. Ngập lụt sâu cứu hộ (>30cm)",
+                "name": "3. Điểm ngập sâu diện rộng",
                 "filename": "real_flood_3.mp4",
                 "available": resolve_real_video_path("real_flood_3") is not None
             },
             {
                 "id": "real_flood_4",
-                "name": "4. Ngõ hẻm ngập nước dân cư (15-20cm)",
+                "name": "4. Ngõ hẻm dân cư",
                 "filename": "real_flood_4.mp4",
                 "available": resolve_real_video_path("real_flood_4") is not None
             },
             {
                 "id": "real_accident_1",
-                "name": "5. Sự cố đường trơn mưa bão",
+                "name": "5. Mặt đường trơn mưa bão",
                 "filename": "real_accident_1.mp4",
                 "available": resolve_real_video_path("real_accident_1") is not None
             }
@@ -347,13 +347,13 @@ def set_node_scenario(node_id: str, data: ScenarioUpdate):
     is_flood = "flood" in data.scenario
     inc_type = "FLOOD" if is_flood else "WEATHER"
     if data.scenario == "real_flood_1":
-        msg = "Phát hiện ngập triều cường 22.4cm vượt nửa bánh xe máy"
+        msg = "Phát hiện ngập triều cường vượt nửa bánh xe máy, nguy cơ chết máy cao"
     elif data.scenario == "real_flood_2":
-        msg = "Nước ngập 19.5cm mấp mé ống xả phương tiện"
+        msg = "Nước ngập mấp mé ống xả, phương tiện di chuyển chậm"
     elif data.scenario == "real_flood_3":
-        msg = "Ngập sâu diện rộng trên 30cm, khuyến cáo cứu hộ"
+        msg = "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng cứu hộ"
     elif data.scenario == "real_flood_4":
-        msg = "Ngõ hẻm ngập nước mưa 18.0cm, người dân lội bộ"
+        msg = "Ngõ hẻm ngập nước mưa, người dân lưu thông khó khăn"
     else:
         msg = "CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm"
 

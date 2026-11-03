@@ -56,11 +56,11 @@ const INITIAL_NODES = [
 ];
 
 const SCENARIOS = [
-  { id: 'real_flood_1', title: 'Triều cường (22.4cm)', desc: 'Ngập vượt nửa bánh xe', icon: Droplets, type: 'flood' },
-  { id: 'real_flood_2', title: 'Đoạn trũng (19.5cm)', desc: 'Mấp mé ống xả xe', icon: CheckCircle2, type: 'flood' },
-  { id: 'real_flood_3', title: 'Ngập sâu (>30cm)', desc: 'Khuyến cáo cứu hộ', icon: Waves, type: 'flood' },
-  { id: 'real_flood_4', title: 'Ngõ hẻm (18.0cm)', desc: 'Người dân lội bộ', icon: Droplets, type: 'flood' },
-  { id: 'real_accident_1', title: 'Mưa bão trơn trượt', desc: 'Sự cố & té ngã', icon: CloudRain, type: 'accident' },
+  { id: 'real_flood_1', title: '1. Tuyến đường chính', desc: 'Đường ngập triều cường', icon: Droplets, type: 'flood' },
+  { id: 'real_flood_2', title: '2. Đoạn đường trũng', desc: 'Phương tiện qua vùng ngập', icon: CheckCircle2, type: 'flood' },
+  { id: 'real_flood_3', title: '3. Điểm ngập sâu', desc: 'Khu vực ngập sâu xe ô tô', icon: Waves, type: 'flood' },
+  { id: 'real_flood_4', title: '4. Ngõ hẻm dân cư', desc: 'Ngõ nhỏ ngập nước mưa', icon: Droplets, type: 'flood' },
+  { id: 'real_accident_1', title: '5. Mưa bão trơn trượt', desc: 'Mặt đường trơn & té ngã', icon: CloudRain, type: 'accident' },
 ];
 
 export default function App() {
@@ -80,7 +80,7 @@ export default function App() {
       node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
       type: "FLOOD",
       level: "DANGER",
-      message: "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
+      message: "Nước ngập sâu vượt nửa bánh xe máy, nguy cơ chết máy cao",
       timestamp: "10:15:30",
       gps: "10.7599, 106.6823"
     },
@@ -90,7 +90,7 @@ export default function App() {
       node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
       type: "FLOOD",
       level: "DANGER",
-      message: "Ngập sâu diện rộng trên 30cm, khuyến cáo chuyển hướng lưu thông",
+      message: "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
       timestamp: "10:17:45",
       gps: "10.7552, 106.6855"
     },
@@ -163,10 +163,10 @@ export default function App() {
     const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
     const isFlood = scenario.includes('flood');
     let incMsg = 'Phát hiện ngập lụt tại cung đường';
-    if (scenario === 'real_flood_1') incMsg = 'Phát hiện ngập triều cường 22.4cm vượt nửa bánh xe máy';
-    else if (scenario === 'real_flood_2') incMsg = 'Nước ngập 19.5cm mấp mé ống xả phương tiện';
-    else if (scenario === 'real_flood_3') incMsg = 'Ngập sâu diện rộng trên 30cm, khuyến cáo cứu hộ';
-    else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa 18.0cm, người dân lội bộ';
+    if (scenario === 'real_flood_1') incMsg = 'Phát hiện ngập triều cường vượt nửa bánh xe máy, nguy cơ chết máy cao';
+    else if (scenario === 'real_flood_2') incMsg = 'Nước ngập mấp mé ống xả, phương tiện di chuyển chậm';
+    else if (scenario === 'real_flood_3') incMsg = 'Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng cứu hộ';
+    else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa, người dân lưu thông khó khăn';
     else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
 
     const cleanNodeName = activeNode.name.split('(')[0].trim();

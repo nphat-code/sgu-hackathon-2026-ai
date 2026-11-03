@@ -122,39 +122,51 @@ class UrbanShieldDetector:
         elif primary_ref is None and len(vehicles) > 0:
             primary_ref = vehicles[0]
 
-        # Step 3: Calculate depth across valid vehicles with 50cm wheel reference
+        # Step 3: Dynamic geometric depth estimation using 50cm motorcycle wheel benchmark
         measured_depth_cm = 0.0
         vehicle_sample_count = 0
 
         for m in valid_motorcycles:
             bw = m["width"]
             bh = m["height"]
-            expected_full_h = bw * 0.95
+            expected_full_h = bw * 1.05
             submerged_px = max(0.0, expected_full_h - bh)
-            cm_per_px = 50.0 / max(20.0, 0.35 * bw)
-            depth_est = submerged_px * cm_per_px
+            wheel_h_px = max(20.0, 0.35 * expected_full_h)
+            submerged_ratio = min(1.0, submerged_px / wheel_h_px)
+            depth_est = submerged_ratio * 50.0
 
-            if is_water_surface:
-                depth_est = max(depth_est, 19.5 + (bw % 6))
-            
             measured_depth_cm += depth_est
             vehicle_sample_count += 1
 
+        # Check other vehicles (cars, trucks) if no motorcycle
         if vehicle_sample_count == 0 and len(vehicles) > 0 and is_water_surface:
             for v in vehicles:
-                measured_depth_cm += 22.0
+                vw = v["width"]
+                vh = v["height"]
+                expected_car_h = vw * 0.72
+                submerged_car_px = max(0.0, expected_car_h - vh)
+                wheel_car_px = max(25.0, 0.28 * expected_car_h)
+                car_submerged_ratio = min(1.0, submerged_car_px / wheel_car_px)
+                measured_depth_cm += car_submerged_ratio * 60.0
                 vehicle_sample_count += 1
 
+        # Check pedestrians wading in water
         if vehicle_sample_count == 0 and len(persons) > 0 and is_water_surface:
             for p in persons:
-                if p["aspect_ratio"] > 0.40:
-                    measured_depth_cm += 23.5
-                    vehicle_sample_count += 1
+                pw = p["width"]
+                ph = p["height"]
+                expected_person_h = pw * 2.8
+                submerged_person_px = max(0.0, expected_person_h - ph)
+                person_leg_px = max(30.0, 0.28 * expected_person_h)
+                depth_person = min(1.0, submerged_person_px / person_leg_px) * 45.0
+                measured_depth_cm += depth_person
+                vehicle_sample_count += 1
 
         if vehicle_sample_count > 0:
             avg_depth = measured_depth_cm / vehicle_sample_count
-        elif is_water_surface and (len(persons) > 0 or len(vehicles) > 0):
-            avg_depth = 18.0
+        elif is_water_surface:
+            water_coverage = float(np.mean((hsv[:, :, 1] < 85) & (hsv[:, :, 2] > 40)))
+            avg_depth = max(0.0, water_coverage * 28.0)
         else:
             avg_depth = 0.0
 
