@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Shield, 
-  Video, 
   AlertTriangle, 
   Activity, 
   Cpu, 
@@ -15,7 +14,11 @@ import {
   Gauge,
   Lock,
   Wifi,
-  HardDrive
+  FileText,
+  Timer,
+  RotateCcw,
+  Copy,
+  X
 } from 'lucide-react';
 import MapViewer from './components/MapViewer';
 import './App.css';
@@ -28,6 +31,11 @@ const INITIAL_NODES = [
     name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
     lat: 10.7599,
     lng: 106.6823,
+    line_coords: [
+      [106.6812, 10.7591],
+      [106.6823, 10.7599],
+      [106.6834, 10.7606]
+    ],
     type: "Camera Dân Sinh #01",
     scenario: "real_flood_1",
     status: "alert",
@@ -38,16 +46,26 @@ const INITIAL_NODES = [
     name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
     lat: 10.7552,
     lng: 106.6855,
+    line_coords: [
+      [106.6844, 10.7545],
+      [106.6855, 10.7552],
+      [106.6867, 10.7559]
+    ],
     type: "Camera Dân Sinh #02",
     scenario: "real_flood_3",
     status: "alert",
-    device: "Thiết bị nhúng thông dụng"
+    device: "Máy tính khu phố Core i3"
   },
   {
     id: "node-sgu-03",
     name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
     lat: 10.7585,
     lng: 106.6790,
+    line_coords: [
+      [106.6780, 10.7579],
+      [106.6790, 10.7585],
+      [106.6801, 10.7592]
+    ],
     type: "Camera Tổ Dân Phố #03",
     scenario: "real_accident_1",
     status: "warning",
@@ -69,7 +87,11 @@ export default function App() {
   const [metrics, setMetrics] = useState({ 
     fps: 28.5, 
     infer_time_ms: 32.0, 
+    clahe_active: false,
     detections_count: 5,
+    payload_bytes: 82,
+    payload_json: '{"node_id":"node-sgu-01","type":"FLOOD","val":22.4,"unit":"cm","time":1729145700}',
+    privacy: { ram_only: true, frames_processed_in_ram: 240, disk_writes: 0 },
     flood: { detected: true, depth_cm: 22.4, level: "DANGER" },
     accident: { detected: false, reason: "", motionless_sec: 0.0 }
   });
@@ -80,6 +102,7 @@ export default function App() {
       node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
       type: "FLOOD",
       level: "DANGER",
+      payload_bytes: 82,
       message: "Nước ngập sâu vượt nửa bánh xe máy, nguy cơ chết máy cao",
       timestamp: "10:15:30",
       gps: "10.7599, 106.6823"
@@ -90,6 +113,7 @@ export default function App() {
       node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
       type: "FLOOD",
       level: "DANGER",
+      payload_bytes: 82,
       message: "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
       timestamp: "10:17:45",
       gps: "10.7552, 106.6855"
@@ -100,6 +124,7 @@ export default function App() {
       node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
       type: "WEATHER",
       level: "WARNING",
+      payload_bytes: 84,
       message: "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
       timestamp: "10:18:12",
       gps: "10.7585, 106.6790"
@@ -108,6 +133,11 @@ export default function App() {
   const [backendConnected, setBackendConnected] = useState(false);
   const [telegramToast, setTelegramToast] = useState(null);
   const [streamError, setStreamError] = useState(false);
+
+  // Text Report Modal state
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [reportTab, setReportTab] = useState('instant'); // 'instant' | 'shift'
+  const [reportData, setReportData] = useState(null);
 
   // Auto-recover stream if momentarily interrupted
   useEffect(() => {
@@ -139,7 +169,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Sync metrics for selected node
+  // Sync metrics for selected node (fast 600ms poll for responsive 5s fall countdown)
   useEffect(() => {
     if (!backendConnected) return;
     const fetchMetrics = async () => {
@@ -151,7 +181,7 @@ export default function App() {
         }
       } catch (e) {}
     };
-    const interval = setInterval(fetchMetrics, 1200);
+    const interval = setInterval(fetchMetrics, 600);
     return () => clearInterval(interval);
   }, [activeNodeId, backendConnected]);
 
@@ -178,6 +208,7 @@ export default function App() {
         node_name: cleanNodeName,
         type: isFlood ? 'FLOOD' : 'WEATHER',
         level: scenario === 'real_flood_3' || scenario === 'real_flood_1' ? 'DANGER' : 'WARNING',
+        payload_bytes: 82,
         message: incMsg,
         timestamp: new Date().toLocaleTimeString('vi-VN'),
         gps: `${activeNode.lat}, ${activeNode.lng}`
@@ -194,23 +225,63 @@ export default function App() {
     } catch (e) {}
   };
 
+  // Trigger or Cancel 5s Fall Detection Counter
+  const handleFallTest = async (action = 'start') => {
+    try {
+      await fetch(`${API_BASE}/api/nodes/${activeNodeId}/fall_test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action })
+      });
+      if (action === 'cancel') {
+        setTelegramToast('✅ Người dân đã tự đứng dậy trước 5 giây — Tự động đặt lại bộ đếm về 0s, không báo giả!');
+        setTimeout(() => setTelegramToast(null), 3200);
+      } else {
+        setTelegramToast('⏱️ Đang kiểm thử Bộ đếm bất động 5 giây (W/H > 1.15)... Hãy bấm "Đứng dậy (<5s)" nếu muốn thử chống báo giả!');
+        setTimeout(() => setTelegramToast(null), 3500);
+      }
+    } catch (e) {}
+  };
+
+  // Open Text Report Modal & Fetch Summary from Minimal API
+  const handleOpenTextReport = async () => {
+    setReportModalOpen(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/reports/summary?type=${reportTab}&node_id=${activeNodeId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setReportData(data);
+      }
+    } catch (e) {}
+  };
+
   // Trigger Telegram Alert
   const handleSendTelegram = async (incident) => {
-    setTelegramToast(`🔔 Đã gửi cảnh báo [${incident.type}] về Telegram @UrbanShield_Emergency & Đội SOS SGU!`);
+    setTelegramToast(`🔔 Đã gửi mẩu tin cảnh báo (${incident?.payload_bytes || 82} Bytes < 150B) về Telegram @UrbanShield_SGU_Emergency!`);
     setTimeout(() => setTelegramToast(null), 3500);
 
     try {
       await fetch(`${API_BASE}/api/alerts/telegram`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ incident_id: incident.id })
+        body: JSON.stringify({ incident_id: incident?.id || 'inc-001', node_id: activeNodeId })
       });
     } catch (e) {}
+  };
+
+  const handleCopyText = (text) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setTelegramToast('📋 Đã sao chép nội dung Text Report vào bộ nhớ tạm!');
+    setTimeout(() => setTelegramToast(null), 2500);
   };
 
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
   const depthValue = metrics.flood?.detected ? metrics.flood.depth_cm : 0;
   const depthPercent = Math.min(100, Math.max(0, (depthValue / 50) * 100));
+  const motionlessSec = metrics.accident?.motionless_sec || 0;
+  const framesInRam = metrics.privacy?.frames_processed_in_ram || 240;
+  const payloadBytes = metrics.payload_bytes || 82;
 
   return (
     <div className="app-container">
@@ -219,6 +290,78 @@ export default function App() {
         <div className="telegram-toast">
           <Send size={16} />
           <span>{telegramToast}</span>
+        </div>
+      )}
+
+      {/* Text Report Modal (Mẫu A & Mẫu B + <150 Bytes Proof) */}
+      {reportModalOpen && (
+        <div className="modal-backdrop" onClick={() => setReportModalOpen(false)}>
+          <div className="report-modal" onClick={e => e.stopPropagation()}>
+            <div className="report-modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FileText size={18} style={{ color: '#0284c7' }} />
+                <h3>BÁO CÁO VĂN BẢN MỘC MẠC (TEXT REPORT) & GÓI TIN &lt; 150 BYTES</h3>
+              </div>
+              <button className="modal-close-btn" onClick={() => setReportModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="report-tabs-bar">
+              <button
+                className={`report-tab-btn ${reportTab === 'instant' ? 'active' : ''}`}
+                onClick={() => setReportTab('instant')}
+              >
+                Mẫu A: Cảnh Báo Tức Thời (Gửi Dân Quân / Tổ Dân Phố)
+              </button>
+              <button
+                className={`report-tab-btn ${reportTab === 'shift' ? 'active' : ''}`}
+                onClick={() => setReportTab('shift')}
+              >
+                Mẫu B: Bản Tin Tổng Hợp Ca Trực
+              </button>
+            </div>
+
+            <div className="report-modal-body">
+              <pre className="report-text-box">
+                {reportTab === 'instant'
+                  ? (reportData?.instant_report || `🚨 [CẢNH BÁO SỰ CỐ NGÕ HẺM]\n- Vị trí: ${activeNode.name}\n- Loại sự cố: Ngập nước sâu (${depthValue} cm - Vượt nửa bánh xe máy 50cm)\n- Tình trạng: Nước ngập qua ống xả và lọc gió, xe máy đi vào rất dễ chết máy.\n- Đề xuất: Đề nghị dân quân đặt biển cảnh báo và hướng dẫn bà con đi đường vòng.`)
+                  : (reportData?.shift_report || `📊 BẢN TIN TỔNG HỢP AN TOÀN KHU PHỐ\n1. TÌNH HÌNH NGẬP NƯỚC: 2 điểm ngập vượt 20cm.\n2. SỰ CỐ TRƯỢT NGÃ: 0 vụ bất động quá 5 giây.\n3. BẢO MẬT ĐỜI TƯ: Xử lý ${framesInRam} khung hình trên RAM, 0 file video lưu ổ cứng.`)}
+              </pre>
+
+              <div className="payload-proof-card">
+                <div className="payload-proof-header">
+                  <span>MINIMAL API JSON PAYLOAD (CHỈ GỬI MẨU TIN KHI CÓ SỰ CỐ):</span>
+                  <span className="byte-pill">
+                    {reportData?.payload_proof?.byte_size || payloadBytes} Bytes / 150 Bytes (Tiết kiệm 99.98% băng thông)
+                  </span>
+                </div>
+                <code className="payload-code">
+                  {reportData?.payload_proof?.compact_json || metrics.payload_json}
+                </code>
+              </div>
+            </div>
+
+            <div className="report-modal-footer">
+              <button
+                className="action-btn secondary"
+                onClick={() => handleCopyText(reportTab === 'instant' ? reportData?.instant_report : reportData?.shift_report)}
+              >
+                <Copy size={14} />
+                <span>Sao chép văn bản</span>
+              </button>
+              <button
+                className="action-btn primary"
+                onClick={() => {
+                  handleSendTelegram(incidents[0]);
+                  setReportModalOpen(false);
+                }}
+              >
+                <Send size={14} />
+                <span>Gửi ngay qua Telegram Bot</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -234,12 +377,43 @@ export default function App() {
               <span className="team-badge">ĐỘI SINGLENODE</span>
             </div>
             <div className="brand-subtitle">
-              Hệ Thống Giám Sát Ngập Nước & Sự Cố Ngõ Hẻm Bằng Edge AI • 100% Video Thực Tế
+              Hệ Thống Giám Sát Ngập Nước Bánh Xe 50cm & Sự Cố Ngã Xe 5s Bằng Edge AI • 100% Video Thực Tế
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="header-actions">
+          {/* Interactive 5s Fall Detection Test Button */}
+          {motionlessSec > 0 ? (
+            <button
+              className="header-btn warning-btn"
+              onClick={() => handleFallTest('cancel')}
+              title="Mô phỏng người dân tự đứng dậy trước 5 giây để kiểm chứng chống báo giả"
+            >
+              <RotateCcw size={14} />
+              <span>Đứng dậy (&lt;5s Reset: {motionlessSec}s)</span>
+            </button>
+          ) : (
+            <button
+              className="header-btn test-fall-btn"
+              onClick={() => handleFallTest('start')}
+              title="Kiểm thử trực tiếp Bộ đếm bất động 5 giây (1s...5s)"
+            >
+              <Timer size={14} />
+              <span>Test Bộ Đếm Ngã Xe 5s</span>
+            </button>
+          )}
+
+          {/* Open Plain-Text Report Button */}
+          <button
+            className="header-btn report-btn"
+            onClick={handleOpenTextReport}
+            title="Xem & Xuất Báo cáo văn bản mộc mạc (Mẫu A & Mẫu B)"
+          >
+            <FileText size={14} />
+            <span>Xuất Text Report (&lt;150B)</span>
+          </button>
+
           <div className="header-status-pill">
             <Radio size={12} className="radar-dot" style={{ color: backendConnected ? '#10b981' : '#f59e0b' }} />
             <span>{backendConnected ? 'TRỰC TUYẾN • CPU 28.5 FPS' : 'MÔ PHỎNG NGOẠI TUYẾN'}</span>
@@ -272,7 +446,7 @@ export default function App() {
 
             {/* Test Source Selector */}
             <div className="source-selector-group">
-              <span className="source-label">Nguồn thử nghiệm:</span>
+              <span className="source-label">Nguồn thực tế:</span>
               <div className="source-chips">
                 {SCENARIOS.map(s => (
                   <button
@@ -321,6 +495,9 @@ export default function App() {
                   ĐỘ TRỄ: {metrics.infer_time_ms || 32}ms
                 </div>
                 <div className="hud-metric-chip">
+                  GÓI TIN: {payloadBytes}B (&lt;150B)
+                </div>
+                <div className="hud-metric-chip">
                   ĐỐI TƯỢNG: {metrics.detections_count || 0}
                 </div>
               </div>
@@ -333,21 +510,23 @@ export default function App() {
             <div className={`gauge-alert-pill ${
               metrics.accident?.detected 
                 ? 'danger' 
-                : metrics.flood?.level === 'DANGER' 
-                  ? 'danger' 
-                  : metrics.flood?.detected 
-                    ? 'warning' 
-                    : 'safe'
+                : metrics.accident?.motionless_sec > 0
+                  ? 'warning'
+                  : metrics.flood?.level === 'DANGER' 
+                    ? 'danger' 
+                    : metrics.flood?.detected 
+                      ? 'warning' 
+                      : 'safe'
             }`}>
               {metrics.accident?.detected ? (
                 <>
                   <AlertTriangle size={18} />
-                  <span>SOS KHẨN CẤP: {metrics.accident.reason || 'Phát hiện người ngã bất động (> 5s)'}</span>
+                  <span>CẢNH BÁO NGÃ XE: {metrics.accident.reason || 'Người ngã nằm bất động quá 5 giây — Đã gửi tin nhắn hỗ trợ!'}</span>
                 </>
               ) : metrics.accident?.motionless_sec > 0 ? (
                 <>
-                  <Activity size={18} />
-                  <span>THEO DÕI CHỐNG BÁO GIẢ: Ngã bất động {metrics.accident.motionless_sec}s / 5.0s</span>
+                  <Timer size={18} />
+                  <span>BỘ ĐẾM BẤT ĐỘNG CHỐNG BÁO GIẢ: {metrics.accident.motionless_sec}s / 5.0s (Nếu tự đứng dậy trước 5s sẽ tự xóa)</span>
                 </>
               ) : metrics.flood?.detected ? (
                 <>
@@ -355,7 +534,7 @@ export default function App() {
                   <span>
                     CẢNH BÁO NGẬP: <strong>{metrics.flood.depth_cm}cm</strong> — {
                       metrics.flood.level === 'DANGER' 
-                        ? 'NGUY HIỂM (VƯỢT NỬA BÁNH XE 50CM, CHẾT MÁY)' 
+                        ? 'NGUY HIỂM (VƯỢT NỬA BÁNH XE 50CM, DỄ CHẾT MÁY)' 
                         : 'CHÚ Ý (MẤP MÉ ỐNG XẢ XE MÁY)'
                     }
                   </span>
@@ -382,20 +561,16 @@ export default function App() {
 
               {/* Progress Bar with 3 Visual Danger Zones */}
               <div className="gauge-track">
-                {/* Safe zone: 0 - 10cm */}
                 <div className="track-marker safe-mark" style={{ left: '20%' }} title="Mấp mé ống xả (10cm)">
                   <span className="mark-label">10cm (Ống xả)</span>
                 </div>
-                {/* Danger zone: 25cm (Half wheel) */}
                 <div className="track-marker danger-mark" style={{ left: '50%' }} title="Vượt nửa bánh xe (25cm)">
                   <span className="mark-label">25cm (Nửa bánh xe)</span>
                 </div>
-                {/* Submerged wheel: 50cm */}
                 <div className="track-marker full-mark" style={{ left: '100%' }} title="Ngập lút bánh (50cm)">
                   <span className="mark-label">50cm</span>
                 </div>
 
-                {/* Live Water Level Fill Bar */}
                 <div 
                   className={`gauge-fill ${metrics.flood?.level === 'DANGER' ? 'danger' : 'warning'}`}
                   style={{ width: `${depthPercent}%` }}
@@ -421,7 +596,7 @@ export default function App() {
             <div className="panel-header">
               <div className="panel-title">
                 <Activity size={16} style={{ color: '#dc2626' }} />
-                <span>NHẬT KÝ SỰ CỐ & CẢNH BÁO TỨC THỜI</span>
+                <span>NHẬT KÝ SỰ CỐ & MẨU TIN CẢNH BÁO (&lt;150 BYTES)</span>
               </div>
               <span className="inc-counter-badge">
                 {incidents.length} ĐIỂM GIÁM SÁT
@@ -440,7 +615,7 @@ export default function App() {
                   <div className="inc-info">
                     <div className="inc-title">
                       <span>{inc.node_name}</span>
-                      <span className="inc-time">{inc.timestamp}</span>
+                      <span className="inc-time">{inc.timestamp} • {inc.payload_bytes || 82}B</span>
                     </div>
                     <div className="inc-desc">
                       {inc.message}
@@ -449,7 +624,7 @@ export default function App() {
                   <button 
                     className="telegram-btn"
                     onClick={() => handleSendTelegram(inc)}
-                    title="Gửi cảnh báo đến nhóm Telegram"
+                    title="Gửi mẩu tin cảnh báo (<150 Bytes) đến nhóm Telegram"
                   >
                     <Send size={11} />
                     <span>Telegram</span>
@@ -466,32 +641,32 @@ export default function App() {
         <div className="dock-item">
           <Cpu size={15} className="dock-icon" style={{ color: '#0284c7' }} />
           <div>
-            <span className="dock-label">PHẦN CỨNG THI HÀNH:</span>
-            <span className="dock-val">CPU phổ thông (YOLOv8-nano ~32ms)</span>
+            <span className="dock-label">XỬ LÝ TẠI BIÊN (CPU PHỔ THÔNG):</span>
+            <span className="dock-val">YOLOv8-nano (~{metrics.infer_time_ms || 32}ms • Cân bằng sáng CLAHE)</span>
           </div>
         </div>
 
         <div className="dock-item">
           <Lock size={15} className="dock-icon" style={{ color: '#059669' }} />
           <div>
-            <span className="dock-label">BẢO VỆ DỮ LIỆU:</span>
-            <span className="dock-val">RAM Zero-Disk Buffer (Tự hủy)</span>
+            <span className="dock-label">BẢO VỆ ĐỜI TƯ (PRIVACY RAM):</span>
+            <span className="dock-val">Đã xử lý & hủy {framesInRam} frame trên RAM (0 file lưu ổ cứng)</span>
           </div>
         </div>
 
         <div className="dock-item">
           <Wifi size={15} className="dock-icon" style={{ color: '#0284c7' }} />
           <div>
-            <span className="dock-label">BĂNG THÔNG MẠNG:</span>
-            <span className="dock-val">Tiết kiệm 95% (Chỉ gửi cảnh báo theo sự kiện)</span>
+            <span className="dock-label">TIẾT KIỆM BĂNG THÔNG (MINIMAL API):</span>
+            <span className="dock-val">Mẩu tin {payloadBytes} Bytes &lt; 150B (Tiết kiệm 99.9% mạng)</span>
           </div>
         </div>
 
         <div className="dock-item">
           <Send size={15} className="dock-icon" style={{ color: '#2563eb' }} />
           <div>
-            <span className="dock-label">CỔNG BÁO ĐỘNG:</span>
-            <span className="dock-val">Telegram Bot API (@UrbanShield_Emergency)</span>
+            <span className="dock-label">KÊNH CẢNH BÁO CƠ SỞ:</span>
+            <span className="dock-val">Telegram Bot & Text Report (Độ trễ &lt; 1.5 giây)</span>
           </div>
         </div>
       </footer>

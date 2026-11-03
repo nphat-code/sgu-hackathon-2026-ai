@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  edge-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: urbanshield-edge-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - EDGE_API_KEY=${EDGE_API_KEY:-urbanshield-sgu-2026-key}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+    restart: unless-stopped
+
+  webgis-dashboard:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: urbanshield-webgis-dashboard
+    ports:
+      - "5173:80"
+    depends_on:
+      - edge-backend
+    restart: unless-stopped

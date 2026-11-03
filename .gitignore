@@ -17,6 +17,10 @@ build/
 out/
 *.log
 *.pt
+*.db
+*.sqlite
+*.sqlite3
+.pytest_cache/
 
 # Large video recordings (local evaluation and demo only, do not commit)
 backend/videos/real_*.mp4

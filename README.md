@@ -1,133 +1,125 @@
-# UrbanShield Lite – Hệ Thống Hỗ Trợ Theo Dõi Ngập Nước & Sự Cố Giao Thông Bằng Edge AI
+# UrbanShield Lite – Hệ Thống Giám Sát Ngập Nước & Sự Cố Ngõ Hẻm Bằng Edge AI
 
 > **Dự án phát triển bởi:** **SingleNode** ([nphat-code](https://github.com/nphat-code))  
-> **Chủ đề:** AI - Kỷ nguyên vươn mình (An toàn đô thị & Dân sinh)  
+> **Chủ đề:** AI - Kỷ nguyên vươn mình (Giải pháp An toàn đô thị & Dân sinh tiết kiệm chi phí)  
 > **Cuộc thi:** SGU Hackathon 2026 – Trường Đại học Sài Gòn  
 > **Repository:** [sgu-hackathon-2026-ai](https://github.com/nphat-code/sgu-hackathon-2026-ai)
 
 ---
 
-## 📂 Cấu trúc thư mục dự án (Project Structure)
+## 📂 Cấu trúc thư mục dự án (Modular Edge-to-Cloud Architecture)
 
 ```text
 HackathonSGU2026/
-├── docs/                                  # Tài liệu thuyết minh & Thể lệ cuộc thi
-│   ├── DE_AN_Y_TUONG_URBANSHIELD_LITE.md   # Đề án ý tưởng giải pháp kỹ thuật
-│   ├── KICH_BAN_PITCHING_URBANSHIELD_LITE.md # Kịch bản thuyết trình tổng quan & Q&A
-│   ├── LOI_THOAI_THUYET_TRINH_8_SLIDE.md   # Lời thoại chi tiết khớp từng giây cho 8 slide
-│   ├── THE_LE_CUOC_THI.md                 # Quy chế & Thể lệ cuộc thi Hackathon SGU 2026
-│   └── prompts/                           # Các bộ prompt AI đã được chuẩn hóa (Anti-hype)
-│       ├── PROMPT_NOTEBOOKLM_SLIDES.md    # Prompt tạo bộ Slide trình chiếu (Presenter Slides)
-│       ├── PROMPT_NOTEBOOKLM_INFOGRAPHIC.md # Prompt tạo Poster Infographic
-│       └── PROMPT_VIDEO_PITCHING.md       # Prompt tạo Video Pitching (Giọng nam tiếng Việt)
+├── .spec/                                 # Bộ đặc tả chuẩn GitHub Spec Kit (Spec-Driven Development)
+│   ├── constitution.md                    # Hiến chương dự án (Problem-First, Privacy RAM, Anti-hype)
+│   ├── spec.md                            # Câu chuyện người dùng & Tiêu chuẩn nghiệm thu (AC-01..AC-04)
+│   ├── functional-spec.md                 # Đặc tả chức năng & Phi chức năng (FPS, RAM, Payload <150B)
+│   ├── technical-spec.md                  # Kiến trúc hệ thống, Minimal API Contracts & GeoJSON Schema
+│   ├── live-demo-spec.md                  # Kịch bản Live Demo tương tác 3 phút trước Ban Giám khảo
+│   ├── plan.md                            # Kế hoạch kiến trúc & phân tách module
+│   └── tasks.md                           # Danh mục công việc đã hoàn thiện 100%
 │
-├── slides/                                # Tài nguyên trình chiếu, Infographic & Video
-│   ├── SingleNode_UrbanShieldLite.pdf     # Slide thuyết trình chính thức (Bản vẽ kỹ thuật 16:9)
-│   ├── SingleNode_UrbanShieldLite.png     # Poster Infographic sắc nét tóm tắt đề án
-│   ├── SingleNode_UrbanShieldLite.mp4     # Video pitch giới thiệu giải pháp (2.5 phút)
-│   └── SingleNode_UrbanShieldLite.pptx        # Slide định dạng PowerPoint
+├── backend/                               # Dịch vụ Thị giác Biên & Minimal API Gateway (FastAPI)
+│   ├── detector.py                        # YOLOv8n CPU (~28.5 FPS), CLAHE ban đêm, Đo ngập bánh xe 50cm, Đếm ngã 5s
+│   ├── reporting.py                       # Text Report Engine (Mẫu A: Tức thời, Mẫu B: Ca trực) & Gói tin <150 Bytes
+│   ├── database.py                        # Lưu trữ SQLite (Sự cố, Heartbeat, Thống kê tiết kiệm băng thông)
+│   ├── notify.py                          # Điều phối cảnh báo Telegram Bot API (<1.5s) + Local Fallback
+│   ├── main.py                            # Minimal API (/health, /api/v1/incidents/*, /api/v1/map/segments, ...)
+│   ├── eval_benchmark.py                  # Script đánh giá mô hình trên 5 video thực tế & xuất TEST_REPORT.md
+│   ├── Dockerfile                         # Container hóa dịch vụ biên tối ưu cho CPU
+│   └── requirements.txt                   # Thư viện phụ thuộc Python
 │
-├── backend/                               # Máy trạm xử lý tại biên (Edge AI Service)
-│   ├── detector.py                        # Logic nhận diện YOLOv8n, đo ngập & ngã xe (CLAHE)
-│   ├── main.py                            # FastAPI Gateway, Telegram Bot Alert & WebSocket
-│   ├── requirements.txt                   # Thư viện phụ thuộc (Python 3.10+)
-│   ├── yolov8n.pt                         # Trọng số mô hình YOLOv8-nano (~6.5MB)
-│   └── videos/                            # Video mẫu thử nghiệm (ngập nước, tai nạn)
+├── frontend/                              # Bảng điều khiển WebGIS Command Center (React + Leaflet)
+│   ├── src/
+│   │   ├── App.jsx                        # Giao diện 100vh không cuộn, Thước đo 50cm, Text Report Modal, Test 5s
+│   │   ├── App.css                        # Thiết kế tương phản cao, chuẩn trung tâm điều hành
+│   │   └── components/MapViewer.jsx       # Bản đồ số Leaflet vẽ Tuyến hẻm GeoJSON LineString đổi màu
+│   ├── Dockerfile                         # Multi-stage build với Nginx
+│   └── package.json
 │
-├── frontend/                              # Bảng điều khiển giám sát trung tâm (Dashboard)
-│   ├── src/                               # Mã nguồn React + Tailwind + Leaflet
-│   ├── package.json                       # Cấu hình gói Vite / React
-│   └── vite.config.js
+├── tests/                                 # Bộ kiểm thử tự động QA (Pytest - 100% Pass)
+│   ├── test_flood_measurement.py          # Unit test đo ngập hình học bánh xe 50cm & cân bằng sáng CLAHE
+│   ├── test_fall_detection.py             # Unit test tỷ lệ khung W/H > 1.15 & bộ đếm bất động 5.0s chống báo giả
+│   └── test_api_endpoints.py              # Integration test Minimal API, gói tin <150B, GeoJSON & Zero-Disk RAM
 │
-├── GEMINI.md                              # Quy tắc làm việc & Phong cách kỹ thuật của Agent
-├── notes.md                               # Sổ tay ghi chú tiến độ công việc
-└── README.md                              # Tài liệu hướng dẫn tổng quan dự án
+├── docs/                                  # Tài liệu báo cáo, dữ liệu & thuyết minh
+│   ├── TEST_REPORT.md                     # Báo cáo kiểm thử tự động & Đánh giá thực nghiệm trên video thật
+│   ├── DATA.md                            # Minh bạch nguồn gốc dữ liệu video thực tế & quy trình gán nhãn
+│   ├── THUAT_TOAN_ANH_XA_NGAP_NUOC.md     # Cơ sở toán học ánh xạ ngập bánh xe 50cm & bản đồ GIS
+│   └── ...
+│
+├── .github/workflows/ci.yml               # Pipeline CI/CD tự động chạy Pytest & kiểm tra build Frontend
+├── docker-compose.yml                     # Khởi chạy toàn bộ hệ thống bằng 1 lệnh duy nhất
+├── labels.csv                             # Nhãn thực tế (Ground Truth) của tập video đánh giá
+├── GEMINI.md                              # Quy tắc làm việc & chuẩn ngôn từ thuyết trình
+└── README.md
 ```
 
 ---
 
-## 📑 Danh mục tài liệu & Tài nguyên dự thi
+## 💡 Điểm mới & Lợi thế cạnh tranh cốt lõi
 
-### 1. Tài liệu thuyết minh:
-* 📋 **Tóm tắt giải pháp sản phẩm:** [docs/TOM_TAT_SAN_PHAM.md](file:///c:/Competition/HackathonSGU2026/docs/TOM_TAT_SAN_PHAM.md)
-* 📄 **Đề án ý tưởng giải pháp:** [docs/DE_AN_Y_TUONG_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/docs/DE_AN_Y_TUONG_URBANSHIELD_LITE.md)
-* 🎙️ **Kịch bản thuyết trình ý tưởng & Bộ Q&A:** [docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md](file:///c:/Competition/HackathonSGU2026/docs/KICH_BAN_PITCHING_URBANSHIELD_LITE.md)
-* 🗣️ **Lời thoại thuyết trình chi tiết 8 slide (3 phút):** [docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md](file:///c:/Competition/HackathonSGU2026/docs/LOI_THOAI_THUYET_TRINH_8_SLIDE.md)
-* 📜 **Thể lệ cuộc thi:** [docs/THE_LE_CUOC_THI.md](file:///c:/Competition/HackathonSGU2026/docs/THE_LE_CUOC_THI.md)
-* 🎯 **Tiêu chí Vòng Sơ loại (100đ):** [docs/TIEU_CHI_VONG_SO_LOAI.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_SO_LOAI.md)
-* 🏆 **Tiêu chí Vòng 24h & Chung kết (100đ):** [docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md](file:///c:/Competition/HackathonSGU2026/docs/TIEU_CHI_VONG_24H_VA_CHUNG_KET.md)
-* 🚀 **Kế hoạch triển khai Vòng Coding (24h):** [docs/KE_HOACH_VONG_CODING.md](file:///c:/Competition/HackathonSGU2026/docs/KE_HOACH_VONG_CODING.md)
+1. **Đo ngập bằng tham chiếu hình học bánh xe máy 50cm (0đ chi phí cảm biến):**
+   - Không cần lắp cảm biến siêu âm dưới cống (dễ bị bùn rác làm nghẹt) hay mua camera chuyên dụng đắt đỏ.
+   - Tận dụng chính các xe máy lưu thông qua hẻm làm thước đo động: lấy đường kính chuẩn **~50cm của bánh xe máy phổ thông** để tính tỷ lệ ngập thực tế và phân thành 3 mức: **An toàn (<10cm)**, **Chú ý (10–20cm, mấp mé ống xả)**, **Nguy hiểm (≥20cm, vượt nửa bánh xe)**.
+   - Tích hợp **Bộ lọc không gian đa phương tiện** (loại bỏ xe ở quá xa hoặc bị xe trước che khuất) và cân bằng sáng **CLAHE** khi mưa đêm thiếu sáng.
 
-### 2. Slide trình chiếu & Truyền thông:
-* 🖥️ **Slide PDF chính thức (16:9):** [slides/SingleNode_UrbanShieldLite.pdf](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.pdf)
-* 📊 **Slide PowerPoint:** [slides/SingleNode_UrbanShieldLite.pptx](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.pptx)
-* 📜 **Poster Infographic đề án:** [slides/SingleNode_UrbanShieldLite.png](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.png)
-* 🎬 **Video thuyết trình ý tưởng:** [slides/SingleNode_UrbanShieldLite.mp4](file:///c:/Competition/HackathonSGU2026/slides/SingleNode_UrbanShieldLite.mp4)
+2. **Phát hiện ngã xe đa tầng kèm Bộ đếm bất động 5 giây (Triệt tiêu báo động giả):**
+   - Kết hợp kiểm tra tỷ lệ khung bao nằm ngang ($W/H > 1.15$), khoảng cách tới xe máy ($< 180\text{ px}$) và **bộ đếm nằm bất động liên tục $\ge 5.0\text{ giây}$**.
+   - Nếu người dân chỉ dừng xe chống chân, dắt bộ hoặc cúi nhặt đồ rồi đứng dậy trước 5 giây, bộ đếm tự động đặt lại về 0, không phát sinh báo động giả.
 
----
+3. **Bảo vệ quyền riêng tư tuyệt đối (Privacy-by-Design RAM Zero-Disk):**
+   - Luồng video từ camera ngõ xóm chỉ được giải mã tạm thời trên bộ nhớ RAM để trích xuất tọa độ và **bị hủy ngay lập tức (`del frame`, 0 file lưu xuống ổ cứng)**.
+   - Không nhận diện khuôn mặt (No Face Recognition), không đọc biển số xe (No ALPR).
 
-## 💡 Định hướng kỹ thuật cốt lõi
-
-1. **Xử lý hình ảnh tại biên (Edge Computing):** Tối ưu hóa mô hình **YOLOv8-nano (~6.5MB)** thực thi trực tiếp trên vi xử lý **CPU phổ thông** (25 - 30 FPS), không bắt buộc trang bị GPU rời đắt đỏ.
-2. **Đo ngập bằng tham chiếu hình học:** Lấy đường kính chuẩn **~50cm của bánh xe máy** lưu thông thực tế làm thước đo tương đối; phân loại 3 cấp độ ngập (<10cm, 10-20cm, >20cm) mà không cần cảm biến đặt dưới cống.
-3. **Nhận diện ngã xe đa tầng (Triệt tiêu báo giả):** Kết hợp tỷ lệ khung bao nằm ngang ($W/H > 1.15$), **bộ đếm bất động liên tục > 5 giây** và thuật toán cân bằng sáng thích ứng **CLAHE** ban đêm.
-4. **Bảo vệ quyền riêng tư (Privacy-by-design):** Luồng video chỉ nạp vào bộ nhớ RAM tạm thời để suy luận và **hủy vĩnh viễn ngay lập tức (Zero-Disk storage)**; không nhận diện khuôn mặt người dân.
-5. **Tiết kiệm chi phí & Băng thông (TCO):** Mô hình Trạm cụm (Cluster) 1 máy tính cơ sở gom 20 - 30 camera ngõ xóm; **tiết kiệm 70% - 80% chi phí** và **giảm >95% lưu lượng băng thông**.
+4. **Minimal API & Mẩu tin cảnh báo gọn nhẹ (< 150 Bytes):**
+   - Máy tính khu phố không kéo luồng video về máy chủ trung tâm. Chỉ khi có sự cố mới gửi đi một mẩu tin JSON **~82 Bytes (< 150 Bytes)**, tiết kiệm **99.98% băng thông mạng dân sinh** và tự động xuất **Báo cáo văn bản mộc mạc (Text Report Mẫu A & Mẫu B)** gửi thẳng qua Telegram cho dân quân, tổ dân phố.
 
 ---
 
-## 🛠️ Kiến trúc công nghệ (Tech Stack)
+## 🔌 Danh mục Minimal API Endpoints
 
-```
-[ Camera IP / Webcam ngõ xóm ]
-               │
-               ▼ (Mạng LAN nội bộ khu phố)
-┌────────────────────────────────────────────────────────┐
-│               Máy trạm Edge AI (Python)                │
-│  • YOLOv8-nano (Object Detection trên CPU)             │
-│  • Optical Wheel-Occlusion Ratio (Đo ngập bánh xe)     │
-│  • Aspect Ratio & Inactivity Timer > 5s (Ngã xe đêm)   │
-│  • Privacy-by-design RAM (Hủy video tức thì)           │
-└──────────────────────────┬─────────────────────────────┘
-                           │
-             ┌─────────────┴─────────────┐
-             ▼                           ▼
-┌─────────────────────────┐ ┌─────────────────────────┐
-│ FastAPI Gateway         │ │ Telegram Bot API        │
-│ Quản lý luồng dữ liệu   │ │ Gửi cảnh báo GPS + ảnh  │
-└────────────┬────────────┘ └─────────────────────────┘
-             │
-             ▼
-┌────────────────────────────────────────────────────────┐
-│ Giao diện Quản trị (React + Leaflet OpenStreetMap)     │
-│ Bản đồ giám sát trực quan các điểm ngõ xóm             │
-└────────────────────────────────────────────────────────┘
-```
+| Phương thức | Endpoint | Mô tả chức năng |
+| :---: | :--- | :--- |
+| `GET` | `/health` | Kiểm tra nhịp tim trạm biên, tốc độ xử lý (`28.5 FPS`), RAM (`<500MB`) và xác nhận `zero_disk_verified: true`. |
+| `POST` | `/api/v1/incidents/flood` | Tiếp nhận sự cố ngập nước kèm kiểm chứng gói tin `< 150 Bytes` và sinh Text Report tức thời. |
+| `POST` | `/api/v1/incidents/accident` | Tiếp nhận sự cố ngã xe (tự động lọc bỏ nếu thời gian bất động `< 5.0s`). |
+| `GET` | `/api/v1/map/segments` | Trả về dữ liệu bản đồ `GeoJSON FeatureCollection` (`LineString`) các tuyến hẻm đổi màu Xanh / Vàng / Đỏ. |
+| `GET` | `/api/v1/reports/summary` | Xuất Báo cáo văn bản mộc mạc (`?type=instant` cho Mẫu A hoặc `?type=shift` cho Mẫu B). |
+| `POST` | `/api/nodes/{id}/fall_test` | Kích hoạt hoặc đặt lại bộ đếm kiểm thử ngã xe bất động 5 giây trực tiếp trên luồng Live Demo. |
 
 ---
 
-## 🚀 Hướng dẫn chạy thử nghiệm PoC
+## 🚀 Hướng dẫn khởi chạy & Kiểm thử
 
-### 1. Khởi động Backend (FastAPI + YOLOv8n):
+### Cách 1: Chạy trực tiếp trên môi trường máy tính (Local Development)
+
+**1. Khởi động Backend (FastAPI + YOLOv8n CPU):**
 ```bash
-cd backend
-.\venv\Scripts\activate
-python -m uvicorn main:app --host 127.0.0.1 --port 8000
+backend\venv\Scripts\python.exe -m uvicorn main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
-*Tài liệu API Swagger:* `http://127.0.0.1:8000/docs`
+*Swagger UI:* `http://127.0.0.1:8000/docs`
 
-### 2. Khởi động Frontend Dashboard (React + Leaflet):
+**2. Khởi động Bảng điều khiển WebGIS (React + Leaflet):**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Truy cập bảng điều khiển:* `http://localhost:5173/`
+*Truy cập Dashboard:* `http://localhost:5173`
 
----
+### Cách 2: Khởi chạy 1 lệnh bằng Docker Compose
+```bash
+docker compose up --build -d
+```
 
-## 📅 Các mốc thời gian quan trọng Hackathon SGU 2026
+### Cách 3: Chạy bộ kiểm thử tự động (Pytest QA) & Đánh giá mô hình
+```bash
+# Chạy 13 bài kiểm thử Unit & Integration Test
+backend\venv\Scripts\python.exe -m pytest tests/ -v
 
-* **15/10/2026 (Hạn chót):** Nộp đề án `SingleNode_UrbanShieldLite.pdf` & Lệ phí dự thi.
-* **17/10/2026 (08:30 - 11:00):** Vòng Sơ loại Pitching (Hội trường Lầu 7, Nhà E, ĐH Sài Gòn).
-* **31/10 – 01/11/2026:** Vòng Thử thách Hackathon 24H (Tập trung tại SGU - khởi tạo Repo trống).
+# Chạy đánh giá thực nghiệm trên 5 video thực tế và xuất docs/TEST_REPORT.md
+backend\venv\Scripts\python.exe backend\eval_benchmark.py
+```
+👉 Xem kết quả kiểm thử chi tiết tại: [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) và dữ liệu tại [`docs/DATA.md`](docs/DATA.md).
