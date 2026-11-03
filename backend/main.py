@@ -70,7 +70,7 @@ INCIDENTS = [
     {
         "id": "inc-001",
         "node_id": "node-sgu-01",
-        "node_name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
+        "node_name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
         "type": "FLOOD",
         "level": "DANGER",
         "message": "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
@@ -81,7 +81,7 @@ INCIDENTS = [
     {
         "id": "inc-002",
         "node_id": "node-sgu-02",
-        "node_name": "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
+        "node_name": "Trạm 02 - Hẻm 254 Bến Vân Đồn",
         "type": "FLOOD",
         "level": "DANGER",
         "message": "Ngập sâu diện rộng vượt 30cm, khuyến cáo chuyển hướng lưu thông",
@@ -92,7 +92,7 @@ INCIDENTS = [
     {
         "id": "inc-003",
         "node_id": "node-sgu-03",
-        "node_name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
+        "node_name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
         "type": "WEATHER",
         "level": "WARNING",
         "message": "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
@@ -343,24 +343,36 @@ def set_node_scenario(node_id: str, data: ScenarioUpdate):
         except Exception:
             pass
 
-    # Record real incident if alert scenario
+    # Record real incident if alert scenario (clean deduplication per node)
     is_flood = "flood" in data.scenario
     inc_type = "FLOOD" if is_flood else "WEATHER"
-    msg = ("Phát hiện ngập lụt 22.4cm vượt nửa bánh xe máy (50cm)" 
-           if is_flood else 
-           "CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm")
+    if data.scenario == "real_flood_1":
+        msg = "Phát hiện ngập triều cường 22.4cm vượt nửa bánh xe máy"
+    elif data.scenario == "real_flood_2":
+        msg = "Nước ngập 19.5cm mấp mé ống xả phương tiện"
+    elif data.scenario == "real_flood_3":
+        msg = "Ngập sâu diện rộng trên 30cm, khuyến cáo cứu hộ"
+    elif data.scenario == "real_flood_4":
+        msg = "Ngõ hẻm ngập nước mưa 18.0cm, người dân lội bộ"
+    else:
+        msg = "CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm"
+
+    clean_node_name = NODES[node_id]["name"].split("(")[0].strip()
+    global INCIDENTS
+    INCIDENTS = [inc for inc in INCIDENTS if inc.get("node_id") != node_id]
     new_inc = {
-        "id": f"inc-{int(time.time())}",
+        "id": f"inc-{node_id}-{int(time.time())}",
         "node_id": node_id,
-        "node_name": NODES[node_id]["name"],
+        "node_name": clean_node_name,
         "type": inc_type,
-        "level": "DANGER" if is_flood else "WARNING",
+        "level": "DANGER" if (data.scenario in ["real_flood_1", "real_flood_3"]) else "WARNING",
         "message": msg,
         "timestamp": time.strftime("%H:%M:%S"),
         "gps": f"{NODES[node_id]['lat']}, {NODES[node_id]['lng']}",
         "telegram_sent": True
     }
     INCIDENTS.insert(0, new_inc)
+    INCIDENTS = INCIDENTS[:5]
         
     return {"success": True, "node": NODES[node_id]}
 

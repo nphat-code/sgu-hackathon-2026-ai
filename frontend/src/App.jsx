@@ -65,7 +65,7 @@ export default function App() {
     {
       id: "inc-001",
       node_id: "node-sgu-01",
-      node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
+      node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
       type: "FLOOD",
       level: "DANGER",
       message: "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
@@ -75,7 +75,7 @@ export default function App() {
     {
       id: "inc-002",
       node_id: "node-sgu-02",
-      node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
+      node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
       type: "FLOOD",
       level: "DANGER",
       message: "Ngập sâu diện rộng trên 30cm, khuyến cáo chuyển hướng lưu thông",
@@ -85,7 +85,7 @@ export default function App() {
     {
       id: "inc-003",
       node_id: "node-sgu-03",
-      node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
+      node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
       type: "WEATHER",
       level: "WARNING",
       message: "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
@@ -149,7 +149,7 @@ export default function App() {
     // Optimistic UI update
     setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
     
-    // Add local incident if alert
+    // Add or update incident specifically for active node (prevent spamming & contradictions)
     const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
     const isFlood = scenario.includes('flood');
     let incMsg = 'Phát hiện ngập lụt tại cung đường';
@@ -159,17 +159,21 @@ export default function App() {
     else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa 18.0cm, người dân lội bộ';
     else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
 
-    const newInc = {
-      id: `inc-${Date.now()}`,
-      node_id: activeNode.id,
-      node_name: activeNode.name,
-      type: isFlood ? 'FLOOD' : 'WEATHER',
-      level: scenario === 'real_flood_3' || scenario === 'real_flood_1' ? 'DANGER' : 'WARNING',
-      message: incMsg,
-      timestamp: new Date().toLocaleTimeString('vi-VN'),
-      gps: `${activeNode.lat}, ${activeNode.lng}`
-    };
-    setIncidents(prev => [newInc, ...prev]);
+    const cleanNodeName = activeNode.name.split('(')[0].trim();
+    setIncidents(prev => {
+      const filtered = prev.filter(item => item.node_id !== activeNode.id);
+      const newInc = {
+        id: `inc-${activeNode.id}-${Date.now()}`,
+        node_id: activeNode.id,
+        node_name: cleanNodeName,
+        type: isFlood ? 'FLOOD' : 'WEATHER',
+        level: scenario === 'real_flood_3' || scenario === 'real_flood_1' ? 'DANGER' : 'WARNING',
+        message: incMsg,
+        timestamp: new Date().toLocaleTimeString('vi-VN'),
+        gps: `${activeNode.lat}, ${activeNode.lng}`
+      };
+      return [newInc, ...filtered].slice(0, 5);
+    });
 
     try {
       await fetch(`${API_BASE}/api/nodes/${activeNodeId}/scenario`, {
@@ -387,39 +391,39 @@ export default function App() {
                 className={`scenario-btn flood ${activeNode.scenario === 'real_flood_1' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_flood_1')}
               >
-                <Droplets size={16} />
-                <span>1. Triều cường xe máy (22-26cm)</span>
+                <Droplets size={15} />
+                <span>1. Triều cường (22-26cm)</span>
               </button>
 
               <button
                 className={`scenario-btn flood ${activeNode.scenario === 'real_flood_2' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_flood_2')}
               >
-                <CheckCircle2 size={16} />
-                <span>2. Đoạn trũng ngập (18-22cm)</span>
+                <CheckCircle2 size={15} />
+                <span>2. Đoạn trũng (18-22cm)</span>
               </button>
 
               <button
                 className={`scenario-btn flood ${activeNode.scenario === 'real_flood_3' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_flood_3')}
               >
-                <Waves size={16} />
-                <span>3. Ngập sâu cứu hộ (&gt;30cm)</span>
+                <Waves size={15} />
+                <span>3. Ngập cứu hộ (&gt;30cm)</span>
               </button>
 
               <button
                 className={`scenario-btn flood ${activeNode.scenario === 'real_flood_4' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_flood_4')}
               >
-                <Droplets size={16} />
-                <span>4. Hẻm ngập nước (15-20cm)</span>
+                <Droplets size={15} />
+                <span>4. Hẻm ngập (15-20cm)</span>
               </button>
 
               <button
                 className={`scenario-btn accident ${activeNode.scenario === 'real_accident_1' ? 'active' : ''}`}
                 onClick={() => handleScenarioChange('real_accident_1')}
               >
-                <CloudRain size={16} />
+                <CloudRain size={15} />
                 <span>5. Mưa bão trơn trượt</span>
               </button>
             </div>
@@ -444,8 +448,8 @@ export default function App() {
                 <Activity size={18} style={{ color: 'var(--rose-500)' }} />
                 <span>NHẬT KÝ SỰ CỐ & CẢNH BÁO TỨC THỜI</span>
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-faint)', fontFamily: 'var(--font-mono)' }}>
-                {incidents.length} SỰ CỐ GHI NHẬN
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontFamily: 'var(--font-mono)', fontWeight: '700' }}>
+                {incidents.length} ĐIỂM GIÁM SÁT
               </span>
             </div>
 
@@ -486,25 +490,25 @@ export default function App() {
       <footer className="glass-panel comparison-banner">
         <div className="comp-metric-box">
           <span className="comp-label">Mô hình triển khai</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>Phần cứng phổ thông</span>
+          <span className="comp-value">Phần cứng phổ thông</span>
           <span className="comp-sub">Sử dụng webcam hoặc camera sẵn có</span>
         </div>
 
         <div className="comp-metric-box">
           <span className="comp-label">Xử lý hình ảnh</span>
-          <span className="comp-value" style={{ color: 'var(--emerald-400)' }}>Tính toán tại biên</span>
+          <span className="comp-value">Tính toán tại biên</span>
           <span className="comp-sub">Chạy trên CPU, không yêu cầu GPU rời</span>
         </div>
 
         <div className="comp-metric-box">
           <span className="comp-label">Truyền dữ liệu</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Theo sự kiện</span>
+          <span className="comp-value">Theo sự kiện</span>
           <span className="comp-sub">Chỉ gửi dữ liệu khi có ngập hoặc sự cố</span>
         </div>
 
         <div className="comp-metric-box">
           <span className="comp-label">Kênh thông báo</span>
-          <span className="comp-value" style={{ color: 'var(--cyan-400)' }}>Telegram Bot</span>
+          <span className="comp-value">Telegram Bot</span>
           <span className="comp-sub">Gửi mẩu tin và tọa độ vị trí</span>
         </div>
       </footer>

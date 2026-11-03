@@ -10,9 +10,9 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
-      // Center near SGU An Duong Vuong, District 5, HCMC
+      // Center near SGU & monitored corridors
       const map = L.map(mapContainerRef.current, {
-        center: [10.7580, 106.6825],
+        center: [10.7578, 106.6823],
         zoom: 15,
         zoomControl: false,
         attributionControl: false
@@ -32,6 +32,12 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
     Object.values(markersRef.current).forEach(m => m.remove());
     markersRef.current = {};
 
+    // Auto-fit bounds so all stations are visible simultaneously
+    if (nodes && nodes.length > 0) {
+      const bounds = L.latLngBounds(nodes.map(n => [n.lat, n.lng]));
+      map.fitBounds(bounds, { padding: [35, 35], maxZoom: 15 });
+    }
+
     // Add nodes as custom radar markers
     nodes.forEach(node => {
       let colorClass = 'marker-normal';
@@ -46,6 +52,7 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
       }
 
       const isSelected = node.id === activeNodeId;
+      const shortName = node.name.split('-')[0].trim(); // e.g. "Trạm 01"
 
       const customIcon = L.divIcon({
         className: 'custom-map-marker',
@@ -53,7 +60,7 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
           <div class="map-radar-pin ${colorClass} ${isSelected ? 'selected-pin' : ''}">
             <div class="pin-pulse" style="border-color: ${statusColor}"></div>
             <div class="pin-dot" style="background-color: ${statusColor}"></div>
-            <div class="pin-label">${node.name.split('(')[0]}</div>
+            <div class="pin-label">${shortName}</div>
           </div>
         `,
         iconSize: [40, 40],
@@ -62,6 +69,11 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
 
       const marker = L.marker([node.lat, node.lng], { icon: customIcon })
         .addTo(map)
+        .bindTooltip(`<strong>${node.name}</strong><br/><span style="color:#64748b;font-size:0.75rem">${node.device}</span>`, {
+          direction: 'top',
+          offset: [0, -18],
+          opacity: 0.95
+        })
         .on('click', () => onSelectNode(node.id));
 
       markersRef.current[node.id] = marker;
@@ -69,14 +81,14 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
 
   }, [nodes, activeNodeId, onSelectNode]);
 
-  // Pan to selected node
+  // Pan smoothly to selected node
   useEffect(() => {
     if (!mapInstanceRef.current || !activeNodeId) return;
     const selected = nodes.find(n => n.id === activeNodeId);
     if (selected) {
       mapInstanceRef.current.panTo([selected.lat, selected.lng], {
         animate: true,
-        duration: 0.8
+        duration: 0.6
       });
     }
   }, [activeNodeId, nodes]);

@@ -256,37 +256,32 @@ class UrbanShieldDetector:
             cv2.putText(annotated, f"{cls_name} {conf:.2f}", (x1 + 4, max(14, y1 - 5)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.45, (10, 15, 25), 1, cv2.LINE_AA)
 
-        # Top Privacy & Telemetry Bar
-        cv2.rectangle(annotated, (0, 0), (w, 38), (15, 20, 28), -1)
-        cv2.putText(annotated, "URBANSHIELD LITE • [EDGE AI: RAM ZERO-DISK] • CPU INFERENCE",
-                    (14, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (220, 230, 245), 1, cv2.LINE_AA)
-        cv2.putText(annotated, "THUOC DO: BANH XE MAY 50CM", (w - 235, 24),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.44, (56, 189, 248), 1, cv2.LINE_AA)
-
-        # Bottom Flood / Accident Status Badge
+        # Bottom Flood / Accident Status Badge (Positioned safely above lower frame edge)
+        b_top = h - 46
+        b_bot = h - 10
         if accident_data["detected"]:
             if (self.frame_count // 6) % 2 == 0:
                 cv2.rectangle(annotated, (0, 0), (w - 1, h - 1), (0, 0, 242), 6)
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), (15, 15, 30), -1)
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), (0, 0, 242), 2)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), (15, 15, 30), -1)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), (0, 0, 242), 2)
             cv2.putText(annotated, f"SOS KHAN CAP: {accident_data['reason'].upper()}",
-                        (24, h - 28), cv2.FONT_HERSHEY_SIMPLEX, 0.60, (0, 0, 255), 2, cv2.LINE_AA)
+                        (18, b_bot - 11), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 0, 255), 2, cv2.LINE_AA)
         elif accident_data.get("motionless_sec", 0.0) > 0:
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), (20, 25, 20), -1)
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), (0, 165, 255), 2)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), (20, 25, 20), -1)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), (0, 165, 255), 2)
             cv2.putText(annotated, f"THEO DOI CHONG BAO GIA: {accident_data['reason']}",
-                        (24, h - 28), cv2.FONT_HERSHEY_SIMPLEX, 0.58, (0, 165, 255), 2, cv2.LINE_AA)
+                        (18, b_bot - 11), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (0, 165, 255), 2, cv2.LINE_AA)
         elif flood_data["detected"]:
             color = (0, 0, 255) if flood_data["level"] == "DANGER" else (0, 165, 255)
             level_vn = "NGUY HIEM (VUOT NUA BANH XE)" if flood_data["level"] == "DANGER" else "CHU Y (MAP ME ONG XA)"
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), (15, 20, 30), -1)
-            cv2.rectangle(annotated, (12, h - 60), (w - 12, h - 12), color, 2)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), (15, 20, 30), -1)
+            cv2.rectangle(annotated, (10, b_top), (w - 10, b_bot), color, 2)
             cv2.putText(annotated, f"CANH BAO NGAP: {flood_data['depth_cm']}cm - {level_vn}",
-                        (24, h - 28), cv2.FONT_HERSHEY_SIMPLEX, 0.58, color, 2, cv2.LINE_AA)
+                        (18, b_bot - 11), cv2.FONT_HERSHEY_SIMPLEX, 0.50, color, 2, cv2.LINE_AA)
         else:
-            cv2.rectangle(annotated, (12, h - 46), (320, h - 12), (20, 30, 20), -1)
+            cv2.rectangle(annotated, (10, b_top), (330, b_bot), (20, 30, 20), -1)
             cv2.putText(annotated, "TRANG THAI: DUONG KHO RAO, AN TOAN",
-                        (20, h - 24), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (16, 185, 129), 2, cv2.LINE_AA)
+                        (18, b_bot - 11), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (16, 185, 129), 2, cv2.LINE_AA)
 
         return annotated
 
