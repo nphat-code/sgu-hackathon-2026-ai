@@ -318,32 +318,27 @@ class UrbanShieldDetector:
 
             tag = f"{cls_name} {conf:.2f}"
             if is_ref:
-                tag = f"REF 50CM: {cls_name}"
+                tag = f"REF: {cls_name}"
 
-            tag_w = 125 if is_ref else 85
+            tag_w = 115 if is_ref else 85
             cv2.rectangle(annotated, (x1, max(0, y1 - 18)), (x1 + tag_w, y1), box_color, -1)
             cv2.putText(annotated, tag, (x1 + 3, max(12, y1 - 4)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.40, (10, 15, 25), 1, cv2.LINE_AA)
 
-        # Draw dedicated Wheel Reference Box & Waterline on the Primary Reference Vehicle
+        # Draw clear waterline at the submerged vehicle boundary (Technical honesty: no fake underwater wheel box)
         if pref and flood_data.get("detected"):
-            wx1, wy1, wx2, wy2 = pref["wheel_box"]
-            w_line_y = pref["waterline_y"]
+            px1, py1, px2, py2 = pref["box"]
             depth_cm = pref["depth_cm"]
+            w_line_y = pref["waterline_y"]
 
-            # 1. Bounding box for 50cm Wheel zone (Amber / Cyan)
-            cv2.rectangle(annotated, (wx1, wy1), (wx2, wy2), (0, 215, 255), 2)
-            cv2.putText(annotated, "BANH XE 50CM", (wx1 + 2, max(12, wy1 - 4)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.38, (0, 215, 255), 1, cv2.LINE_AA)
-
-            # 2. Waterline cutting across the wheel
             line_color = (0, 0, 255) if flood_data.get("level") == "DANGER" else (0, 165, 255)
-            cv2.line(annotated, (wx1 - 18, w_line_y), (wx2 + 18, w_line_y), line_color, 2, cv2.LINE_AA)
+            cv2.line(annotated, (px1 - 12, w_line_y), (px2 + 12, w_line_y), line_color, 2, cv2.LINE_AA)
+            cv2.circle(annotated, (px1 - 12, w_line_y), 3, line_color, -1)
+            cv2.circle(annotated, (px2 + 12, w_line_y), 3, line_color, -1)
 
-            # Waterline text badge
-            badge_text = f"MAT NUOC: {depth_cm}cm"
-            cv2.putText(annotated, badge_text, (wx2 + 22, min(h - 10, max(20, w_line_y + 4))),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.42, line_color, 2, cv2.LINE_AA)
+            badge_text = f"RANH GIOI NGAP: {depth_cm}cm"
+            cv2.putText(annotated, badge_text, (px2 + 16, min(h - 10, max(20, w_line_y + 4))),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.42, line_color, 1, cv2.LINE_AA)
 
         # Subtle CCTV Camera Watermark (Top right)
         cv2.putText(annotated, "CAM-FEED • RAM BUFFER", (w - 180, 22),
