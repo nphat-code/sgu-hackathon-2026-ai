@@ -1,0 +1,10 @@
+clip,loai,muc_ngap,giay_bat_dau_nga,thoi_luong_s,do_phan_giai,ghi_chu
+real_flood_1.mp4,FLOOD,3,,16.3,1920x1080,Xe máy lội nước ngập nửa bánh (~22-26cm) đường ngập triều cường TP.HCM
+real_flood_2.mp4,FLOOD,2,,17.2,1280x720,Xe cộ qua đoạn trũng ngập mấp mé ống xả (~18-22cm)
+real_flood_3.mp4,FLOOD,3,,15.3,1280x720,Đoạn ngập lụt sâu có người lội ngang gối và thuyền nhỏ (>30cm)
+real_flood_4.mp4,FLOOD,2,,14.5,1280x720,Ngõ hẻm dân cư ngập nước mưa (~15-20cm)
+real_accident_1.mp4,FLOOD,1,,24.8,1280x720,Mưa to mặt đường ngập trơn trượt lưu thông chậm
+accident.mp4,FALL,0,2.5,12.0,640x480,Xe máy trượt ngã lúc t=2.5s nằm bất động quá 5s (kích hoạt SOS lúc t=7.5s)
+normal.mp4,NONE,0,,10.0,640x480,Tuyến đường khô ráo xe máy và người đi bộ lưu thông bình thường
+clip_negative_shoelace.mp4,NONE,0,,10.0,640x480,Người cúi buộc dây giày cạnh xe máy (dưới 3s tự đứng lên - chống báo giả)
+clip_negative_push_bike.mp4,NONE,0,,10.0,640x480,Người dân dắt xe qua đoạn dốc (không ngã xe - chống báo giả)

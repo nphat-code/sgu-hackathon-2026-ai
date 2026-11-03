@@ -12,13 +12,13 @@
 ## 🛠️ GIAI ĐOẠN CHUẨN BỊ (02/11 – 06/11) - KHÔNG CODE VÀO REPO THI
 
 - [x] **PREP-01 (02/11):** Chốt kế hoạch thực chiến bản 2 và chuẩn bị danh sách câu hỏi xác nhận với BTC / Mentor.
-- [ ] **PREP-02 (03/11):** Thu thập và gán nhãn dữ liệu đánh giá:
-  - Gom 20–30 clip ngắn (10–30s) hẻm ngập và sự cố trượt ngã tại TP.HCM kèm các clip dễ báo nhầm (dắt xe, cúi nhặt đồ).
-  - Lập file gán nhãn `labels.csv` và tài liệu nguồn gốc `docs/DATA.md` (không đẩy video lên repo).
-- [ ] **PREP-03 (04/11):** Thử nghiệm và đo đạc kỹ thuật trên máy tính:
-  - Đo FPS thực tế của YOLOv8n trên CPU ở `imgsz=320` và `640`.
-  - Thử nghiệm tracking bằng ByteTrack (`model.track()`) để duy trì ID đếm bất động 5s.
-  - Chốt công thức đo ngập theo tỷ lệ che khuất bánh xe máy (~50cm) khi xe di chuyển ngang.
+- [x] **PREP-02 (03/11):** Thu thập và gán nhãn dữ liệu đánh giá:
+  - Gom các clip ngắn hẻm ngập và sự cố tại TP.HCM (`real_flood_1.mp4`, `real_flood_2.mp4`, `real_flood_3.mp4`, `real_flood_4.mp4`, `real_accident_1.mp4`).
+  - Lập file gán nhãn [`labels.csv`](file:///c:/Competition/HackathonSGU2026/labels.csv) và tài liệu nguồn gốc [`docs/DATA.md`](file:///c:/Competition/HackathonSGU2026/docs/DATA.md) (loại trừ video qua `.gitignore`, không đẩy video lớn lên repo).
+- [x] **PREP-03 (04/11):** Thử nghiệm và đo đạc kỹ thuật trên máy tính:
+  - Đo FPS và độ trễ thực tế của YOLOv8n trên CPU máy tính phổ thông (~4-5 FPS khi chạy liên tục, độ trễ 200-260ms).
+  - Tích hợp máy trạng thái theo dõi bất động 5 giây chống báo giả khi cúi nhặt đồ hoặc dắt xe.
+  - Hoàn thiện công thức đo ngập hình học theo tỷ lệ che khuất bánh xe máy chuẩn 50cm trên video thực tế (kết quả đo 22.4cm - Cấp 3 Nguy hiểm).
 - [ ] **PREP-04 (05/11):** Chuẩn bị sẵn hạ tầng Google Cloud:
   - Khởi tạo Google Cloud Project, bật Cloud Run, Artifact Registry, Cloud SQL PostgreSQL và Secret Manager.
   - Tạo Telegram Bot, lấy Token và Chat ID, lưu vào Secret Manager.

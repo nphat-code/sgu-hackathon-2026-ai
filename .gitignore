@@ -18,6 +18,10 @@ out/
 *.log
 *.pt
 
+# Large video recordings (local evaluation and demo only, do not commit)
+backend/videos/real_*.mp4
+flood*.mp4
+
 # OS & Editor
 .DS_Store
 Thumbs.db
