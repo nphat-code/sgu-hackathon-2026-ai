@@ -38,6 +38,7 @@ class UrbanShieldDetector:
             "detections": [],
             "flood": {"detected": True, "depth_cm": 22.4, "level": "DANGER"},
             "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
+            "primary_ref": None,
             "infer_time_ms": 32.0,
             "fps": 28.5
         }
@@ -86,7 +87,7 @@ class UrbanShieldDetector:
                     motorcycles.append(item)
 
         # ----------------------------------------------------
-        # 1. WATER REFLECTION & FLOOD DEPTH GEOMETRIC ESTIMATION
+        # 1. MULTI-VEHICLE FILTERING & GEOMETRIC FLOOD ESTIMATION
         # ----------------------------------------------------
         lower_region = frame[int(h * 0.70):, :]
         hsv = cv2.cvtColor(lower_region, cv2.COLOR_BGR2HSV)
@@ -94,11 +95,38 @@ class UrbanShieldDetector:
         val_mean = float(np.mean(hsv[:, :, 2]))
 
         is_water_surface = sat_mean < 85 and val_mean > 40
+
+        # Step 1: Filter out small/distant vehicles (width < 35 or height < 45)
+        valid_motorcycles = [m for m in motorcycles if m["width"] >= 35 and m["height"] >= 45]
+        
+        # Sort by proximity to camera (y2 / bottom of bounding box descending)
+        valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
+
+        # Step 2: Occlusion check - find primary reference vehicle not blocked by foreground
+        primary_ref = None
+        for i, m1 in enumerate(valid_motorcycles):
+            is_occluded = False
+            for j in range(i):
+                m_closer = valid_motorcycles[j]
+                ox1 = max(m1["box"][0], m_closer["box"][0])
+                ox2 = min(m1["box"][2], m_closer["box"][2])
+                if ox2 > ox1 and (ox2 - ox1) > (0.40 * m1["width"]):
+                    is_occluded = True
+                    break
+            if not is_occluded and primary_ref is None:
+                primary_ref = m1
+                break
+
+        if primary_ref is None and len(valid_motorcycles) > 0:
+            primary_ref = valid_motorcycles[0]
+        elif primary_ref is None and len(vehicles) > 0:
+            primary_ref = vehicles[0]
+
+        # Step 3: Calculate depth across valid vehicles with 50cm wheel reference
         measured_depth_cm = 0.0
         vehicle_sample_count = 0
 
-        # Geometric wheel reference: 50cm motorcycle wheel
-        for m in motorcycles:
+        for m in valid_motorcycles:
             bw = m["width"]
             bh = m["height"]
             expected_full_h = bw * 0.95
@@ -147,6 +175,31 @@ class UrbanShieldDetector:
             flood_level = "WARNING"
         else:
             flood_level = "SAFE"
+
+        # Construct primary benchmark reference wheel & waterline coordinates
+        primary_ref_info = None
+        if primary_ref is not None:
+            px1, py1, px2, py2 = primary_ref["box"]
+            pbw = px2 - px1
+            pbh = py2 - py1
+            
+            # 35% lower section represents standard 50cm motorcycle wheel
+            wh = int(pbh * 0.35)
+            w_top = py2 - wh
+            w_bot = py2
+            w_left = px1 + int(pbw * 0.12)
+            w_right = px2 - int(pbw * 0.12)
+            
+            submerged_ratio = min(1.0, max(0.0, final_depth_cm / 50.0)) if flood_detected else 0.0
+            waterline_y = int(w_bot - (submerged_ratio * wh))
+            
+            primary_ref_info = {
+                "box": [px1, py1, px2, py2],
+                "wheel_box": [w_left, w_top, w_right, w_bot],
+                "waterline_y": waterline_y,
+                "depth_cm": final_depth_cm,
+                "class": primary_ref.get("class", "motorcycle")
+            }
 
         # ----------------------------------------------------
         # 2. REAL FALL DETECTION WITH 5.0s MOTIONLESS TRACKING
@@ -214,6 +267,7 @@ class UrbanShieldDetector:
             "infer_time_ms": self.last_infer_time_ms,
             "detections_count": len(detections),
             "detections": detections,
+            "primary_ref": primary_ref_info,
             "accident": {
                 "detected": accident_detected,
                 "reason": accident_reason,
@@ -228,7 +282,7 @@ class UrbanShieldDetector:
 
     def render_hud(self, frame: np.ndarray, analysis: Dict[str, Any], stream_fps: float = 28.5) -> np.ndarray:
         """
-        Fast rendering of bounding boxes and CCTV HUD overlay in < 0.5ms.
+        Fast rendering of bounding boxes, primary geometric wheel reference, and CCTV HUD overlay in < 0.5ms.
         """
         self.frame_count += 1
         h, w = frame.shape[:2]
@@ -237,24 +291,59 @@ class UrbanShieldDetector:
         detections = analysis.get("detections", [])
         flood_data = analysis.get("flood", {"detected": False, "depth_cm": 0.0, "level": "SAFE"})
         accident_data = analysis.get("accident", {"detected": False, "reason": "", "motionless_sec": 0.0})
+        pref = analysis.get("primary_ref")
+        pref_box = pref.get("box") if pref else None
 
-        # Draw bounding boxes with high clarity
+        # Draw standard vehicle & pedestrian bounding boxes
         for d in detections:
             x1, y1, x2, y2 = d["box"]
             cls_name = d["class"]
             conf = d["confidence"]
+            is_ref = (pref_box is not None and [x1, y1, x2, y2] == pref_box)
 
-            if cls_name == "person":
-                box_color = (255, 180, 0) # Amber / Cyan for people
+            if is_ref:
+                box_color = (0, 230, 255) # Bright gold/cyan for Primary Benchmark Vehicle
+                thick = 2
+            elif cls_name == "person":
+                box_color = (255, 180, 0)
+                thick = 1
             elif cls_name == "motorcycle":
-                box_color = (0, 240, 180) # Vibrant teal for motorcycles
+                box_color = (0, 200, 150)
+                thick = 1
             else:
-                box_color = (255, 255, 255) # Clean white for vehicles
+                box_color = (220, 220, 220)
+                thick = 1
 
-            cv2.rectangle(annotated, (x1, y1), (x2, y2), box_color, 2)
-            cv2.rectangle(annotated, (x1, max(0, y1 - 20)), (x1 + 110, y1), box_color, -1)
-            cv2.putText(annotated, f"{cls_name} {conf:.2f}", (x1 + 4, max(14, y1 - 5)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, (10, 15, 25), 1, cv2.LINE_AA)
+            cv2.rectangle(annotated, (x1, y1), (x2, y2), box_color, thick)
+
+            tag = f"{cls_name} {conf:.2f}"
+            if is_ref:
+                tag = f"REF 50CM: {cls_name}"
+
+            tag_w = 125 if is_ref else 85
+            cv2.rectangle(annotated, (x1, max(0, y1 - 18)), (x1 + tag_w, y1), box_color, -1)
+            cv2.putText(annotated, tag, (x1 + 3, max(12, y1 - 4)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.40, (10, 15, 25), 1, cv2.LINE_AA)
+
+        # Draw dedicated Wheel Reference Box & Waterline on the Primary Reference Vehicle
+        if pref and flood_data.get("detected"):
+            wx1, wy1, wx2, wy2 = pref["wheel_box"]
+            w_line_y = pref["waterline_y"]
+            depth_cm = pref["depth_cm"]
+
+            # 1. Bounding box for 50cm Wheel zone (Amber / Cyan)
+            cv2.rectangle(annotated, (wx1, wy1), (wx2, wy2), (0, 215, 255), 2)
+            cv2.putText(annotated, "BANH XE 50CM", (wx1 + 2, max(12, wy1 - 4)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.38, (0, 215, 255), 1, cv2.LINE_AA)
+
+            # 2. Waterline cutting across the wheel
+            line_color = (0, 0, 255) if flood_data.get("level") == "DANGER" else (0, 165, 255)
+            cv2.line(annotated, (wx1 - 18, w_line_y), (wx2 + 18, w_line_y), line_color, 2, cv2.LINE_AA)
+
+            # Waterline text badge
+            badge_text = f"MAT NUOC: {depth_cm}cm"
+            cv2.putText(annotated, badge_text, (wx2 + 22, min(h - 10, max(20, w_line_y + 4))),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.42, line_color, 2, cv2.LINE_AA)
 
         # Subtle CCTV Camera Watermark (Top right)
         cv2.putText(annotated, "CAM-FEED • RAM BUFFER", (w - 180, 22),
