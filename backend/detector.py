@@ -59,22 +59,25 @@ def evaluate_fall_candidate(
     aspect_ratio = round(float(box_w) / float(box_h), 2)
     is_horizontal = aspect_ratio > aspect_threshold
 
-    near_vehicle = False
+    near_vehicle_ground = False
     min_dist = 9999.0
     for vx, vy in vehicle_centers:
         dist = float(np.hypot(person_center[0] - vx, person_center[1] - vy))
         if dist < min_dist:
             min_dist = dist
-        if dist < proximity_px:
-            near_vehicle = True
+        # Person must be near the vehicle AND at ground level (not sitting on top of the vehicle seat)
+        if dist < proximity_px and person_center[1] >= (vy - 15.0):
+            near_vehicle_ground = True
 
-    is_candidate = is_horizontal or (aspect_ratio > 0.90 and near_vehicle)
+    # Genuine fall: person is horizontal on the road (W/H > 1.15) or collapsed at ground level beside vehicle (W/H >= 1.05)
+    # Seated upright riders/passengers in water (center above bike) are NEVER fall candidates.
+    is_candidate = is_horizontal or (aspect_ratio >= 1.05 and near_vehicle_ground)
     if not is_candidate:
         return {
             "is_candidate": False,
             "detected": False,
             "aspect_ratio": aspect_ratio,
-            "near_vehicle": near_vehicle,
+            "near_vehicle": near_vehicle_ground,
             "motionless_sec": 0.0,
             "reason": ""
         }
@@ -85,7 +88,7 @@ def evaluate_fall_candidate(
             "is_candidate": True,
             "detected": True,
             "aspect_ratio": aspect_ratio,
-            "near_vehicle": near_vehicle,
+            "near_vehicle": near_vehicle_ground,
             "motionless_sec": elapsed,
             "reason": f"Phát hiện người ngã xe nằm bất động {elapsed:.1f}s (vượt ngưỡng {debounce_sec:.0f}s, W/H={aspect_ratio})"
         }
@@ -94,7 +97,7 @@ def evaluate_fall_candidate(
             "is_candidate": True,
             "detected": False,
             "aspect_ratio": aspect_ratio,
-            "near_vehicle": near_vehicle,
+            "near_vehicle": near_vehicle_ground,
             "motionless_sec": elapsed,
             "reason": f"Đang kiểm tra bất động: {elapsed:.1f}s / {debounce_sec:.1f}s (W/H={aspect_ratio})"
         }
@@ -268,12 +271,11 @@ class UrbanShieldDetector:
         # Flood water surface condition: supports daytime rain and nighttime streetlight reflections
         is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
 
-        # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26, W/H <= 0.95)
-        # Tipped-over or fallen motorcycles (W/H > 0.95) are NEVER used as flood depth benchmarks!
+        # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
         valid_motorcycles = [
             m for m in motorcycles
             if m["width"] >= 20 and m["height"] >= 26
-            and m["aspect_ratio"] <= 0.95
+            and m["aspect_ratio"] <= 1.45
             and (0.12 * w <= m["center"][0] <= 0.90 * w)
         ]
         valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
@@ -415,27 +417,12 @@ class UrbanShieldDetector:
         # Filter strictly for genuine horizontal / fallen candidates (W/H > 1.0 or W/H > 0.90 near vehicle)
         # Normal standing or riding people (W/H < 0.85) are NEVER candidates.
         for p in persons:
-            if p["height"] >= 20:
+            if p["height"] >= 30 and p["center"][1] >= 0.40 * h:
                 eval_check = evaluate_fall_candidate(
                     p["width"], p["height"], p["center"], vehicle_centers, 0.0
                 )
                 if eval_check["is_candidate"]:
                     active_fallen_person = p
-                    break
-
-        # Also detect tipped-over / fallen motorcycles lying horizontally on the road (W/H >= 1.25)
-        if active_fallen_person is None:
-            for m in motorcycles:
-                if m["aspect_ratio"] >= 1.25 and m["width"] >= 40 and m["center"][1] >= 0.40 * h:
-                    active_fallen_person = {
-                        "class": "fallen_vehicle",
-                        "box": m["box"],
-                        "width": m["width"],
-                        "height": m["height"],
-                        "aspect_ratio": m["aspect_ratio"],
-                        "center": m["center"],
-                        "confidence": m["confidence"]
-                    }
                     break
 
         accident_detected = False
@@ -460,10 +447,10 @@ class UrbanShieldDetector:
                 self.fall_test_active = False
 
         elif active_fallen_person is not None or len(self.fallen_candidates) > 0:
-            # Check if any standing person (W/H < 0.80) appeared at candidate's spot -> person stood up!
+            # Check if a tall upright person (standing, height >= 65px and W/H <= 0.55) appeared at candidate's spot -> person stood up!
             for cid, cand in list(self.fallen_candidates.items()):
                 for p in persons:
-                    if p["aspect_ratio"] < 0.80 and np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 90:
+                    if p["height"] >= 65 and p["aspect_ratio"] <= 0.55 and np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 90:
                         del self.fallen_candidates[cid]
                         break
 
