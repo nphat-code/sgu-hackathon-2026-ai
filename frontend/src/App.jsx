@@ -29,6 +29,7 @@ const INITIAL_NODES = [
   {
     id: "node-sgu-01",
     name: "Trạm 01 - Hẻm 273 An Dương Vương (Khu vực ĐH Sài Gòn)",
+    street_segment: "Tuyến An Dương Vương - Hẻm 273, Quận 5",
     lat: 10.760567,
     lng: 106.681823,
     line_coords: [
@@ -49,6 +50,7 @@ const INITIAL_NODES = [
   {
     id: "node-sgu-02",
     name: "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ (Ngã tư Trần Hưng Đạo)",
+    street_segment: "Tuyến Nguyễn Văn Cừ - Hẻm 21, Quận 5",
     lat: 10.756229,
     lng: 106.684653,
     line_coords: [
@@ -62,13 +64,14 @@ const INITIAL_NODES = [
       [106.685628, 10.755584]
     ],
     type: "Camera Khu Phố #02",
-    scenario: "real_flood_3",
-    status: "alert",
+    scenario: "real_flood_2",
+    status: "warning",
     device: "Máy tính khu phố Core i3"
   },
   {
     id: "node-sgu-03",
-    name: "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt (Chợ Quán)",
+    name: "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt (Chợ Quán)",
+    street_segment: "Tuyến Cao Đạt - Hẻm 57 Trần Bình Trọng, Quận 5",
     lat: 10.754270,
     lng: 106.682694,
     line_coords: [
@@ -83,18 +86,48 @@ const INITIAL_NODES = [
       [106.684140, 10.754628]
     ],
     type: "Camera Tổ Dân Phố #03",
-    scenario: "real_accident_1",
-    status: "warning",
+    scenario: "real_flood_3",
+    status: "alert",
     device: "Webcam USB tiêu chuẩn"
+  },
+  {
+    id: "node-sgu-04",
+    name: "Trạm 04 - Hẻm 180 Bùi Hữu Nghĩa (Khu trũng thấp)",
+    street_segment: "Tuyến Bùi Hữu Nghĩa - Hẻm 180, Quận 5",
+    lat: 10.752352,
+    lng: 106.673301,
+    line_coords: [
+      [106.673274, 10.752500],
+      [106.673276, 10.752447],
+      [106.673301, 10.752352],
+      [106.673329, 10.752232],
+      [106.673346, 10.752233],
+      [106.673377, 10.752242]
+    ],
+    type: "Camera Dân Sinh #04",
+    scenario: "real_flood_4",
+    status: "warning",
+    device: "Camera IP hẻm dân cư"
+  },
+  {
+    id: "node-sgu-05",
+    name: "Trạm 05 - Hẻm 57 Trần Bình Trọng (Dốc trơn trượt)",
+    street_segment: "Tuyến Trần Bình Trọng - Dốc Hẻm 57, Quận 5",
+    lat: 10.757078,
+    lng: 106.678164,
+    line_coords: [
+      [106.678514, 10.756956],
+      [106.678413, 10.756954],
+      [106.678222, 10.756908],
+      [106.678164, 10.757078],
+      [106.678128, 10.757183],
+      [106.678267, 10.757239]
+    ],
+    type: "Camera Giám Sát Sự Cố #05",
+    scenario: "real_accident_1",
+    status: "alert",
+    device: "Máy tính mini Edge AI"
   }
-];
-
-const SCENARIOS = [
-  { id: 'real_flood_1', title: '1. Tuyến đường chính', desc: 'Đường ngập triều cường', icon: Droplets, type: 'flood' },
-  { id: 'real_flood_2', title: '2. Đoạn đường trũng', desc: 'Phương tiện qua vùng ngập', icon: CheckCircle2, type: 'flood' },
-  { id: 'real_flood_3', title: '3. Điểm ngập sâu', desc: 'Khu vực ngập sâu xe ô tô', icon: Waves, type: 'flood' },
-  { id: 'real_flood_4', title: '4. Ngõ hẻm dân cư', desc: 'Ngõ nhỏ ngập nước mưa', icon: Droplets, type: 'flood' },
-  { id: 'real_accident_1', title: '5. Mưa bão trơn trượt', desc: 'Mặt đường trơn & té ngã', icon: CloudRain, type: 'accident' },
 ];
 
 export default function App() {
@@ -431,26 +464,19 @@ export default function App() {
                     setActiveNodeId(node.id);
                     setStreamError(false);
                   }}
+                  title={node.name}
                 >
                   <MapPin size={13} />
                   <span>{node.name.split('-')[0].trim()}</span>
-                  <span className={`tab-dot ${(node.scenario === 'real_flood_1' || node.scenario === 'real_flood_3' || node.scenario?.includes('accident')) ? 'red' : 'amber'}`} />
+                  <span className={`tab-dot ${(node.status === 'alert' || node.scenario === 'real_flood_1' || node.scenario === 'real_flood_3' || node.scenario === 'real_accident_1') ? 'red' : 'amber'}`} />
                 </button>
               ))}
             </div>
 
-            {/* Test Source Selector */}
-            <div className="source-chips">
-              {SCENARIOS.map(s => (
-                <button
-                  key={s.id}
-                  className={`source-chip ${activeNode.scenario === s.id ? 'active' : ''}`}
-                  onClick={() => handleScenarioChange(s.id)}
-                  title={s.desc}
-                >
-                  <span>{s.title}</span>
-                </button>
-              ))}
+            <div className="camera-node-meta">
+              <span className="camera-meta-street">{activeNode.street_segment || activeNode.name}</span>
+              <span className="camera-meta-divider">•</span>
+              <span className="camera-meta-device">{activeNode.device}</span>
             </div>
           </div>
 

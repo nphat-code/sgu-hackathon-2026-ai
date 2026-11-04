@@ -121,6 +121,14 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
       markersRef.current[node.id] = marker;
     });
 
+    // Smoothly pan map to selected station when user switches stations
+    if (activeNodeId && nodes && nodes.length > 0) {
+      const activeNode = nodes.find(n => n.id === activeNodeId);
+      if (activeNode) {
+        map.panTo([activeNode.lat, activeNode.lng], { animate: true, duration: 0.6 });
+      }
+    }
+
   }, [nodes, activeNodeId, onSelectNode]);
 
   return (

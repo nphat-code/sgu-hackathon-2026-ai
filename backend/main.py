@@ -75,7 +75,7 @@ NODES: Dict[str, Dict[str, Any]] = {
     "node-sgu-02": {
         "id": "node-sgu-02",
         "name": "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ (Ngã tư Trần Hưng Đạo)",
-        "street_segment": "Tuyến Trần Hưng Đạo - Hẻm 21 Nguyễn Văn Cừ, Quận 5",
+        "street_segment": "Tuyến Nguyễn Văn Cừ - Hẻm 21, Quận 5",
         "lat": 10.756229,
         "lng": 106.684653,
         "line_coords": [
@@ -89,14 +89,14 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.685628, 10.755584]
         ],
         "type": "Camera Khu Phố #02",
-        "scenario": "real_flood_3",
-        "status": "alert",
+        "scenario": "real_flood_2",
+        "status": "warning",
         "last_ping": time.time(),
         "device": "Máy tính khu phố Core i3"
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
-        "name": "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt (Chợ Quán)",
+        "name": "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt (Chợ Quán)",
         "street_segment": "Tuyến Cao Đạt - Hẻm 57 Trần Bình Trọng, Quận 5",
         "lat": 10.754270,
         "lng": 106.682694,
@@ -112,17 +112,59 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.684140, 10.754628]
         ],
         "type": "Camera Tổ Dân Phố #03",
-        "scenario": "real_accident_1",
-        "status": "warning",
+        "scenario": "real_flood_3",
+        "status": "alert",
         "last_ping": time.time(),
         "device": "Webcam USB tiêu chuẩn"
+    },
+    "node-sgu-04": {
+        "id": "node-sgu-04",
+        "name": "Trạm 04 - Hẻm 180 Bùi Hữu Nghĩa (Khu trũng thấp)",
+        "street_segment": "Tuyến Bùi Hữu Nghĩa - Hẻm 180, Quận 5",
+        "lat": 10.752352,
+        "lng": 106.673301,
+        "line_coords": [
+            [106.673274, 10.752500],
+            [106.673276, 10.752447],
+            [106.673301, 10.752352],
+            [106.673329, 10.752232],
+            [106.673346, 10.752233],
+            [106.673377, 10.752242]
+        ],
+        "type": "Camera Dân Sinh #04",
+        "scenario": "real_flood_4",
+        "status": "warning",
+        "last_ping": time.time(),
+        "device": "Camera IP hẻm dân cư"
+    },
+    "node-sgu-05": {
+        "id": "node-sgu-05",
+        "name": "Trạm 05 - Hẻm 57 Trần Bình Trọng (Dốc trơn trượt)",
+        "street_segment": "Tuyến Trần Bình Trọng - Dốc Hẻm 57, Quận 5",
+        "lat": 10.757078,
+        "lng": 106.678164,
+        "line_coords": [
+            [106.678514, 10.756956],
+            [106.678413, 10.756954],
+            [106.678222, 10.756908],
+            [106.678164, 10.757078],
+            [106.678128, 10.757183],
+            [106.678267, 10.757239]
+        ],
+        "type": "Camera Giám Sát Sự Cố #05",
+        "scenario": "real_accident_1",
+        "status": "alert",
+        "last_ping": time.time(),
+        "device": "Máy tính mini Edge AI"
     }
 }
 
 # Initial seeded incidents with compact payload metadata (< 150 bytes)
 _p1_json, _p1_bytes = build_compact_payload("node-sgu-01", "FLOOD", 22.4, "cm")
-_p2_json, _p2_bytes = build_compact_payload("node-sgu-02", "FLOOD", 31.5, "cm")
-_p3_json, _p3_bytes = build_compact_payload("node-sgu-03", "WEATHER", 14.0, "cm")
+_p2_json, _p2_bytes = build_compact_payload("node-sgu-02", "FLOOD", 18.2, "cm")
+_p3_json, _p3_bytes = build_compact_payload("node-sgu-03", "FLOOD", 31.5, "cm")
+_p4_json, _p4_bytes = build_compact_payload("node-sgu-04", "FLOOD", 16.0, "cm")
+_p5_json, _p5_bytes = build_compact_payload("node-sgu-05", "ACCIDENT", 5.2, "s")
 
 INCIDENTS: List[Dict[str, Any]] = [
     {
@@ -141,33 +183,33 @@ INCIDENTS: List[Dict[str, Any]] = [
         "telegram_sent": True
     },
     {
-        "id": "inc-002",
-        "node_id": "node-sgu-02",
-        "node_name": "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ",
+        "id": "inc-003",
+        "node_id": "node-sgu-03",
+        "node_name": "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt",
         "type": "FLOOD",
         "level": "DANGER",
         "val": 31.5,
         "unit": "cm",
-        "payload_json": _p2_json,
-        "payload_bytes": _p2_bytes,
-        "message": "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
+        "payload_json": _p3_json,
+        "payload_bytes": _p3_bytes,
+        "message": "Ngập sâu diện rộng trên lòng đường, chạm gầm xe ô tô",
         "timestamp": "10:17:45",
-        "gps": "10.756229, 106.684653",
+        "gps": "10.754270, 106.682694",
         "telegram_sent": True
     },
     {
-        "id": "inc-003",
-        "node_id": "node-sgu-03",
-        "node_name": "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt",
-        "type": "WEATHER",
-        "level": "WARNING",
-        "val": 14.0,
-        "unit": "cm",
-        "payload_json": _p3_json,
-        "payload_bytes": _p3_bytes,
-        "message": "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
+        "id": "inc-005",
+        "node_id": "node-sgu-05",
+        "node_name": "Trạm 05 - Hẻm 57 Trần Bình Trọng",
+        "type": "ACCIDENT",
+        "level": "DANGER",
+        "val": 5.2,
+        "unit": "s",
+        "payload_json": _p5_json,
+        "payload_bytes": _p5_bytes,
+        "message": "Phát hiện người ngã xe nằm bất động 5.2s, cần hỗ trợ y tế cơ sở",
         "timestamp": "10:18:12",
-        "gps": "10.754270, 106.682694",
+        "gps": "10.757078, 106.678164",
         "telegram_sent": True
     }
 ]
@@ -265,7 +307,7 @@ NODE_LATEST_METRICS: Dict[str, Any] = {
         "payload_json": _p2_json,
         "privacy": {"ram_only": True, "frames_processed_in_ram": 95, "disk_writes": 0},
         "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
-        "flood": {"detected": True, "depth_cm": 31.5, "level": "DANGER"},
+        "flood": {"detected": True, "depth_cm": 18.2, "level": "WARNING"},
         "updated_at": time.time()
     },
     "node-sgu-03": {
@@ -277,6 +319,30 @@ NODE_LATEST_METRICS: Dict[str, Any] = {
         "payload_json": _p3_json,
         "privacy": {"ram_only": True, "frames_processed_in_ram": 110, "disk_writes": 0},
         "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
+        "flood": {"detected": True, "depth_cm": 31.5, "level": "DANGER"},
+        "updated_at": time.time()
+    },
+    "node-sgu-04": {
+        "fps": 28.5,
+        "infer_time_ms": 30.0,
+        "clahe_active": False,
+        "detections_count": 3,
+        "payload_bytes": _p4_bytes,
+        "payload_json": _p4_json,
+        "privacy": {"ram_only": True, "frames_processed_in_ram": 80, "disk_writes": 0},
+        "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
+        "flood": {"detected": True, "depth_cm": 16.0, "level": "WARNING"},
+        "updated_at": time.time()
+    },
+    "node-sgu-05": {
+        "fps": 28.5,
+        "infer_time_ms": 32.0,
+        "clahe_active": True,
+        "detections_count": 3,
+        "payload_bytes": _p5_bytes,
+        "payload_json": _p5_json,
+        "privacy": {"ram_only": True, "frames_processed_in_ram": 140, "disk_writes": 0},
+        "accident": {"detected": True, "reason": "Phát hiện người ngã xe nằm bất động 5.2s", "motionless_sec": 5.2},
         "flood": {"detected": False, "depth_cm": 0.0, "level": "SAFE"},
         "updated_at": time.time()
     }
