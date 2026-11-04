@@ -727,7 +727,9 @@ def set_node_scenario(node_id: str, data: ScenarioUpdate):
         raise HTTPException(status_code=404, detail="Node not found")
 
     NODES[node_id]["scenario"] = data.scenario
-    detector.cancel_fall_test()
+    detector.reset_state()
+    if node_id in NODE_ANALYSIS_CACHE:
+        del NODE_ANALYSIS_CACHE[node_id]
 
     if data.scenario in VIDEO_CAPS:
         try:

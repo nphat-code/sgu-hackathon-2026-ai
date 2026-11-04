@@ -82,3 +82,4 @@ def test_text_reports_anti_hype_compliance():
     banned_phrases = ["siêu nhẹ", "siêu ai", "siêu nhanh", "thời gian vàng", "mắt thần"]
     for phrase in banned_phrases:
         assert phrase not in combined_text
+

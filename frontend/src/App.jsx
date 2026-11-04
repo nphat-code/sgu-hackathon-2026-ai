@@ -277,7 +277,9 @@ export default function App() {
   };
 
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-  const depthValue = metrics.flood?.detected ? metrics.flood.depth_cm : 0;
+  const hasRefObject = Boolean(metrics.detections_count > 0 && metrics.flood?.has_reference !== false);
+  const depthValue = (hasRefObject && metrics.flood?.detected) ? metrics.flood.depth_cm : 0;
+  const lastRefDepth = metrics.flood?.last_ref_depth_cm || 0;
   const depthPercent = Math.min(100, Math.max(0, (depthValue / 50) * 100));
   const motionlessSec = metrics.accident?.motionless_sec || 0;
   const framesInRam = metrics.privacy?.frames_processed_in_ram || 240;
@@ -512,11 +514,13 @@ export default function App() {
                 ? 'danger' 
                 : metrics.accident?.motionless_sec > 0
                   ? 'warning'
-                  : metrics.flood?.level === 'DANGER' 
+                  : (hasRefObject && metrics.flood?.level === 'DANGER')
                     ? 'danger' 
-                    : metrics.flood?.detected 
+                    : (hasRefObject && metrics.flood?.detected)
                       ? 'warning' 
-                      : 'safe'
+                      : metrics.flood?.water_surface_present
+                        ? 'warning'
+                        : 'safe'
             }`}>
               {metrics.accident?.detected ? (
                 <>
@@ -528,21 +532,33 @@ export default function App() {
                   <Timer size={18} />
                   <span>BỘ ĐẾM BẤT ĐỘNG CHỐNG BÁO GIẢ: {metrics.accident.motionless_sec}s / 5.0s (Nếu tự đứng dậy trước 5s sẽ tự xóa)</span>
                 </>
-              ) : metrics.flood?.detected ? (
+              ) : (hasRefObject && metrics.flood?.detected) ? (
                 <>
                   <Waves size={18} />
                   <span>
-                    CẢNH BÁO NGẬP: <strong>{metrics.flood.depth_cm}cm</strong> — {
+                    CẢNH BÁO NGẬP (ĐO TỪ XE THAM CHIẾU): <strong>{metrics.flood.depth_cm}cm</strong> — {
                       metrics.flood.level === 'DANGER' 
                         ? 'NGUY HIỂM (VƯỢT NỬA BÁNH XE 50CM, DỄ CHẾT MÁY)' 
                         : 'CHÚ Ý (MẤP MÉ ỐNG XẢ XE MÁY)'
                     }
                   </span>
                 </>
+              ) : !hasRefObject && metrics.flood?.water_surface_present ? (
+                <>
+                  <Waves size={18} />
+                  <span>
+                    PHÁT HIỆN MẶT NƯỚC NGẬP — <strong>Đang chờ phương tiện đi qua để đo tỷ lệ bánh xe 50cm</strong>
+                    {lastRefDepth > 0 ? ` (Số đo xe vừa đi qua: ${lastRefDepth}cm)` : ''}
+                  </span>
+                </>
               ) : (
                 <>
                   <CheckCircle2 size={18} />
-                  <span>TRẠNG THÁI BÌNH THƯỜNG: Tuyến đường khô ráo, an toàn lưu thông</span>
+                  <span>
+                    {hasRefObject
+                      ? 'TRẠNG THÁI BÌNH THƯỜNG: Phương tiện di chuyển an toàn (< 10cm)'
+                      : 'ĐANG QUAN SÁT: Chờ phương tiện đi qua vùng đo tham chiếu 50cm'}
+                  </span>
                 </>
               )}
             </div>
@@ -555,7 +571,11 @@ export default function App() {
                   THƯỚC ĐO HÌNH HỌC: BÁNH XE MÁY TIÊU CHUẨN (ĐƯỜNG KÍNH 50CM)
                 </span>
                 <span className="gauge-val">
-                  Mực nước đo được: <strong>{depthValue} cm</strong> / 50 cm
+                  {hasRefObject ? (
+                    <>Mực nước đo trực tiếp: <strong>{depthValue} cm</strong> / 50 cm</>
+                  ) : (
+                    <>Chưa có đối tượng trong khung hình (<strong>0 xe</strong>) — Chờ xe đi qua</>
+                  )}
                 </span>
               </div>
 

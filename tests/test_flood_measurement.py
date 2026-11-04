@@ -54,3 +54,4 @@ def test_clahe_night_and_day_preprocessing():
     bright_frame[120:, :] = 70
     _, clahe_bright = detector.preprocess_clahe(bright_frame)
     assert clahe_bright is False
+

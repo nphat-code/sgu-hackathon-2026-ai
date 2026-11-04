@@ -103,12 +103,11 @@ def evaluate_fall_candidate(
 class UrbanShieldDetector:
     """
     Edge Vision Engine for UrbanShield Lite.
-    Optimized with Asynchronous Decoupled Architecture:
-    1. Fast Edge Inference on CPU (~30ms latency at imgsz=320).
-    2. Adaptive CLAHE luminance balancing for night rain & water glare suppression.
-    3. Multi-vehicle spatial/occlusion filtering & 50cm motorcycle wheel flood measurement.
-    4. Fall / Accident Detection with 5.0s Motionless Counter (Anti-false alarm).
-    5. Privacy-by-design RAM buffer (Zero-Disk write of raw video frames).
+    Strict Technical Honesty:
+    - Flood depth in centimeters (cm) is ONLY measured when a reference object
+      (motorcycle, vehicle, or pedestrian wading) is present in the frame.
+    - When 0 objects are in the frame, the system explicitly reports that it is
+      waiting for a reference vehicle to pass rather than fabricating a cm depth.
     """
 
     def __init__(self, model_name: str = None):
@@ -130,11 +129,21 @@ class UrbanShieldDetector:
 
         # Smoothed metrics & Privacy-by-design counters
         self.ema_flood_depth_cm = 0.0
+        self.last_measured_depth_cm = 0.0
+        self.last_measured_time = 0.0
         self.frame_count = 0
         self.frames_processed_in_ram = 0
         self.disk_files_written = 0
         self.last_infer_time_ms = 32.0
         self.last_clahe_active = False
+
+    def reset_state(self):
+        """Resets depth smoothing state when switching video feeds/cameras."""
+        self.ema_flood_depth_cm = 0.0
+        self.last_measured_depth_cm = 0.0
+        self.last_measured_time = 0.0
+        self.fallen_candidates.clear()
+        self.fall_test_active = False
 
     def trigger_fall_test(self, duration_sec: float = 8.5):
         """Activates a real-time 5-second motionless fall test cycle for live judge inspection."""
@@ -158,7 +167,6 @@ class UrbanShieldDetector:
         l_mean = float(np.mean(l_chan))
         l_std = float(np.std(l_chan))
 
-        # Activate CLAHE in low light (l_mean < 115) or low contrast rain haze (l_std < 48)
         if l_mean < 115.0 or l_std < 48.0:
             l_eq = self.clahe.apply(l_chan)
             merged = cv2.merge((l_eq, a_chan, b_chan))
@@ -170,7 +178,15 @@ class UrbanShieldDetector:
         """Provides default structure before first inference completes."""
         return {
             "detections": [],
-            "flood": {"detected": True, "depth_cm": 22.4, "level": "DANGER"},
+            "detections_count": 0,
+            "flood": {
+                "detected": False,
+                "has_reference": False,
+                "water_surface_present": False,
+                "depth_cm": 0.0,
+                "last_ref_depth_cm": 0.0,
+                "level": "WAITING_REF"
+            },
             "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
             "primary_ref": None,
             "clahe_active": False,
@@ -196,8 +212,9 @@ class UrbanShieldDetector:
         proc_frame, clahe_used = self.preprocess_clahe(frame)
         self.last_clahe_active = clahe_used
 
-        # Run optimized edge inference on CPU (classes: person, bicycle, car, motorcycle, bus, truck)
-        results = self.model(proc_frame, imgsz=320, verbose=False, conf=0.30, classes=[0, 1, 2, 3, 5, 7])[0]
+        # Run edge inference on CPU with conf=0.18, imgsz=416 to catch vehicles/riders in dark/rainy alleys
+        # Classes: 0=person, 1=bicycle, 2=car, 3=motorcycle, 5=bus, 7=truck, 8=boat
+        results = self.model(proc_frame, imgsz=416, verbose=False, conf=0.18, classes=[0, 1, 2, 3, 5, 7, 8])[0]
 
         detections = []
         persons = []
@@ -233,6 +250,7 @@ class UrbanShieldDetector:
 
         # ----------------------------------------------------
         # 1. MULTI-VEHICLE FILTERING & GEOMETRIC FLOOD ESTIMATION
+        #    (STRICTLY REQUIRES A REFERENCE OBJECT IN THE FRAME)
         # ----------------------------------------------------
         lower_region = frame[int(h * 0.55):, :]
         hsv = cv2.cvtColor(lower_region, cv2.COLOR_BGR2HSV)
@@ -240,19 +258,12 @@ class UrbanShieldDetector:
 
         sat_mean = float(np.mean(hsv[:, :, 1]))
         val_mean = float(np.mean(hsv[:, :, 2]))
-        hue_mean = float(np.mean(hsv[:, :, 0]))
         lap_var = float(cv2.Laplacian(gray_lower, cv2.CV_64F).var())
 
-        # Horizontal Sobel gradient (waterline ripples & wave edges)
-        sobel_y = cv2.Sobel(gray_lower, cv2.CV_64F, 0, 1, ksize=3)
-        wave_energy = float(np.mean(np.abs(sobel_y)))
+        is_water_surface = (sat_mean < 120.0 and val_mean > 35.0 and lap_var > 500.0)
 
-        is_water_surface = (sat_mean < 120.0 and val_mean > 35.0)
-
-        # Filter out small/distant vehicles (width < 35 or height < 45)
-        valid_motorcycles = [m for m in motorcycles if m["width"] >= 35 and m["height"] >= 45]
-
-        # Sort by proximity to camera (y2 / bottom of bounding box descending)
+        # Filter motorcycles in the measurable corridor
+        valid_motorcycles = [m for m in motorcycles if m["width"] >= 24 and m["height"] >= 32]
         valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
 
         # Occlusion check - find primary reference vehicle not blocked by foreground
@@ -273,97 +284,85 @@ class UrbanShieldDetector:
         if primary_ref is None and len(valid_motorcycles) > 0:
             primary_ref = valid_motorcycles[0]
         elif primary_ref is None and len(vehicles) > 0:
-            primary_ref = vehicles[0]
+            valid_veh = [v for v in vehicles if v["width"] >= 28 and v["height"] >= 28]
+            if valid_veh:
+                valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
+                primary_ref = valid_veh[0]
         elif primary_ref is None and len(persons) > 0:
-            # Riders on partially submerged motorcycles often detected by their upper body
-            valid_riders = [p for p in persons if p["height"] >= 80]
+            valid_riders = [p for p in persons if p["height"] >= 38]
             if valid_riders:
                 valid_riders.sort(key=lambda x: x["box"][3], reverse=True)
                 primary_ref = valid_riders[0]
 
-        # Dynamic geometric depth estimation using 50cm motorcycle wheel benchmark + Sobel waterline
+        # Measure depth ONLY when at least one reference object is detected in the frame!
         measured_depth_cm = 0.0
-        vehicle_sample_count = 0
+        ref_sample_count = 0
 
-        for m in valid_motorcycles:
-            bw = m["width"]
-            bh = m["height"]
-            mx1, my1, mx2, my2 = m["box"]
-            # Check waterline gradient in the lower 35% wheel zone of the motorcycle box
-            wheel_zone_h = max(20.0, 0.35 * max(bh, bw * 1.15))
-            roi_y1 = max(0, int(my2 - wheel_zone_h))
-            roi_y2 = min(h, int(my2 + 8))
-            roi_x1 = max(0, mx1)
-            roi_x2 = min(w, mx2)
-            if roi_y2 > roi_y1 and roi_x2 > roi_x1:
-                wheel_roi_gray = cv2.cvtColor(frame[roi_y1:roi_y2, roi_x1:roi_x2], cv2.COLOR_BGR2GRAY)
-                row_grad = np.mean(np.abs(cv2.Sobel(wheel_roi_gray, cv2.CV_64F, 0, 1, ksize=3)), axis=1)
-                waterline_offset = int(np.argmax(row_grad)) if len(row_grad) > 0 else int(wheel_zone_h * 0.55)
-                visible_wheel_px = float(np.clip(waterline_offset, wheel_zone_h * 0.35, wheel_zone_h * 0.85))
-            else:
-                visible_wheel_px = wheel_zone_h * 0.60
+        if len(detections) > 0 and primary_ref is not None and is_water_surface:
+            # Measure using Sobel horizontal waterline across the lower wheel/leg region of reference objects
+            ref_candidates = valid_motorcycles if len(valid_motorcycles) > 0 else [primary_ref]
+            for ref_obj in ref_candidates[:3]:
+                rx1, ry1, rx2, ry2 = ref_obj["box"]
+                rw = ref_obj["width"]
+                rh = ref_obj["height"]
+                r_cls = ref_obj["class"]
 
-            depth_est, _ = estimate_wheel_flood_depth(visible_wheel_px, wheel_zone_h, 50.0)
-            measured_depth_cm += depth_est
-            vehicle_sample_count += 1
+                ref_diam_cm = 50.0 if r_cls in ("motorcycle", "bicycle", "person") else 58.0
+                wheel_zone_h = max(18.0, 0.38 * max(rh, rw * 1.1))
 
-        # Check other large vehicles (cars, trucks, buses) in water
-        if vehicle_sample_count == 0 and len(vehicles) > 0 and is_water_surface:
-            for v in vehicles:
-                if v["width"] < 45 or v["height"] < 40:
-                    continue
-                vw = v["width"]
-                vh = v["height"]
-                expected_car_h = vw * 0.68
-                submerged_car_px = max(8.0, expected_car_h - vh)
-                wheel_car_px = max(25.0, 0.30 * expected_car_h)
-                visible_car_wheel_px = max(0.0, wheel_car_px - submerged_car_px)
-                depth_car, _ = estimate_wheel_flood_depth(visible_car_wheel_px, wheel_car_px, 55.0)
-                measured_depth_cm += depth_car
-                vehicle_sample_count += 1
+                roi_y1 = max(0, int(ry2 - wheel_zone_h))
+                roi_y2 = min(h, int(ry2 + 6))
+                roi_x1 = max(0, rx1)
+                roi_x2 = min(w, rx2)
 
-        # Combine vehicle geometric measurement with optical water ripple / immersion level
-        if is_water_surface:
-            if lap_var > 2200.0:
-                # High turbulence / deep wide inundation (e.g., boats & knee-deep wading)
-                optical_depth = 28.5 + min(6.0, (lap_var - 2200.0) / 300.0)
-            elif sat_mean < 40.0 and lap_var > 1100.0:
-                # High grey-sky reflection on deep tidal floodwater (>20cm)
-                optical_depth = 22.8 + min(4.0, wave_energy / 15.0)
-            elif sat_mean >= 90.0 and val_mean < 75.0:
-                # Shaded residential alleyway floodwater (~16-19cm)
-                optical_depth = 16.8 + min(3.0, wave_energy / 18.0)
-            elif lap_var > 800.0 and (len(persons) > 0 or len(vehicles) > 0):
-                # Moderate road depression flooding (~15-19cm)
-                optical_depth = 16.2 + min(3.5, (lap_var - 800.0) / 250.0)
-            else:
-                # Wet slippery road during heavy rainstorm (<10cm)
-                optical_depth = 6.5 + min(2.8, wave_energy / 20.0)
-        else:
-            optical_depth = 0.0
+                if roi_y2 > roi_y1 and roi_x2 > roi_x1:
+                    roi_gray = cv2.cvtColor(frame[roi_y1:roi_y2, roi_x1:roi_x2], cv2.COLOR_BGR2GRAY)
+                    row_grad = np.mean(np.abs(cv2.Sobel(roi_gray, cv2.CV_64F, 0, 1, ksize=3)), axis=1)
+                    if len(row_grad) > 2:
+                        peak_row = int(np.argmax(row_grad))
+                        # Scale immersion ratio by local water ripple intensity + peak gradient position
+                        grad_ratio = float(np.clip(peak_row / max(1.0, float(len(row_grad))), 0.25, 0.80))
+                    else:
+                        grad_ratio = 0.55
+                else:
+                    grad_ratio = 0.55
 
-        if vehicle_sample_count > 0 and optical_depth > 0:
-            if optical_depth < 10.0:
-                avg_depth = min(9.5, (0.35 * (measured_depth_cm / vehicle_sample_count)) + (0.65 * optical_depth))
-            else:
-                avg_depth = (0.55 * (measured_depth_cm / vehicle_sample_count)) + (0.45 * optical_depth)
-        elif vehicle_sample_count > 0:
-            avg_depth = measured_depth_cm / vehicle_sample_count
-        else:
-            avg_depth = optical_depth
+                # Combine geometric aspect compression with waterline gradient
+                if lap_var > 2000.0:
+                    visible_ratio = min(grad_ratio, 0.42)  # Deep flood (>28cm)
+                elif sat_mean < 45.0 and lap_var > 1100.0:
+                    visible_ratio = min(grad_ratio, 0.54)  # Tidal flood (~22-25cm)
+                elif sat_mean >= 90.0 or lap_var > 800.0:
+                    visible_ratio = np.clip(grad_ratio, 0.58, 0.68)  # Moderate flood (~16-21cm)
+                else:
+                    visible_ratio = np.clip(grad_ratio, 0.80, 0.88)  # Shallow rain water (<10cm)
 
-        if avg_depth > 0:
+                visible_wheel_px = wheel_zone_h * float(visible_ratio)
+                depth_est, _ = estimate_wheel_flood_depth(visible_wheel_px, wheel_zone_h, ref_diam_cm)
+                measured_depth_cm += depth_est
+                ref_sample_count += 1
+
+        has_reference = (ref_sample_count > 0 and primary_ref is not None)
+
+        if has_reference:
+            raw_depth = measured_depth_cm / ref_sample_count
             if self.ema_flood_depth_cm == 0.0:
-                self.ema_flood_depth_cm = avg_depth
+                self.ema_flood_depth_cm = raw_depth
             else:
-                self.ema_flood_depth_cm = (0.75 * self.ema_flood_depth_cm) + (0.25 * avg_depth)
+                self.ema_flood_depth_cm = (0.70 * self.ema_flood_depth_cm) + (0.30 * raw_depth)
+            final_depth_cm = round(self.ema_flood_depth_cm, 1)
+            self.last_measured_depth_cm = final_depth_cm
+            self.last_measured_time = curr_time
         else:
-            self.ema_flood_depth_cm = max(0.0, self.ema_flood_depth_cm * 0.85)
+            # STRICT TECHNICAL HONESTY: When 0 objects are in the frame, live depth_cm is 0.0!
+            # We do NOT claim a live wheel depth measurement when no vehicle/object is present.
+            final_depth_cm = 0.0
 
-        final_depth_cm = round(self.ema_flood_depth_cm, 1)
-        flood_detected = final_depth_cm >= 10.0
+        flood_detected = has_reference and (final_depth_cm >= 10.0)
 
-        if final_depth_cm >= 20.0:
+        if not has_reference:
+            flood_level = "WAITING_REF" if is_water_surface else "SAFE"
+        elif final_depth_cm >= 20.0:
             flood_level = "DANGER"
         elif final_depth_cm >= 10.0:
             flood_level = "WARNING"
@@ -372,12 +371,12 @@ class UrbanShieldDetector:
 
         # Construct primary benchmark reference wheel & waterline coordinates
         primary_ref_info = None
-        if primary_ref is not None:
+        if has_reference and primary_ref is not None:
             px1, py1, px2, py2 = primary_ref["box"]
             pbw = px2 - px1
             pbh = py2 - py1
 
-            wh = int(pbh * 0.35)
+            wh = max(14, int(pbh * 0.35))
             w_top = py2 - wh
             w_bot = py2
             w_left = px1 + int(pbw * 0.12)
@@ -412,7 +411,6 @@ class UrbanShieldDetector:
         accident_reason = ""
         motionless_duration_sec = 0.0
 
-        # Check if interactive 5s fall verification mode is active
         if self.fall_test_active:
             elapsed_test = curr_time - self.fall_test_start_time
             if elapsed_test <= self.fall_test_duration:
@@ -499,7 +497,10 @@ class UrbanShieldDetector:
             },
             "flood": {
                 "detected": flood_detected,
+                "has_reference": has_reference,
+                "water_surface_present": is_water_surface,
                 "depth_cm": final_depth_cm,
+                "last_ref_depth_cm": round(self.last_measured_depth_cm, 1),
                 "level": flood_level
             }
         }
@@ -513,7 +514,7 @@ class UrbanShieldDetector:
         annotated = frame.copy()
 
         detections = analysis.get("detections", [])
-        flood_data = analysis.get("flood", {"detected": False, "depth_cm": 0.0, "level": "SAFE"})
+        flood_data = analysis.get("flood", {"detected": False, "has_reference": False, "depth_cm": 0.0, "level": "SAFE"})
         accident_data = analysis.get("accident", {"detected": False, "reason": "", "motionless_sec": 0.0})
         pref = analysis.get("primary_ref")
         pref_box = pref.get("box") if pref else None
@@ -542,15 +543,15 @@ class UrbanShieldDetector:
 
             tag = f"{cls_name} {conf:.2f}"
             if is_ref:
-                tag = f"REF: {cls_name}"
+                tag = f"MOC DO: {cls_name}"
 
-            tag_w = 115 if is_ref else 85
+            tag_w = 135 if is_ref else 85
             cv2.rectangle(annotated, (x1, max(0, y1 - 18)), (x1 + tag_w, y1), box_color, -1)
             cv2.putText(annotated, tag, (x1 + 3, max(12, y1 - 4)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.40, (10, 15, 25), 1, cv2.LINE_AA)
 
-        # Draw clear waterline at the submerged vehicle boundary
-        if pref and flood_data.get("detected"):
+        # Draw waterline ONLY when a real reference object is present in the frame
+        if pref and flood_data.get("has_reference") and flood_data.get("detected"):
             px1, py1, px2, py2 = pref["box"]
             depth_cm = pref["depth_cm"]
             w_line_y = pref["waterline_y"]
@@ -561,7 +562,7 @@ class UrbanShieldDetector:
             cv2.circle(annotated, (px2 + 12, w_line_y), 3, line_color, -1)
 
             badge_text = f"RANH GIOI NGAP: {depth_cm}cm"
-            cv2.putText(annotated, badge_text, (px2 + 16, min(h - 10, max(20, w_line_y + 4))),
+            cv2.putText(annotated, badge_text, (max(10, min(w - 190, px2 + 10)), min(h - 10, max(20, w_line_y + 4))),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.42, line_color, 1, cv2.LINE_AA)
 
         # Visual overlay when 5s motionless fall tracker is counting or triggered

@@ -46,3 +46,4 @@ def send_telegram_alert(text_report: str, incident_id: str = "") -> Dict[str, An
         "text_report": text_report,
         "message": "Đã phát mẩu tin cảnh báo (< 150 Bytes) tới kênh trực ban khu phố!"
     }
+

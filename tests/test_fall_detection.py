@@ -52,3 +52,4 @@ def test_person_fallen_motionless_over_5_seconds():
     assert res["detected"] is True
     assert res["motionless_sec"] == 5.4
     assert "vượt ngưỡng 5s" in res["reason"]
+

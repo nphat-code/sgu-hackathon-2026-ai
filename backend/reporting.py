@@ -131,3 +131,4 @@ def generate_shift_digest_text(
     ])
 
     return "\n".join(lines)
+
