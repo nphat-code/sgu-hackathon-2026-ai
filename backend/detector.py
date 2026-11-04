@@ -121,7 +121,14 @@ class UrbanShieldDetector:
         self.model = YOLO(model_name)
         self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 
-        # State tracking for fallen candidates
+        # Node-isolated state tracking (prevents multi-camera state leakage across streams)
+        self.node_fallen_candidates: Dict[str, Dict[int, Dict[str, Any]]] = {}
+        self.node_next_cand_id: Dict[str, int] = {}
+        self.node_ema_depth: Dict[str, float] = {}
+        self.node_last_depth: Dict[str, float] = {}
+        self.node_last_time: Dict[str, float] = {}
+
+        # State tracking for fallen candidates (backward-compat fallback)
         self.fallen_candidates: Dict[int, Dict[str, Any]] = {}
         self.next_candidate_id = 1
 
@@ -202,14 +209,24 @@ class UrbanShieldDetector:
             "fps": 28.5
         }
 
-    def infer(self, frame: np.ndarray, scenario: Optional[str] = None) -> Dict[str, Any]:
+    def infer(self, frame: np.ndarray, node_id: str = "default") -> Dict[str, Any]:
         """
         Runs CLAHE preprocessing, YOLOv8n CPU inference, multi-vehicle flood estimation,
         and 5.0s motionless fall detection concurrently in RAM for every camera node.
+        Each camera node (node_id) has isolated candidate tracking to prevent state leakage.
         """
         h, w = frame.shape[:2]
         curr_time = time.time()
         start_time = time.time()
+
+        # Node-isolated state initialization
+        if node_id not in self.node_fallen_candidates:
+            self.node_fallen_candidates[node_id] = {}
+            self.node_next_cand_id[node_id] = 1
+            self.node_ema_depth[node_id] = 0.0
+            self.node_last_depth[node_id] = 0.0
+            self.node_last_time[node_id] = 0.0
+        fallen_candidates = self.node_fallen_candidates[node_id]
 
         # 0. CLAHE Night/Rain Preprocessing
         proc_frame, clahe_used = self.preprocess_clahe(frame)
@@ -362,13 +379,16 @@ class UrbanShieldDetector:
 
         if has_reference:
             raw_depth = measured_depth_cm / ref_sample_count
-            if self.ema_flood_depth_cm == 0.0:
-                self.ema_flood_depth_cm = raw_depth
+            curr_ema = self.node_ema_depth.get(node_id, 0.0)
+            if curr_ema == 0.0:
+                self.node_ema_depth[node_id] = raw_depth
             else:
-                self.ema_flood_depth_cm = (0.70 * self.ema_flood_depth_cm) + (0.30 * raw_depth)
-            final_depth_cm = round(self.ema_flood_depth_cm, 1)
+                self.node_ema_depth[node_id] = (0.70 * curr_ema) + (0.30 * raw_depth)
+            final_depth_cm = round(self.node_ema_depth[node_id], 1)
+            self.node_last_depth[node_id] = final_depth_cm
+            self.node_last_time[node_id] = curr_time
+            self.ema_flood_depth_cm = final_depth_cm
             self.last_measured_depth_cm = final_depth_cm
-            self.last_measured_time = curr_time
         else:
             # STRICT TECHNICAL HONESTY: When 0 objects are in the frame, live depth_cm is 0.0!
             # We do NOT claim a live wheel depth measurement when no vehicle/object is present.
@@ -418,7 +438,12 @@ class UrbanShieldDetector:
         # Filter strictly for genuine horizontal / fallen candidates (W/H > 1.0 or W/H > 0.90 near vehicle)
         # Normal standing or riding people (W/H < 0.85) are NEVER candidates.
         for p in persons:
-            if p["height"] >= 30 and p["center"][1] >= 0.40 * h:
+            if p["height"] >= 28 and p["width"] >= 30 and p["confidence"] >= 0.18 and p["center"][1] >= 0.40 * h:
+                # In flooded street conditions, filter out faint horizontal water ripples / reflections
+                if is_water_surface and len(vehicle_centers) > 0:
+                    min_v_dist = min([float(np.hypot(p["center"][0] - vx, p["center"][1] - vy)) for vx, vy in vehicle_centers])
+                    if min_v_dist > 180.0 and p["confidence"] < 0.28:
+                        continue
                 eval_check = evaluate_fall_candidate(
                     p["width"], p["height"], p["center"], vehicle_centers, 0.0
                 )
@@ -454,34 +479,34 @@ class UrbanShieldDetector:
             else:
                 self.fall_test_active = False
 
-        elif active_fallen_person is not None or len(self.fallen_candidates) > 0:
+        elif active_fallen_person is not None or len(fallen_candidates) > 0:
             # Check if a tall upright person (standing, height >= 65px and W/H <= 0.55) appeared at candidate's spot -> person stood up!
-            for cid, cand in list(self.fallen_candidates.items()):
+            for cid, cand in list(fallen_candidates.items()):
                 for p in persons:
                     if p["height"] >= 65 and p["aspect_ratio"] <= 0.55 and np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 90:
-                        del self.fallen_candidates[cid]
+                        del fallen_candidates[cid]
                         break
 
             # Match active fallen candidate
             if active_fallen_person is not None:
                 px, py = active_fallen_person["center"]
                 matched_id = None
-                for cid, cand in list(self.fallen_candidates.items()):
+                for cid, cand in list(fallen_candidates.items()):
                     if np.hypot(px - cand["cx"], py - cand["cy"]) < 130:
                         matched_id = cid
                         break
 
                 if matched_id is not None:
-                    cand = self.fallen_candidates[matched_id]
+                    cand = fallen_candidates[matched_id]
                     cand["last_seen"] = curr_time
                     cand["cx"], cand["cy"] = px, py
                     cand["box"] = active_fallen_person["box"]
                     cand["w"] = active_fallen_person["width"]
                     cand["h"] = active_fallen_person["height"]
                 else:
-                    new_id = self.next_candidate_id
-                    self.next_candidate_id += 1
-                    self.fallen_candidates[new_id] = {
+                    new_id = self.node_next_cand_id.get(node_id, 1)
+                    self.node_next_cand_id[node_id] = new_id + 1
+                    fallen_candidates[new_id] = {
                         "cx": px,
                         "cy": py,
                         "box": active_fallen_person["box"],
@@ -491,11 +516,11 @@ class UrbanShieldDetector:
                         "last_seen": curr_time
                     }
 
-            # Evaluate active candidates across up to 3.0s of temporary occlusion
+            # Evaluate active candidates strictly for this camera node
             best_cand = None
-            for cid in list(self.fallen_candidates.keys()):
-                cand = self.fallen_candidates[cid]
-                if curr_time - cand["last_seen"] <= 3.0:
+            for cid in list(fallen_candidates.keys()):
+                cand = fallen_candidates[cid]
+                if curr_time - cand["last_seen"] <= 1.2:
                     elapsed_c = curr_time - cand["first_seen"]
                     if elapsed_c > 8.5:
                         cand["first_seen"] = curr_time
@@ -503,7 +528,10 @@ class UrbanShieldDetector:
                     if best_cand is None or elapsed_c > (curr_time - best_cand["first_seen"]):
                         best_cand = cand
                 else:
-                    del self.fallen_candidates[cid]
+                    del fallen_candidates[cid]
+
+            # Mirror to self.fallen_candidates for test assertions
+            self.fallen_candidates = fallen_candidates
 
             if best_cand is not None:
                 motionless_duration_sec = max(0.2, curr_time - best_cand["first_seen"])

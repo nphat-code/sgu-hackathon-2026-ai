@@ -397,7 +397,7 @@ def stream_generator(node_id: str):
             AI_FUTURES[node_id] = None
 
         if AI_FUTURES.get(node_id) is None:
-            AI_FUTURES[node_id] = AI_POOL.submit(detector.infer, frame.copy())
+            AI_FUTURES[node_id] = AI_POOL.submit(detector.infer, frame.copy(), node_id)
 
         analysis = NODE_ANALYSIS_CACHE.get(node_id, detector.get_default_analysis())
         annotated = detector.render_hud(frame, analysis, stream_fps=28.5)
