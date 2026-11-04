@@ -226,8 +226,8 @@ class UrbanShieldDetector:
             cls_name = self.model.names[cls_id]
             conf = float(box.conf[0].item())
 
-            # Require higher confidence (0.28) for person; allow 0.10 for partially submerged vehicles
-            if cls_name == "person" and conf < 0.28:
+            # Conf threshold: 0.18 for person and vehicles in low-light / rain conditions
+            if cls_name == "person" and conf < 0.18:
                 continue
 
             x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
@@ -268,10 +268,13 @@ class UrbanShieldDetector:
         # Flood water surface condition: supports daytime rain and nighttime streetlight reflections
         is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
 
-        # Filter motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
+        # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26, W/H <= 0.95)
+        # Tipped-over or fallen motorcycles (W/H > 0.95) are NEVER used as flood depth benchmarks!
         valid_motorcycles = [
             m for m in motorcycles
-            if m["width"] >= 20 and m["height"] >= 26 and (0.12 * w <= m["center"][0] <= 0.90 * w)
+            if m["width"] >= 20 and m["height"] >= 26
+            and m["aspect_ratio"] <= 0.95
+            and (0.12 * w <= m["center"][0] <= 0.90 * w)
         ]
         valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
 
@@ -295,7 +298,10 @@ class UrbanShieldDetector:
         elif primary_ref is None and len(vehicles) > 0:
             valid_veh = [
                 v for v in vehicles
-                if v["width"] >= 24 and v["height"] >= 24 and (0.12 * w <= v["center"][0] <= 0.90 * w)
+                if v["class"] in ("car", "bus", "truck")
+                and v["width"] >= 35 and v["height"] >= 35
+                and (0.12 * w <= v["center"][0] <= 0.90 * w)
+                and (v["center"][1] >= 0.50 * h)  # Must be in active roadway corridor, not parked on sidewalk
             ]
             if valid_veh:
                 valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
@@ -417,6 +423,21 @@ class UrbanShieldDetector:
                     active_fallen_person = p
                     break
 
+        # Also detect tipped-over / fallen motorcycles lying horizontally on the road (W/H >= 1.25)
+        if active_fallen_person is None:
+            for m in motorcycles:
+                if m["aspect_ratio"] >= 1.25 and m["width"] >= 40 and m["center"][1] >= 0.40 * h:
+                    active_fallen_person = {
+                        "class": "fallen_vehicle",
+                        "box": m["box"],
+                        "width": m["width"],
+                        "height": m["height"],
+                        "aspect_ratio": m["aspect_ratio"],
+                        "center": m["center"],
+                        "confidence": m["confidence"]
+                    }
+                    break
+
         accident_detected = False
         accident_reason = ""
         motionless_duration_sec = 0.0
@@ -494,15 +515,17 @@ class UrbanShieldDetector:
                 tracked_fall_box = best_cand.get("box")
                 bw = best_cand.get("w", 140)
                 bh = best_cand.get("h", 95)
+                ar = float(bw) / max(1.0, float(bh))
+                eff_w = bw if ar >= 1.0 else int(bh * 1.25)
                 fall_res = evaluate_fall_candidate(
-                    bw,
+                    eff_w,
                     bh,
                     (best_cand["cx"], best_cand["cy"]),
                     vehicle_centers,
                     motionless_duration_sec
                 )
                 accident_detected = fall_res["detected"]
-                accident_reason = fall_res["reason"]
+                accident_reason = "Phát hiện sự cố ngã xe nằm bất động > 5 giây trên đường" if accident_detected else fall_res["reason"]
                 motionless_duration_sec = fall_res["motionless_sec"]
 
         # Privacy-by-design: increment RAM frame counter and explicitly release intermediate buffers
