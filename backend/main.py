@@ -301,6 +301,7 @@ def stream_generator(node_id: str):
                         "infer_time_ms": res.get("infer_time_ms", 32.0),
                         "clahe_active": res.get("clahe_active", False),
                         "detections_count": res.get("detections_count", 0),
+                        "vehicles_count": res.get("vehicles_count", 0),
                         "payload_bytes": p_bytes,
                         "payload_json": p_json,
                         "privacy": res.get("privacy", {"ram_only": True, "frames_processed_in_ram": detector.frames_processed_in_ram, "disk_writes": 0}),

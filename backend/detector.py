@@ -212,9 +212,9 @@ class UrbanShieldDetector:
         proc_frame, clahe_used = self.preprocess_clahe(frame)
         self.last_clahe_active = clahe_used
 
-        # Run edge inference on CPU with conf=0.18, imgsz=416 to catch vehicles/riders in dark/rainy alleys
-        # Classes: 0=person, 1=bicycle, 2=car, 3=motorcycle, 5=bus, 7=truck, 8=boat
-        results = self.model(proc_frame, imgsz=416, verbose=False, conf=0.18, classes=[0, 1, 2, 3, 5, 7, 8])[0]
+        # Run edge inference on CPU with conf=0.10 so partially-submerged motorcycles/vehicles are captured
+        # Classes: 0=person, 1=bicycle, 2=car, 3=motorcycle, 5=bus, 7=truck
+        results = self.model(proc_frame, imgsz=416, verbose=False, conf=0.10, classes=[0, 1, 2, 3, 5, 7])[0]
 
         detections = []
         persons = []
@@ -225,6 +225,11 @@ class UrbanShieldDetector:
             cls_id = int(box.cls[0].item())
             cls_name = self.model.names[cls_id]
             conf = float(box.conf[0].item())
+
+            # Require higher confidence (0.28) for person; allow 0.10 for partially submerged vehicles
+            if cls_name == "person" and conf < 0.28:
+                continue
+
             x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
             box_w = max(1, x2 - x1)
             box_h = max(1, y2 - y1)
@@ -245,12 +250,12 @@ class UrbanShieldDetector:
                 persons.append(item)
             else:
                 vehicles.append(item)
-                if cls_name == "motorcycle":
+                if cls_name in ("motorcycle", "bicycle"):
                     motorcycles.append(item)
 
         # ----------------------------------------------------
         # 1. MULTI-VEHICLE FILTERING & GEOMETRIC FLOOD ESTIMATION
-        #    (STRICTLY REQUIRES A REFERENCE OBJECT IN THE FRAME)
+        #    (STRICTLY REQUIRES A VEHICLE IN THE FRAME - NEVER 'person')
         # ----------------------------------------------------
         lower_region = frame[int(h * 0.55):, :]
         hsv = cv2.cvtColor(lower_region, cv2.COLOR_BGR2HSV)
@@ -262,8 +267,11 @@ class UrbanShieldDetector:
 
         is_water_surface = (sat_mean < 120.0 and val_mean > 35.0 and lap_var > 500.0)
 
-        # Filter motorcycles in the measurable corridor
-        valid_motorcycles = [m for m in motorcycles if m["width"] >= 24 and m["height"] >= 32]
+        # Filter motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
+        valid_motorcycles = [
+            m for m in motorcycles
+            if m["width"] >= 20 and m["height"] >= 26 and (0.12 * w <= m["center"][0] <= 0.90 * w)
+        ]
         valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
 
         # Occlusion check - find primary reference vehicle not blocked by foreground
@@ -284,22 +292,20 @@ class UrbanShieldDetector:
         if primary_ref is None and len(valid_motorcycles) > 0:
             primary_ref = valid_motorcycles[0]
         elif primary_ref is None and len(vehicles) > 0:
-            valid_veh = [v for v in vehicles if v["width"] >= 28 and v["height"] >= 28]
+            valid_veh = [
+                v for v in vehicles
+                if v["width"] >= 24 and v["height"] >= 24 and (0.12 * w <= v["center"][0] <= 0.90 * w)
+            ]
             if valid_veh:
                 valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
                 primary_ref = valid_veh[0]
-        elif primary_ref is None and len(persons) > 0:
-            valid_riders = [p for p in persons if p["height"] >= 38]
-            if valid_riders:
-                valid_riders.sort(key=lambda x: x["box"][3], reverse=True)
-                primary_ref = valid_riders[0]
 
-        # Measure depth ONLY when at least one reference object is detected in the frame!
+        # Measure depth ONLY when at least one VEHICLE (motorcycle/bicycle/car/bus/truck) is detected!
+        # NEVER use 'person' as a wheel flood reference.
         measured_depth_cm = 0.0
         ref_sample_count = 0
 
-        if len(detections) > 0 and primary_ref is not None and is_water_surface:
-            # Measure using Sobel horizontal waterline across the lower wheel/leg region of reference objects
+        if len(vehicles) > 0 and primary_ref is not None and is_water_surface:
             ref_candidates = valid_motorcycles if len(valid_motorcycles) > 0 else [primary_ref]
             for ref_obj in ref_candidates[:3]:
                 rx1, ry1, rx2, ry2 = ref_obj["box"]
@@ -307,7 +313,7 @@ class UrbanShieldDetector:
                 rh = ref_obj["height"]
                 r_cls = ref_obj["class"]
 
-                ref_diam_cm = 50.0 if r_cls in ("motorcycle", "bicycle", "person") else 58.0
+                ref_diam_cm = 50.0 if r_cls in ("motorcycle", "bicycle") else 58.0
                 wheel_zone_h = max(18.0, 0.38 * max(rh, rw * 1.1))
 
                 roi_y1 = max(0, int(ry2 - wheel_zone_h))
@@ -483,6 +489,7 @@ class UrbanShieldDetector:
             "infer_time_ms": self.last_infer_time_ms,
             "clahe_active": clahe_used,
             "detections_count": len(detections),
+            "vehicles_count": len(vehicles),
             "detections": detections,
             "primary_ref": primary_ref_info,
             "privacy": {

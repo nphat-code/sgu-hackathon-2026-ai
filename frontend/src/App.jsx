@@ -277,7 +277,8 @@ export default function App() {
   };
 
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-  const hasRefObject = Boolean(metrics.detections_count > 0 && metrics.flood?.has_reference !== false);
+  const vehiclesCount = metrics.vehicles_count ?? (metrics.flood?.has_reference ? 1 : 0);
+  const hasRefObject = Boolean(vehiclesCount > 0 && metrics.flood?.has_reference === true);
   const depthValue = (hasRefObject && metrics.flood?.detected) ? metrics.flood.depth_cm : 0;
   const lastRefDepth = metrics.flood?.last_ref_depth_cm || 0;
   const depthPercent = Math.min(100, Math.max(0, (depthValue / 50) * 100));
@@ -500,7 +501,7 @@ export default function App() {
                   GÓI TIN: {payloadBytes}B (&lt;150B)
                 </div>
                 <div className="hud-metric-chip">
-                  ĐỐI TƯỢNG: {metrics.detections_count || 0}
+                  XE: {vehiclesCount} • NGƯỜI: {Math.max(0, (metrics.detections_count || 0) - vehiclesCount)}
                 </div>
               </div>
             </div>
