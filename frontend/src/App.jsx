@@ -28,43 +28,60 @@ const API_BASE = 'http://127.0.0.1:8000';
 const INITIAL_NODES = [
   {
     id: "node-sgu-01",
-    name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
-    lat: 10.7599,
-    lng: 106.6823,
+    name: "Trạm 01 - Hẻm 273 An Dương Vương (Khu vực ĐH Sài Gòn)",
+    lat: 10.760567,
+    lng: 106.681823,
     line_coords: [
-      [106.6812, 10.7591],
-      [106.6823, 10.7599],
-      [106.6834, 10.7606]
+      [106.680131, 10.759887],
+      [106.681404, 10.760398],
+      [106.681547, 10.760456],
+      [106.681823, 10.760567],
+      [106.681927, 10.760608],
+      [106.682336, 10.760773],
+      [106.682586, 10.760874],
+      [106.682977, 10.761031]
     ],
-    type: "Camera Dân Sinh #01",
+    type: "Camera Khu Phố #01",
     scenario: "real_flood_1",
     status: "alert",
     device: "PC văn phòng + Camera USB"
   },
   {
     id: "node-sgu-02",
-    name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
-    lat: 10.7552,
-    lng: 106.6855,
+    name: "Trạm 02 - Hẻm 360D Bến Vân Đồn (Ven Kênh Tàu Hủ)",
+    lat: 10.757274,
+    lng: 106.691990,
     line_coords: [
-      [106.6844, 10.7545],
-      [106.6855, 10.7552],
-      [106.6867, 10.7559]
+      [106.690996, 10.756448],
+      [106.691602, 10.756960],
+      [106.691772, 10.757095],
+      [106.691990, 10.757274],
+      [106.692300, 10.757506],
+      [106.692634, 10.757730],
+      [106.692859, 10.757870],
+      [106.693074, 10.757471],
+      [106.693416, 10.756837]
     ],
-    type: "Camera Dân Sinh #02",
+    type: "Camera Khu Phố #02",
     scenario: "real_flood_3",
     status: "alert",
     device: "Máy tính khu phố Core i3"
   },
   {
     id: "node-sgu-03",
-    name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
-    lat: 10.7585,
-    lng: 106.6790,
+    name: "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt (Chợ Quán)",
+    lat: 10.754270,
+    lng: 106.682694,
     line_coords: [
-      [106.6780, 10.7579],
-      [106.6790, 10.7585],
-      [106.6801, 10.7592]
+      [106.681486, 10.754022],
+      [106.681817, 10.754089],
+      [106.682060, 10.754129],
+      [106.682339, 10.754189],
+      [106.682694, 10.754270],
+      [106.682974, 10.754333],
+      [106.683226, 10.754392],
+      [106.683574, 10.754468],
+      [106.684140, 10.754628]
     ],
     type: "Camera Tổ Dân Phố #03",
     scenario: "real_accident_1",
@@ -99,35 +116,35 @@ export default function App() {
     {
       id: "inc-001",
       node_id: "node-sgu-01",
-      node_name: "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
+      node_name: "Trạm 01 - Hẻm 273 An Dương Vương",
       type: "FLOOD",
       level: "DANGER",
       payload_bytes: 82,
       message: "Nước ngập sâu vượt nửa bánh xe máy, nguy cơ chết máy cao",
       timestamp: "10:15:30",
-      gps: "10.7599, 106.6823"
+      gps: "10.760567, 106.681823"
     },
     {
       id: "inc-002",
       node_id: "node-sgu-02",
-      node_name: "Trạm 02 - Hẻm 254 Bến Vân Đồn",
+      node_name: "Trạm 02 - Hẻm 360D Bến Vân Đồn",
       type: "FLOOD",
       level: "DANGER",
       payload_bytes: 82,
       message: "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
       timestamp: "10:17:45",
-      gps: "10.7552, 106.6855"
+      gps: "10.757274, 106.691990"
     },
     {
       id: "inc-003",
       node_id: "node-sgu-03",
-      node_name: "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
+      node_name: "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt",
       type: "WEATHER",
       level: "WARNING",
       payload_bytes: 84,
       message: "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
       timestamp: "10:18:12",
-      gps: "10.7585, 106.6790"
+      gps: "10.754270, 106.682694"
     }
   ]);
   const [backendConnected, setBackendConnected] = useState(false);

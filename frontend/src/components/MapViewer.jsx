@@ -6,20 +6,21 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
   const mapInstanceRef = useRef(null);
   const markersRef = useRef({});
   const polylinesRef = useRef([]);
+  const hasFittedBoundsRef = useRef(false);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        center: [10.7578, 106.6823],
+        center: [10.7575, 106.6860],
         zoom: 15,
         zoomControl: false,
         attributionControl: false
       });
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
+        maxZoom: 19,
       }).addTo(map);
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -34,10 +35,18 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
     polylinesRef.current.forEach(p => p.remove());
     polylinesRef.current = [];
 
-    // Auto-fit bounds so all stations and alley segments are visible simultaneously
-    if (nodes && nodes.length > 0) {
-      const bounds = L.latLngBounds(nodes.map(n => [n.lat, n.lng]));
-      map.fitBounds(bounds, { padding: [38, 38], maxZoom: 15 });
+    // Auto-fit bounds ONCE on initial load so all stations and road segments are visible, without resetting user zoom on polling
+    if (!hasFittedBoundsRef.current && nodes && nodes.length > 0) {
+      const allPts = [];
+      nodes.forEach(n => {
+        allPts.push([n.lat, n.lng]);
+        if (Array.isArray(n.line_coords)) {
+          n.line_coords.forEach(c => allPts.push([c[1], c[0]]));
+        }
+      });
+      const bounds = L.latLngBounds(allPts);
+      map.fitBounds(bounds, { padding: [32, 32], maxZoom: 15 });
+      hasFittedBoundsRef.current = true;
     }
 
     // Add GeoJSON LineString alley segments & custom radar markers

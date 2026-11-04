@@ -48,20 +48,25 @@ detector = UrbanShieldDetector()
 # Edge API Key authentication (configurable via env, with safe default for local demo)
 EDGE_API_KEY = os.environ.get("EDGE_API_KEY", "urbanshield-sgu-2026-key")
 
-# In-memory storage for nodes and incidents (100% Real-world Video Feeds)
+# In-memory storage for nodes and incidents (100% Real-world Video Feeds + Real OSM OSRM Geometry)
 NODES: Dict[str, Dict[str, Any]] = {
     "node-sgu-01": {
         "id": "node-sgu-01",
-        "name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát (Triều Cường)",
-        "street_segment": "Hẻm 184 Huỳnh Tấn Phát, Quận 7",
-        "lat": 10.7599,
-        "lng": 106.6823,
+        "name": "Trạm 01 - Hẻm 273 An Dương Vương (Khu vực ĐH Sài Gòn)",
+        "street_segment": "Tuyến An Dương Vương - Hẻm 273, Quận 5",
+        "lat": 10.760567,
+        "lng": 106.681823,
         "line_coords": [
-            [106.6812, 10.7591],
-            [106.6823, 10.7599],
-            [106.6834, 10.7606]
+            [106.680131, 10.759887],
+            [106.681404, 10.760398],
+            [106.681547, 10.760456],
+            [106.681823, 10.760567],
+            [106.681927, 10.760608],
+            [106.682336, 10.760773],
+            [106.682586, 10.760874],
+            [106.682977, 10.761031]
         ],
-        "type": "Camera Dân Sinh #01",
+        "type": "Camera Khu Phố #01",
         "scenario": "real_flood_1",
         "status": "alert",
         "last_ping": time.time(),
@@ -69,16 +74,22 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
-        "name": "Trạm 02 - Hẻm 254 Bến Vân Đồn (Ngập Sâu Cứu Hộ)",
-        "street_segment": "Hẻm 254 Bến Vân Đồn, Quận 4",
-        "lat": 10.7552,
-        "lng": 106.6855,
+        "name": "Trạm 02 - Hẻm 360D Bến Vân Đồn (Ven Kênh Tàu Hủ)",
+        "street_segment": "Tuyến Bến Vân Đồn - Hẻm 360D, Quận 4",
+        "lat": 10.757274,
+        "lng": 106.691990,
         "line_coords": [
-            [106.6844, 10.7545],
-            [106.6855, 10.7552],
-            [106.6867, 10.7559]
+            [106.690996, 10.756448],
+            [106.691602, 10.756960],
+            [106.691772, 10.757095],
+            [106.691990, 10.757274],
+            [106.692300, 10.757506],
+            [106.692634, 10.757730],
+            [106.692859, 10.757870],
+            [106.693074, 10.757471],
+            [106.693416, 10.756837]
         ],
-        "type": "Camera Dân Sinh #02",
+        "type": "Camera Khu Phố #02",
         "scenario": "real_flood_3",
         "status": "alert",
         "last_ping": time.time(),
@@ -86,14 +97,20 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
-        "name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn (Mưa Bão Trơn Trượt)",
-        "street_segment": "Hẻm 98 Trần Xuân Soạn, Quận 7",
-        "lat": 10.7585,
-        "lng": 106.6790,
+        "name": "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt (Chợ Quán)",
+        "street_segment": "Tuyến Cao Đạt - Hẻm 57 Trần Bình Trọng, Quận 5",
+        "lat": 10.754270,
+        "lng": 106.682694,
         "line_coords": [
-            [106.6780, 10.7579],
-            [106.6790, 10.7585],
-            [106.6801, 10.7592]
+            [106.681486, 10.754022],
+            [106.681817, 10.754089],
+            [106.682060, 10.754129],
+            [106.682339, 10.754189],
+            [106.682694, 10.754270],
+            [106.682974, 10.754333],
+            [106.683226, 10.754392],
+            [106.683574, 10.754468],
+            [106.684140, 10.754628]
         ],
         "type": "Camera Tổ Dân Phố #03",
         "scenario": "real_accident_1",
@@ -112,7 +129,7 @@ INCIDENTS: List[Dict[str, Any]] = [
     {
         "id": "inc-001",
         "node_id": "node-sgu-01",
-        "node_name": "Trạm 01 - Hẻm 184 Huỳnh Tấn Phát",
+        "node_name": "Trạm 01 - Hẻm 273 An Dương Vương",
         "type": "FLOOD",
         "level": "DANGER",
         "val": 22.4,
@@ -121,28 +138,28 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p1_bytes,
         "message": "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
         "timestamp": "10:15:30",
-        "gps": "10.7599, 106.6823",
+        "gps": "10.760567, 106.681823",
         "telegram_sent": True
     },
     {
         "id": "inc-002",
         "node_id": "node-sgu-02",
-        "node_name": "Trạm 02 - Hẻm 254 Bến Vân Đồn",
+        "node_name": "Trạm 02 - Hẻm 360D Bến Vân Đồn",
         "type": "FLOOD",
         "level": "DANGER",
         "val": 31.5,
         "unit": "cm",
         "payload_json": _p2_json,
         "payload_bytes": _p2_bytes,
-        "message": "Ngập sâu diện rộng vượt 30cm, khuyến cáo chuyển hướng lưu thông",
+        "message": "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
         "timestamp": "10:17:45",
-        "gps": "10.7552, 106.6855",
+        "gps": "10.757274, 106.691990",
         "telegram_sent": True
     },
     {
         "id": "inc-003",
         "node_id": "node-sgu-03",
-        "node_name": "Trạm 03 - Hẻm 98 Trần Xuân Soạn",
+        "node_name": "Trạm 03 - Hẻm 57 Trần Bình Trọng - Cao Đạt",
         "type": "WEATHER",
         "level": "WARNING",
         "val": 14.0,
@@ -151,7 +168,7 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p3_bytes,
         "message": "Mưa to mặt đường ngập trơn trượt, các phương tiện giảm tốc độ",
         "timestamp": "10:18:12",
-        "gps": "10.7585, 106.6790",
+        "gps": "10.754270, 106.682694",
         "telegram_sent": True
     }
 ]
