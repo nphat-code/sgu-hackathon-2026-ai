@@ -205,12 +205,11 @@ class UrbanShieldDetector:
     def infer(self, frame: np.ndarray, scenario: Optional[str] = None) -> Dict[str, Any]:
         """
         Runs CLAHE preprocessing, YOLOv8n CPU inference, multi-vehicle flood estimation,
-        and 5.0s motionless fall detection in RAM, then immediately releases temporary buffers.
+        and 5.0s motionless fall detection concurrently in RAM for every camera node.
         """
         h, w = frame.shape[:2]
         curr_time = time.time()
         start_time = time.time()
-        is_accident_scenario = (scenario == "real_accident_1") or ("accident" in (scenario or "").lower())
 
         # 0. CLAHE Night/Rain Preprocessing
         proc_frame, clahe_used = self.preprocess_clahe(frame)
@@ -270,12 +269,11 @@ class UrbanShieldDetector:
         lap_var = float(cv2.Laplacian(gray_lower, cv2.CV_64F).var())
 
         # Flood water surface condition: supports daytime rain and nighttime streetlight reflections
-        # Completely disabled on dedicated slip/fall/accident surveillance stations
-        is_water_surface = False if is_accident_scenario else (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
+        is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
 
         # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
         # Upright running motorcycles have aspect ratio <= 1.05; fallen bikes (AR >= 1.20) are NEVER flood references!
-        valid_motorcycles = [] if is_accident_scenario else [
+        valid_motorcycles = [
             m for m in motorcycles
             if m["width"] >= 20 and m["height"] >= 26
             and m["aspect_ratio"] <= 1.05
@@ -285,33 +283,32 @@ class UrbanShieldDetector:
 
         # Occlusion check - find primary reference vehicle not blocked by foreground
         primary_ref = None
-        if not is_accident_scenario:
-            for i, m1 in enumerate(valid_motorcycles):
-                is_occluded = False
-                for j in range(i):
-                    m_closer = valid_motorcycles[j]
-                    ox1 = max(m1["box"][0], m_closer["box"][0])
-                    ox2 = min(m1["box"][2], m_closer["box"][2])
-                    if ox2 > ox1 and (ox2 - ox1) > (0.40 * m1["width"]):
-                        is_occluded = True
-                        break
-                if not is_occluded and primary_ref is None:
-                    primary_ref = m1
+        for i, m1 in enumerate(valid_motorcycles):
+            is_occluded = False
+            for j in range(i):
+                m_closer = valid_motorcycles[j]
+                ox1 = max(m1["box"][0], m_closer["box"][0])
+                ox2 = min(m1["box"][2], m_closer["box"][2])
+                if ox2 > ox1 and (ox2 - ox1) > (0.40 * m1["width"]):
+                    is_occluded = True
                     break
+            if not is_occluded and primary_ref is None:
+                primary_ref = m1
+                break
 
-            if primary_ref is None and len(valid_motorcycles) > 0:
-                primary_ref = valid_motorcycles[0]
-            elif primary_ref is None and len(vehicles) > 0:
-                valid_veh = [
-                    v for v in vehicles
-                    if v["class"] in ("car", "bus", "truck")
-                    and v["width"] >= 35 and v["height"] >= 35
-                    and (0.12 * w <= v["center"][0] <= 0.90 * w)
-                    and (v["center"][1] >= 0.50 * h)  # Must be in active roadway corridor, not parked on sidewalk
-                ]
-                if valid_veh:
-                    valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
-                    primary_ref = valid_veh[0]
+        if primary_ref is None and len(valid_motorcycles) > 0:
+            primary_ref = valid_motorcycles[0]
+        elif primary_ref is None and len(vehicles) > 0:
+            valid_veh = [
+                v for v in vehicles
+                if v["class"] in ("car", "bus", "truck")
+                and v["width"] >= 35 and v["height"] >= 35
+                and (0.12 * w <= v["center"][0] <= 0.90 * w)
+                and (v["center"][1] >= 0.50 * h)  # Must be in active roadway corridor, not parked on sidewalk
+            ]
+            if valid_veh:
+                valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
+                primary_ref = valid_veh[0]
 
         # Measure depth ONLY when at least one VEHICLE (motorcycle/bicycle/car/bus/truck) is detected!
         # NEVER use 'person' as a wheel flood reference.

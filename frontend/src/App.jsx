@@ -529,30 +529,50 @@ export default function App() {
                 </span>
 
                 <span className="gauge-val">
-                  {hasRefObject ? (
+                  {metrics.accident?.detected ? (
+                    <strong style={{ color: '#ef4444' }}>Sự cố ngã xe: {metrics.accident.motionless_sec || 5.0}s</strong>
+                  ) : metrics.accident?.motionless_sec >= 1.5 ? (
+                    <span>Thời gian nằm: {metrics.accident.motionless_sec}s / 5.0s</span>
+                  ) : hasRefObject ? (
                     <>Mực nước: <strong>{depthValue} cm</strong> / 50 cm</>
-                  ) : (
+                  ) : metrics.flood?.water_surface_present ? (
                     <>Chờ xe đi qua vùng đo</>
+                  ) : (
+                    <span>Mặt đường khô ráo</span>
                   )}
                 </span>
               </div>
 
               {/* Progress Bar with 3 Visual Danger Zones */}
               <div className="gauge-track">
-                <div className="track-marker safe-mark" style={{ left: '20%' }}>
-                  <span className="mark-label">10cm (Ống xả)</span>
-                </div>
-                <div className="track-marker danger-mark" style={{ left: '50%' }}>
-                  <span className="mark-label">25cm (Nửa bánh xe)</span>
-                </div>
-                <div className="track-marker full-mark" style={{ left: '100%' }}>
-                  <span className="mark-label">50cm</span>
-                </div>
+                {metrics.accident?.detected ? (
+                  <div
+                    className="gauge-fill danger"
+                    style={{ width: '100%' }}
+                  />
+                ) : metrics.accident?.motionless_sec >= 1.5 && depthValue === 0 ? (
+                  <div
+                    className="gauge-fill warning"
+                    style={{ width: `${Math.min(100, (metrics.accident.motionless_sec / 5.0) * 100)}%` }}
+                  />
+                ) : (
+                  <>
+                    <div className="track-marker safe-mark" style={{ left: '20%' }}>
+                      <span className="mark-label">10cm (Ống xả)</span>
+                    </div>
+                    <div className="track-marker danger-mark" style={{ left: '50%' }}>
+                      <span className="mark-label">25cm (Nửa bánh xe)</span>
+                    </div>
+                    <div className="track-marker full-mark" style={{ left: '100%' }}>
+                      <span className="mark-label">50cm</span>
+                    </div>
 
-                <div
-                  className={`gauge-fill ${metrics.flood?.level === 'DANGER' ? 'danger' : 'warning'}`}
-                  style={{ width: `${depthPercent}%` }}
-                />
+                    <div
+                      className={`gauge-fill ${metrics.flood?.level === 'DANGER' ? 'danger' : 'warning'}`}
+                      style={{ width: `${depthPercent}%` }}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

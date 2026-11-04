@@ -370,11 +370,8 @@ def stream_generator(node_id: str):
                 res = fut.result()
                 if res:
                     NODE_ANALYSIS_CACHE[node_id] = res
-                    is_acc_node = (scenario == "real_accident_1") or ("accident" in scenario.lower())
-                    if is_acc_node:
-                        flood_info = {"detected": False, "depth_cm": 0.0, "level": "SAFE", "has_reference": False, "water_surface_present": False}
-                    else:
-                        flood_info = res.get("flood", {"detected": False, "depth_cm": 0.0, "level": "SAFE"})
+                    # Dual-capability edge vision: Every node evaluates both flood and fall simultaneously
+                    flood_info = res.get("flood", {"detected": False, "depth_cm": 0.0, "level": "SAFE"})
                     acc_info = res.get("accident", {"detected": False, "reason": "", "motionless_sec": 0.0})
 
                     ev_type = "ACCIDENT" if acc_info.get("detected") else "FLOOD"
@@ -400,7 +397,7 @@ def stream_generator(node_id: str):
             AI_FUTURES[node_id] = None
 
         if AI_FUTURES.get(node_id) is None:
-            AI_FUTURES[node_id] = AI_POOL.submit(detector.infer, frame.copy(), scenario)
+            AI_FUTURES[node_id] = AI_POOL.submit(detector.infer, frame.copy())
 
         analysis = NODE_ANALYSIS_CACHE.get(node_id, detector.get_default_analysis())
         annotated = detector.render_hud(frame, analysis, stream_fps=28.5)
