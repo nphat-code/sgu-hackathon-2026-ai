@@ -265,7 +265,8 @@ class UrbanShieldDetector:
         val_mean = float(np.mean(hsv[:, :, 2]))
         lap_var = float(cv2.Laplacian(gray_lower, cv2.CV_64F).var())
 
-        is_water_surface = (sat_mean < 120.0 and val_mean > 35.0 and lap_var > 500.0)
+        # Flood water surface condition: supports daytime rain and nighttime streetlight reflections
+        is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
 
         # Filter motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
         valid_motorcycles = [

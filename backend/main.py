@@ -216,12 +216,12 @@ def get_real_video_frame(scenario: str) -> np.ndarray:
                     ret, frame = cap.read()
 
             if ret and frame is not None:
-                if frame.shape[1] != 640 or frame.shape[0] != 480:
-                    frame = cv2.resize(frame, (640, 480))
+                if frame.shape[1] != 640 or frame.shape[0] != 360:
+                    frame = cv2.resize(frame, (640, 360))
                 return frame
 
-    blank = np.zeros((480, 640, 3), dtype=np.uint8)
-    cv2.putText(blank, "CAMERA CONNECTING...", (180, 240),
+    blank = np.zeros((360, 640, 3), dtype=np.uint8)
+    cv2.putText(blank, "CAMERA CONNECTING...", (180, 180),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (120, 120, 120), 2)
     return blank
 

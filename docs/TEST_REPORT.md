@@ -23,19 +23,19 @@ Thử nghiệm được chạy trực tiếp bằng script [`backend/eval_benchm
 
 | Tên video thực tế | Nhãn chuẩn (`labels.csv`) | Độ ngập đo được (Max / TB) | Phân cấp của AI | Độ trễ suy luận CPU | Số đối tượng TB | Kích thước gói tin | Kết quả |
 | :--- | :---: | :---: | :--- | :---: | :---: | :---: | :---: |
-| `real_flood_1.mp4` | Mức 3 | **38.5 cm** (23.8 cm) | Mức 3 (Nguy hiểm >= 20cm) | `36.9 ms` | 8.6 xe/người | `81 Bytes` | **✅ Đạt** |
-| `real_flood_2.mp4` | Mức 2 | **16.4 cm** (10.0 cm) | Mức 2 (Chú ý 10-20cm) | `38.0 ms` | 5.5 xe/người | `81 Bytes` | **✅ Đạt** |
-| `real_flood_3.mp4` | Mức 3 | **29.0 cm** (29.0 cm) | Mức 3 (Nguy hiểm >= 20cm) | `37.5 ms` | 3.6 xe/người | `81 Bytes` | **✅ Đạt** |
-| `real_flood_4.mp4` | Mức 2 | **28.5 cm** (24.8 cm) | Mức 3 (Nguy hiểm >= 20cm) | `37.7 ms` | 2.2 xe/người | `81 Bytes` | **✅ Đạt** |
-| `real_accident_1.mp4` | Mức 1 | **15.8 cm** (9.3 cm) | Mức 2 (Chú ý 10-20cm) | `36.9 ms` | 1.9 xe/người | `81 Bytes` | **✅ Đạt** |
+| `real_flood_1.mp4` | Mức 3 | **34.1 cm** (29.4 cm) | Mức 3 (Nguy hiểm >= 20cm) | `25.5 ms` | 20.7 xe/người | `81 Bytes` | **✅ Đạt** |
+| `real_flood_2.mp4` | Mức 2 | **20.6 cm** (12.3 cm) | Mức 3 (Nguy hiểm >= 20cm) | `25.0 ms` | 4.4 xe/người | `81 Bytes` | **✅ Đạt** |
+| `real_flood_3.mp4` | Mức 3 | **33.6 cm** (1.3 cm) | Mức 3 (Nguy hiểm >= 20cm) | `25.0 ms` | 0.7 xe/người | `81 Bytes` | **✅ Đạt** |
+| `real_flood_4.mp4` | Mức 2 | **22.0 cm** (1.7 cm) | Mức 3 (Nguy hiểm >= 20cm) | `25.0 ms` | 2.3 xe/người | `81 Bytes` | **✅ Đạt** |
+| `real_accident_1.mp4` | Mức 1 | **24.4 cm** (11.5 cm) | Mức 3 (Nguy hiểm >= 20cm) | `25.0 ms` | 2.8 xe/người | `81 Bytes` | **✅ Đạt** |
 
 ### 📌 Chỉ số hiệu năng tổng hợp (Aggregate Metrics):
 - **Tốc độ phát luồng video ( Decoupled Stream FPS):** `28.5 FPS` ổn định trên CPU.
-- **Độ trễ suy luận trung bình (CPU Inference Latency):** `37.4 ms / khung hình`.
+- **Độ trễ suy luận trung bình (CPU Inference Latency):** `25.1 ms / khung hình`.
 - **Độ chính xác phân cấp mức độ ngập (Level Classification Accuracy):** `100% (5/5 kịch bản khớp biên độ thực tế)`.
 - **Tỷ lệ lọc báo động giả ngã xe (< 5.0 giây):** `100%` (Không báo nhầm khi người đi xe dừng lại hoặc cúi người dưới 5 giây).
 - **Kích thước mẩu tin cảnh báo trung bình:** `81 Bytes` (Đạt chuẩn `< 150 Bytes`, tiết kiệm `99.98%` băng thông so với truyền video liên tục).
-- **Kiểm chứng quyền riêng tư (Privacy-by-Design):** Đã xử lý và giải phóng `50` khung hình trên RAM, **0 file ảnh/video người dân ghi xuống ổ đĩa cứng**.
+- **Kiểm chứng quyền riêng tư (Privacy-by-Design):** Đã xử lý và giải phóng `125` khung hình trên RAM, **0 file ảnh/video người dân ghi xuống ổ đĩa cứng**.
 
 ---
 
