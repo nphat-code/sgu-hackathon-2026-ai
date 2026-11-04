@@ -74,20 +74,19 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
-        "name": "Trạm 02 - Hẻm 360D Bến Vân Đồn (Ven Kênh Tàu Hủ)",
-        "street_segment": "Tuyến Bến Vân Đồn - Hẻm 360D, Quận 4",
-        "lat": 10.757274,
-        "lng": 106.691990,
+        "name": "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ (Ngã tư Trần Hưng Đạo)",
+        "street_segment": "Tuyến Trần Hưng Đạo - Hẻm 21 Nguyễn Văn Cừ, Quận 5",
+        "lat": 10.756229,
+        "lng": 106.684653,
         "line_coords": [
-            [106.690996, 10.756448],
-            [106.691602, 10.756960],
-            [106.691772, 10.757095],
-            [106.691990, 10.757274],
-            [106.692300, 10.757506],
-            [106.692634, 10.757730],
-            [106.692859, 10.757870],
-            [106.693074, 10.757471],
-            [106.693416, 10.756837]
+            [106.683692, 10.755956],
+            [106.683854, 10.756002],
+            [106.684653, 10.756229],
+            [106.684844, 10.756283],
+            [106.685075, 10.756349],
+            [106.685180, 10.756372],
+            [106.685444, 10.755850],
+            [106.685628, 10.755584]
         ],
         "type": "Camera Khu Phố #02",
         "scenario": "real_flood_3",
@@ -144,7 +143,7 @@ INCIDENTS: List[Dict[str, Any]] = [
     {
         "id": "inc-002",
         "node_id": "node-sgu-02",
-        "node_name": "Trạm 02 - Hẻm 360D Bến Vân Đồn",
+        "node_name": "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ",
         "type": "FLOOD",
         "level": "DANGER",
         "val": 31.5,
@@ -153,7 +152,7 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p2_bytes,
         "message": "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng lưu thông",
         "timestamp": "10:17:45",
-        "gps": "10.757274, 106.691990",
+        "gps": "10.756229, 106.684653",
         "telegram_sent": True
     },
     {

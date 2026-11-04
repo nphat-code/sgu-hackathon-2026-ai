@@ -527,7 +527,7 @@ class UrbanShieldDetector:
         pref = analysis.get("primary_ref")
         pref_box = pref.get("box") if pref else None
 
-        # Draw standard vehicle & pedestrian bounding boxes
+        # Draw clean bounding boxes: only highlight primary reference vehicle & high-confidence objects without label clutter
         for d in detections:
             x1, y1, x2, y2 = d["box"]
             cls_name = d["class"]
@@ -535,63 +535,51 @@ class UrbanShieldDetector:
             is_ref = (pref_box is not None and [x1, y1, x2, y2] == pref_box)
 
             if is_ref:
-                box_color = (0, 230, 255)  # Bright gold/cyan for Primary Benchmark Vehicle
-                thick = 2
-            elif cls_name == "person":
-                box_color = (255, 180, 0)
-                thick = 1
-            elif cls_name == "motorcycle":
-                box_color = (0, 200, 150)
-                thick = 1
-            else:
-                box_color = (220, 220, 220)
-                thick = 1
+                box_color = (0, 225, 255)  # Gold highlight for Primary Benchmark Vehicle
+                cv2.rectangle(annotated, (x1, y1), (x2, y2), box_color, 2)
+                vn_cls = "XE MAY (50CM)" if cls_name in ("motorcycle", "bicycle") else "PHUONG TIEN"
+                tag = f"MOC DO: {vn_cls}"
+                tag_w = 165
+                cv2.rectangle(annotated, (x1, max(0, y1 - 22)), (x1 + tag_w, y1), box_color, -1)
+                cv2.putText(annotated, tag, (x1 + 5, max(14, y1 - 6)),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.44, (15, 23, 42), 1, cv2.LINE_AA)
+            elif conf >= 0.32:
+                # Subtle thin frame for other clear objects without overlapping text labels
+                sub_color = (255, 190, 60) if cls_name == "person" else (120, 220, 160)
+                cv2.rectangle(annotated, (x1, y1), (x2, y2), sub_color, 1)
 
-            cv2.rectangle(annotated, (x1, y1), (x2, y2), box_color, thick)
-
-            tag = f"{cls_name} {conf:.2f}"
-            if is_ref:
-                tag = f"MOC DO: {cls_name}"
-
-            tag_w = 135 if is_ref else 85
-            cv2.rectangle(annotated, (x1, max(0, y1 - 18)), (x1 + tag_w, y1), box_color, -1)
-            cv2.putText(annotated, tag, (x1 + 3, max(12, y1 - 4)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.40, (10, 15, 25), 1, cv2.LINE_AA)
-
-        # Draw waterline ONLY when a real reference object is present in the frame
+        # Draw waterline with high-contrast pill badge ONLY when reference vehicle is present
         if pref and flood_data.get("has_reference") and flood_data.get("detected"):
             px1, py1, px2, py2 = pref["box"]
             depth_cm = pref["depth_cm"]
             w_line_y = pref["waterline_y"]
 
-            line_color = (0, 0, 255) if flood_data.get("level") == "DANGER" else (0, 165, 255)
-            cv2.line(annotated, (px1 - 12, w_line_y), (px2 + 12, w_line_y), line_color, 2, cv2.LINE_AA)
-            cv2.circle(annotated, (px1 - 12, w_line_y), 3, line_color, -1)
-            cv2.circle(annotated, (px2 + 12, w_line_y), 3, line_color, -1)
+            line_color = (30, 40, 240) if flood_data.get("level") == "DANGER" else (0, 150, 245)
+            cv2.line(annotated, (px1 - 10, w_line_y), (px2 + 10, w_line_y), line_color, 2, cv2.LINE_AA)
+            cv2.circle(annotated, (px1 - 10, w_line_y), 4, line_color, -1)
+            cv2.circle(annotated, (px2 + 10, w_line_y), 4, line_color, -1)
 
-            badge_text = f"RANH GIOI NGAP: {depth_cm}cm"
-            cv2.putText(annotated, badge_text, (max(10, min(w - 190, px2 + 10)), min(h - 10, max(20, w_line_y + 4))),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.42, line_color, 1, cv2.LINE_AA)
+            badge_text = f"NGAP: {depth_cm}cm"
+            bx = max(8, min(w - 125, px2 + 8))
+            by = min(h - 8, max(24, w_line_y + 6))
+            cv2.rectangle(annotated, (bx, by - 18), (bx + 115, by + 4), line_color, -1)
+            cv2.putText(annotated, badge_text, (bx + 6, by - 3),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.44, (255, 255, 255), 1, cv2.LINE_AA)
 
         # Visual overlay when 5s motionless fall tracker is counting or triggered
         motionless_sec = accident_data.get("motionless_sec", 0.0)
         if motionless_sec > 0.0:
             is_confirmed = accident_data.get("detected", False)
             banner_color = (0, 0, 220) if is_confirmed else (0, 140, 255)
-            cv2.rectangle(annotated, (14, h - 54), (w - 14, h - 14), (15, 20, 30), -1)
-            cv2.rectangle(annotated, (14, h - 54), (w - 14, h - 14), banner_color, 2)
+            cv2.rectangle(annotated, (14, h - 50), (w - 14, h - 12), (15, 23, 42), -1)
+            cv2.rectangle(annotated, (14, h - 50), (w - 14, h - 12), banner_color, 2)
             status_txt = (
-                f"SOS NGA XE BAT DONG: {motionless_sec:.1f}s >= 5.0s [DA BAO DONG]"
+                f"CANH BAO NGA XE BAT DONG: {motionless_sec:.1f}s >= 5.0s"
                 if is_confirmed
-                else f"BO DEM BAT DONG CHONG BAO GIA: {motionless_sec:.1f}s / 5.0s (W/H > 1.15)"
+                else f"DANG KIEM TRA BAT DONG: {motionless_sec:.1f}s / 5.0s"
             )
-            cv2.putText(annotated, status_txt, (26, h - 29),
+            cv2.putText(annotated, status_txt, (24, h - 26),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 255, 255), 1, cv2.LINE_AA)
-
-        # Subtle CCTV Camera Watermark (Top right)
-        clahe_tag = "CLAHE ON" if analysis.get("clahe_active") else "RAM ONLY"
-        cv2.putText(annotated, f"CAM-FEED • {clahe_tag}", (w - 185, 22),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.42, (200, 220, 245), 1, cv2.LINE_AA)
 
         # Subtle SOS Border Flash if confirmed accident
         if accident_data["detected"]:

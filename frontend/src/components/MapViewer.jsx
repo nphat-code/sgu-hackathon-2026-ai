@@ -111,7 +111,7 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
 
       const marker = L.marker([node.lat, node.lng], { icon: customIcon })
         .addTo(map)
-        .bindTooltip(`<strong>${node.name}</strong><br/><span style="color:#64748b;font-size:0.75rem">${node.device} • Tuyến hẻm GeoJSON</span>`, {
+        .bindTooltip(`<strong>${node.name}</strong>`, {
           direction: 'top',
           offset: [0, -18],
           opacity: 0.95
@@ -123,24 +123,9 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
 
   }, [nodes, activeNodeId, onSelectNode]);
 
-  // Pan smoothly to selected node
-  useEffect(() => {
-    if (!mapInstanceRef.current || !activeNodeId) return;
-    const selected = nodes.find(n => n.id === activeNodeId);
-    if (selected) {
-      mapInstanceRef.current.panTo([selected.lat, selected.lng], {
-        animate: true,
-        duration: 0.6
-      });
-    }
-  }, [activeNodeId, nodes]);
-
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%', borderRadius: 'inherit' }} />
-      <div className="map-badge-overlay">
-        <span>WEBGIS TUYẾN HẺM GEOJSON • ĐỔI MÀU THỜI GIAN THỰC</span>
-      </div>
     </div>
   );
 }

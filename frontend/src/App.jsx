@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, 
-  AlertTriangle, 
-  Activity, 
-  Cpu, 
-  Send, 
-  CheckCircle2, 
-  MapPin, 
-  Droplets, 
-  Radio, 
-  Waves, 
+import {
+  Shield,
+  AlertTriangle,
+  Activity,
+  Cpu,
+  Send,
+  CheckCircle2,
+  MapPin,
+  Droplets,
+  Radio,
+  Waves,
   CloudRain,
   Gauge,
   Lock,
@@ -48,19 +48,18 @@ const INITIAL_NODES = [
   },
   {
     id: "node-sgu-02",
-    name: "Trạm 02 - Hẻm 360D Bến Vân Đồn (Ven Kênh Tàu Hủ)",
-    lat: 10.757274,
-    lng: 106.691990,
+    name: "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ (Ngã tư Trần Hưng Đạo)",
+    lat: 10.756229,
+    lng: 106.684653,
     line_coords: [
-      [106.690996, 10.756448],
-      [106.691602, 10.756960],
-      [106.691772, 10.757095],
-      [106.691990, 10.757274],
-      [106.692300, 10.757506],
-      [106.692634, 10.757730],
-      [106.692859, 10.757870],
-      [106.693074, 10.757471],
-      [106.693416, 10.756837]
+      [106.683692, 10.755956],
+      [106.683854, 10.756002],
+      [106.684653, 10.756229],
+      [106.684844, 10.756283],
+      [106.685075, 10.756349],
+      [106.685180, 10.756372],
+      [106.685444, 10.755850],
+      [106.685628, 10.755584]
     ],
     type: "Camera Khu Phố #02",
     scenario: "real_flood_3",
@@ -101,9 +100,9 @@ const SCENARIOS = [
 export default function App() {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [activeNodeId, setActiveNodeId] = useState("node-sgu-01");
-  const [metrics, setMetrics] = useState({ 
-    fps: 28.5, 
-    infer_time_ms: 32.0, 
+  const [metrics, setMetrics] = useState({
+    fps: 28.5,
+    infer_time_ms: 32.0,
     clahe_active: false,
     detections_count: 5,
     payload_bytes: 82,
@@ -196,7 +195,7 @@ export default function App() {
           const data = await res.json();
           setMetrics(data);
         }
-      } catch (e) {}
+      } catch (e) { }
     };
     const interval = setInterval(fetchMetrics, 600);
     return () => clearInterval(interval);
@@ -206,7 +205,7 @@ export default function App() {
   const handleScenarioChange = async (scenario) => {
     setStreamError(false);
     setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
-    
+
     const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
     const isFlood = scenario.includes('flood');
     let incMsg = 'Phát hiện ngập lụt tại cung đường';
@@ -239,7 +238,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ scenario })
       });
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // Trigger or Cancel 5s Fall Detection Counter
@@ -257,7 +256,7 @@ export default function App() {
         setTelegramToast('⏱️ Đang kiểm thử Bộ đếm bất động 5 giây (W/H > 1.15)... Hãy bấm "Đứng dậy (<5s)" nếu muốn thử chống báo giả!');
         setTimeout(() => setTelegramToast(null), 3500);
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // Open Text Report Modal & Fetch Summary from Minimal API
@@ -269,7 +268,7 @@ export default function App() {
         const data = await res.json();
         setReportData(data);
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   // Trigger Telegram Alert
@@ -283,7 +282,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ incident_id: incident?.id || 'inc-001', node_id: activeNodeId })
       });
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleCopyText = (text) => {
@@ -385,19 +384,16 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Header - Compact Command Center */}
+      {/* Top Header - Clean & Minimal */}
       <header className="app-header glass-panel">
         <div className="logo-group">
           <div className="shield-icon-badge">
             <Shield size={20} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 className="brand-title">UrbanShield Lite</h1>
-              <span className="team-badge">ĐỘI SINGLENODE</span>
-            </div>
+            <h1 className="brand-title">UrbanShield Lite</h1>
             <div className="brand-subtitle">
-              Hệ Thống Giám Sát Ngập Nước Bánh Xe 50cm & Sự Cố Ngã Xe 5s Bằng Edge AI • 100% Video Thực Tế
+              Giám sát ngập nước & sự cố ngõ hẻm
             </div>
           </div>
         </div>
@@ -408,19 +404,19 @@ export default function App() {
             <button
               className="header-btn warning-btn"
               onClick={() => handleFallTest('cancel')}
-              title="Mô phỏng người dân tự đứng dậy trước 5 giây để kiểm chứng chống báo giả"
+              title="Mô phỏng người dân tự đứng dậy trước 5 giây"
             >
               <RotateCcw size={14} />
-              <span>Đứng dậy (&lt;5s Reset: {motionlessSec}s)</span>
+              <span>Đứng dậy ({motionlessSec}s)</span>
             </button>
           ) : (
             <button
               className="header-btn test-fall-btn"
               onClick={() => handleFallTest('start')}
-              title="Kiểm thử trực tiếp Bộ đếm bất động 5 giây (1s...5s)"
+              title="Kiểm thử bộ đếm bất động 5 giây"
             >
               <Timer size={14} />
-              <span>Test Bộ Đếm Ngã Xe 5s</span>
+              <span>Mô phỏng ngã 5s</span>
             </button>
           )}
 
@@ -428,15 +424,15 @@ export default function App() {
           <button
             className="header-btn report-btn"
             onClick={handleOpenTextReport}
-            title="Xem & Xuất Báo cáo văn bản mộc mạc (Mẫu A & Mẫu B)"
+            title="Xem báo cáo tin nhắn văn bản"
           >
             <FileText size={14} />
-            <span>Xuất Text Report (&lt;150B)</span>
+            <span>Báo cáo tin nhắn</span>
           </button>
 
           <div className="header-status-pill">
             <Radio size={12} className="radar-dot" style={{ color: backendConnected ? '#10b981' : '#f59e0b' }} />
-            <span>{backendConnected ? 'TRỰC TUYẾN • CPU 28.5 FPS' : 'MÔ PHỎNG NGOẠI TUYẾN'}</span>
+            <span>{backendConnected ? 'Đang hoạt động' : 'Ngoại tuyến'}</span>
           </div>
         </div>
       </header>
@@ -459,30 +455,27 @@ export default function App() {
                 >
                   <MapPin size={13} />
                   <span>{node.name.split('-')[0].trim()}</span>
-                  <span className={`tab-dot ${node.scenario?.includes('accident') ? 'red' : 'amber'}`} />
+                  <span className={`tab-dot ${(node.scenario === 'real_flood_1' || node.scenario === 'real_flood_3' || node.scenario?.includes('accident')) ? 'red' : 'amber'}`} />
                 </button>
               ))}
             </div>
 
             {/* Test Source Selector */}
-            <div className="source-selector-group">
-              <span className="source-label">Nguồn thực tế:</span>
-              <div className="source-chips">
-                {SCENARIOS.map(s => (
-                  <button
-                    key={s.id}
-                    className={`source-chip ${activeNode.scenario === s.id ? 'active' : ''}`}
-                    onClick={() => handleScenarioChange(s.id)}
-                    title={s.desc}
-                  >
-                    <span>{s.title}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="source-chips">
+              {SCENARIOS.map(s => (
+                <button
+                  key={s.id}
+                  className={`source-chip ${activeNode.scenario === s.id ? 'active' : ''}`}
+                  onClick={() => handleScenarioChange(s.id)}
+                  title={s.desc}
+                >
+                  <span>{s.title}</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Video Feed Screen */}
+          {/* Video Feed Screen - Unobstructed */}
           <div className="video-feed-wrapper">
             {backendConnected && !streamError ? (
               <img
@@ -496,120 +489,62 @@ export default function App() {
               <div className="video-placeholder">
                 <Cpu size={40} className="placeholder-icon" />
                 <h3>{activeNode.name}</h3>
-                <p>Thiết bị biên: <strong>{activeNode.device}</strong></p>
+                <p>Đang kết nối luồng hình ảnh...</p>
               </div>
             )}
 
-            {/* Top Telemetry HUD Chips */}
             <div className="hud-overlay">
               <div className="live-badge">
                 <div className="live-indicator" />
-                <span>{activeNode.device}</span>
-              </div>
-
-              <div className="hud-metrics">
-                <div className="hud-metric-chip">
-                  FPS: {metrics.fps || 28.5}
-                </div>
-                <div className="hud-metric-chip">
-                  ĐỘ TRỄ: {metrics.infer_time_ms || 32}ms
-                </div>
-                <div className="hud-metric-chip">
-                  GÓI TIN: {payloadBytes}B (&lt;150B)
-                </div>
-                <div className="hud-metric-chip">
-                  XE: {vehiclesCount} • NGƯỜI: {Math.max(0, (metrics.detections_count || 0) - vehiclesCount)}
-                </div>
+                <span>{activeNode.name}</span>
               </div>
             </div>
           </div>
 
-          {/* Real-time Status & Geometric Gauge Bar */}
+          {/* Unified Flood & Incident Status Bar */}
           <div className="telemetry-gauge-card">
-            {/* Status Alert Banner */}
-            <div className={`gauge-alert-pill ${
-              metrics.accident?.detected 
-                ? 'danger' 
-                : metrics.accident?.motionless_sec > 0
-                  ? 'warning'
-                  : (hasRefObject && metrics.flood?.level === 'DANGER')
-                    ? 'danger' 
-                    : (hasRefObject && metrics.flood?.detected)
-                      ? 'warning' 
-                      : metrics.flood?.water_surface_present
-                        ? 'warning'
-                        : 'safe'
-            }`}>
-              {metrics.accident?.detected ? (
-                <>
-                  <AlertTriangle size={18} />
-                  <span>CẢNH BÁO NGÃ XE: {metrics.accident.reason || 'Người ngã nằm bất động quá 5 giây — Đã gửi tin nhắn hỗ trợ!'}</span>
-                </>
-              ) : metrics.accident?.motionless_sec > 0 ? (
-                <>
-                  <Timer size={18} />
-                  <span>BỘ ĐẾM BẤT ĐỘNG CHỐNG BÁO GIẢ: {metrics.accident.motionless_sec}s / 5.0s (Nếu tự đứng dậy trước 5s sẽ tự xóa)</span>
-                </>
-              ) : (hasRefObject && metrics.flood?.detected) ? (
-                <>
-                  <Waves size={18} />
-                  <span>
-                    CẢNH BÁO NGẬP (ĐO TỪ XE THAM CHIẾU): <strong>{metrics.flood.depth_cm}cm</strong> — {
-                      metrics.flood.level === 'DANGER' 
-                        ? 'NGUY HIỂM (VƯỢT NỬA BÁNH XE 50CM, DỄ CHẾT MÁY)' 
-                        : 'CHÚ Ý (MẤP MÉ ỐNG XẢ XE MÁY)'
-                    }
-                  </span>
-                </>
-              ) : !hasRefObject && metrics.flood?.water_surface_present ? (
-                <>
-                  <Waves size={18} />
-                  <span>
-                    PHÁT HIỆN MẶT NƯỚC NGẬP — <strong>Đang chờ phương tiện đi qua để đo tỷ lệ bánh xe 50cm</strong>
-                    {lastRefDepth > 0 ? ` (Số đo xe vừa đi qua: ${lastRefDepth}cm)` : ''}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 size={18} />
-                  <span>
-                    {hasRefObject
-                      ? 'TRẠNG THÁI BÌNH THƯỜNG: Phương tiện di chuyển an toàn (< 10cm)'
-                      : 'ĐANG QUAN SÁT: Chờ phương tiện đi qua vùng đo tham chiếu 50cm'}
-                  </span>
-                </>
-              )}
-            </div>
-
-            {/* Visual Geometric Gauge for 50cm Wheel Benchmark */}
             <div className="gauge-calibrator">
               <div className="gauge-header">
-                <span className="gauge-title">
-                  <Gauge size={14} style={{ color: '#0284c7' }} />
-                  THƯỚC ĐO HÌNH HỌC: BÁNH XE MÁY TIÊU CHUẨN (ĐƯỜNG KÍNH 50CM)
+                <span className={`gauge-status-text ${metrics.accident?.detected || (hasRefObject && metrics.flood?.level === 'DANGER') ? 'text-danger' : 'text-warning'}`}>
+                  {metrics.accident?.detected ? (
+                    <>CẢNH BÁO NGÃ XE: Bất động quá 5 giây — Đã gửi tin nhắn hỗ trợ</>
+                  ) : metrics.accident?.motionless_sec > 0 ? (
+                    <>Đang kiểm tra bất động: {metrics.accident.motionless_sec}s / 5.0s</>
+                  ) : (hasRefObject && metrics.flood?.detected) ? (
+                    <>
+                      {metrics.flood.level === 'DANGER'
+                        ? 'Ngập nguy hiểm (Vượt nửa bánh xe máy 50cm)'
+                        : 'Ngập chú ý (Mấp mé ống xả xe máy)'}
+                    </>
+                  ) : !hasRefObject && metrics.flood?.water_surface_present ? (
+                    <>Phát hiện mặt nước ngập — Đang chờ xe đi qua để đo{lastRefDepth > 0 ? ` (Đo gần nhất: ${lastRefDepth}cm)` : ''}</>
+                  ) : (
+                    <>Mặt đường thông thoáng, di chuyển an toàn</>
+                  )}
                 </span>
+
                 <span className="gauge-val">
                   {hasRefObject ? (
-                    <>Mực nước đo trực tiếp: <strong>{depthValue} cm</strong> / 50 cm</>
+                    <>Mực nước: <strong>{depthValue} cm</strong> / 50 cm</>
                   ) : (
-                    <>Chưa có đối tượng trong khung hình (<strong>0 xe</strong>) — Chờ xe đi qua</>
+                    <>Chờ xe đi qua vùng đo</>
                   )}
                 </span>
               </div>
 
               {/* Progress Bar with 3 Visual Danger Zones */}
               <div className="gauge-track">
-                <div className="track-marker safe-mark" style={{ left: '20%' }} title="Mấp mé ống xả (10cm)">
+                <div className="track-marker safe-mark" style={{ left: '20%' }}>
                   <span className="mark-label">10cm (Ống xả)</span>
                 </div>
-                <div className="track-marker danger-mark" style={{ left: '50%' }} title="Vượt nửa bánh xe (25cm)">
+                <div className="track-marker danger-mark" style={{ left: '50%' }}>
                   <span className="mark-label">25cm (Nửa bánh xe)</span>
                 </div>
-                <div className="track-marker full-mark" style={{ left: '100%' }} title="Ngập lút bánh (50cm)">
+                <div className="track-marker full-mark" style={{ left: '100%' }}>
                   <span className="mark-label">50cm</span>
                 </div>
 
-                <div 
+                <div
                   className={`gauge-fill ${metrics.flood?.level === 'DANGER' ? 'danger' : 'warning'}`}
                   style={{ width: `${depthPercent}%` }}
                 />
@@ -622,10 +557,10 @@ export default function App() {
         <section className="right-column">
           {/* Live Map Panel */}
           <div className="glass-panel map-card-wrapper">
-            <MapViewer 
-              nodes={nodes} 
-              activeNodeId={activeNodeId} 
-              onSelectNode={setActiveNodeId} 
+            <MapViewer
+              nodes={nodes}
+              activeNodeId={activeNodeId}
+              onSelectNode={setActiveNodeId}
             />
           </div>
 
@@ -634,38 +569,38 @@ export default function App() {
             <div className="panel-header">
               <div className="panel-title">
                 <Activity size={16} style={{ color: '#dc2626' }} />
-                <span>NHẬT KÝ SỰ CỐ & MẨU TIN CẢNH BÁO (&lt;150 BYTES)</span>
+                <span>CẢNH BÁO GẦN ĐÂY</span>
               </div>
               <span className="inc-counter-badge">
-                {incidents.length} ĐIỂM GIÁM SÁT
+                {incidents.length} điểm
               </span>
             </div>
 
             <div className="incidents-list">
               {incidents.map(inc => (
-                <div 
-                  key={inc.id} 
+                <div
+                  key={inc.id}
                   className={`incident-item ${inc.level === 'DANGER' ? 'danger' : 'warning'}`}
                 >
                   <span className={`inc-badge ${inc.level === 'DANGER' ? 'danger' : 'warning'}`}>
-                    {inc.level}
+                    {inc.level === 'DANGER' ? 'NGUY HIỂM' : 'CHÚ Ý'}
                   </span>
                   <div className="inc-info">
                     <div className="inc-title">
                       <span>{inc.node_name}</span>
-                      <span className="inc-time">{inc.timestamp} • {inc.payload_bytes || 82}B</span>
+                      <span className="inc-time">{inc.timestamp}</span>
                     </div>
                     <div className="inc-desc">
                       {inc.message}
                     </div>
                   </div>
-                  <button 
+                  <button
                     className="telegram-btn"
                     onClick={() => handleSendTelegram(inc)}
-                    title="Gửi mẩu tin cảnh báo (<150 Bytes) đến nhóm Telegram"
+                    title="Gửi tin nhắn cảnh báo qua Telegram"
                   >
                     <Send size={11} />
-                    <span>Telegram</span>
+                    <span>Gửi tin</span>
                   </button>
                 </div>
               ))}
@@ -673,41 +608,6 @@ export default function App() {
           </div>
         </section>
       </div>
-
-      {/* Bottom Edge System Telemetry Bar (Professional Dock) */}
-      <footer className="glass-panel system-dock">
-        <div className="dock-item">
-          <Cpu size={15} className="dock-icon" style={{ color: '#0284c7' }} />
-          <div>
-            <span className="dock-label">XỬ LÝ TẠI BIÊN (CPU PHỔ THÔNG):</span>
-            <span className="dock-val">YOLOv8-nano (~{metrics.infer_time_ms || 32}ms • Cân bằng sáng CLAHE)</span>
-          </div>
-        </div>
-
-        <div className="dock-item">
-          <Lock size={15} className="dock-icon" style={{ color: '#059669' }} />
-          <div>
-            <span className="dock-label">BẢO VỆ ĐỜI TƯ (PRIVACY RAM):</span>
-            <span className="dock-val">Đã xử lý & hủy {framesInRam} frame trên RAM (0 file lưu ổ cứng)</span>
-          </div>
-        </div>
-
-        <div className="dock-item">
-          <Wifi size={15} className="dock-icon" style={{ color: '#0284c7' }} />
-          <div>
-            <span className="dock-label">TIẾT KIỆM BĂNG THÔNG (MINIMAL API):</span>
-            <span className="dock-val">Mẩu tin {payloadBytes} Bytes &lt; 150B (Tiết kiệm 99.9% mạng)</span>
-          </div>
-        </div>
-
-        <div className="dock-item">
-          <Send size={15} className="dock-icon" style={{ color: '#2563eb' }} />
-          <div>
-            <span className="dock-label">KÊNH CẢNH BÁO CƠ SỞ:</span>
-            <span className="dock-val">Telegram Bot & Text Report (Độ trễ &lt; 1.5 giây)</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
