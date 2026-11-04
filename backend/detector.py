@@ -406,19 +406,16 @@ class UrbanShieldDetector:
         vehicle_centers = [v["center"] for v in vehicles]
         active_fallen_person = None
 
+        # Filter strictly for genuine horizontal / fallen candidates (W/H > 1.0 or W/H > 0.90 near vehicle)
+        # Normal standing or riding people (W/H < 0.85) are NEVER candidates.
         for p in persons:
-            eval_check = evaluate_fall_candidate(
-                p["width"], p["height"], p["center"], vehicle_centers, 0.0
-            )
-            # Also catch riders/pedestrians slipping or struggling in flooded road lane near vehicles
-            in_road_hazard = (
-                p["aspect_ratio"] >= 0.42
-                and p["center"][1] >= 0.30 * h
-                and (len(vehicle_centers) == 0 or min(np.hypot(p["center"][0] - vx, p["center"][1] - vy) for vx, vy in vehicle_centers) < 260.0)
-            )
-            if eval_check["is_candidate"] or in_road_hazard:
-                active_fallen_person = p
-                break
+            if p["height"] >= 20:
+                eval_check = evaluate_fall_candidate(
+                    p["width"], p["height"], p["center"], vehicle_centers, 0.0
+                )
+                if eval_check["is_candidate"]:
+                    active_fallen_person = p
+                    break
 
         accident_detected = False
         accident_reason = ""
@@ -442,40 +439,47 @@ class UrbanShieldDetector:
                 self.fall_test_active = False
 
         elif active_fallen_person is not None or len(self.fallen_candidates) > 0:
-            # First try to match any detected person in road hazard zone to an existing tracked candidate
-            matched_id = None
-            matched_person = None
+            # Check if any standing person (W/H < 0.80) appeared at candidate's spot -> person stood up!
             for cid, cand in list(self.fallen_candidates.items()):
                 for p in persons:
-                    if np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 320:
-                        matched_id = cid
-                        matched_person = p
+                    if p["aspect_ratio"] < 0.80 and np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 90:
+                        del self.fallen_candidates[cid]
                         break
-                if matched_id is not None:
-                    break
 
-            if matched_id is not None and matched_person is not None:
-                cand = self.fallen_candidates[matched_id]
-                cand["last_seen"] = curr_time
-                cand["cx"], cand["cy"] = matched_person["center"]
-                cand["box"] = matched_person["box"]
-            elif active_fallen_person is not None and len(self.fallen_candidates) == 0:
+            # Match active fallen candidate
+            if active_fallen_person is not None:
                 px, py = active_fallen_person["center"]
-                new_id = self.next_candidate_id
-                self.next_candidate_id += 1
-                self.fallen_candidates[new_id] = {
-                    "cx": px,
-                    "cy": py,
-                    "box": active_fallen_person["box"],
-                    "first_seen": curr_time,
-                    "last_seen": curr_time
-                }
+                matched_id = None
+                for cid, cand in list(self.fallen_candidates.items()):
+                    if np.hypot(px - cand["cx"], py - cand["cy"]) < 130:
+                        matched_id = cid
+                        break
 
-            # Evaluate the primary active candidate (maintaining continuity across up to 5.5s of rain-splash occlusion)
+                if matched_id is not None:
+                    cand = self.fallen_candidates[matched_id]
+                    cand["last_seen"] = curr_time
+                    cand["cx"], cand["cy"] = px, py
+                    cand["box"] = active_fallen_person["box"]
+                    cand["w"] = active_fallen_person["width"]
+                    cand["h"] = active_fallen_person["height"]
+                else:
+                    new_id = self.next_candidate_id
+                    self.next_candidate_id += 1
+                    self.fallen_candidates[new_id] = {
+                        "cx": px,
+                        "cy": py,
+                        "box": active_fallen_person["box"],
+                        "w": active_fallen_person["width"],
+                        "h": active_fallen_person["height"],
+                        "first_seen": curr_time,
+                        "last_seen": curr_time
+                    }
+
+            # Evaluate active candidates across up to 3.0s of temporary occlusion
             best_cand = None
             for cid in list(self.fallen_candidates.keys()):
                 cand = self.fallen_candidates[cid]
-                if curr_time - cand["last_seen"] <= 5.5:
+                if curr_time - cand["last_seen"] <= 3.0:
                     elapsed_c = curr_time - cand["first_seen"]
                     if elapsed_c > 8.5:
                         cand["first_seen"] = curr_time
@@ -488,11 +492,10 @@ class UrbanShieldDetector:
             if best_cand is not None:
                 motionless_duration_sec = max(0.2, curr_time - best_cand["first_seen"])
                 tracked_fall_box = best_cand.get("box")
-                bw = tracked_fall_box[2] - tracked_fall_box[0] if tracked_fall_box else 140
-                bh = tracked_fall_box[3] - tracked_fall_box[1] if tracked_fall_box else 95
-                eff_w = max(bw, int(bh * 1.25))
+                bw = best_cand.get("w", 140)
+                bh = best_cand.get("h", 95)
                 fall_res = evaluate_fall_candidate(
-                    eff_w,
+                    bw,
                     bh,
                     (best_cand["cx"], best_cand["cy"]),
                     vehicle_centers,
@@ -593,17 +596,17 @@ class UrbanShieldDetector:
             cv2.putText(annotated, badge_text, (bx + 6, by - 3),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.44, (255, 255, 255), 1, cv2.LINE_AA)
 
-        # Visual overlay when 5s motionless fall tracker is counting or triggered
+        # Visual overlay only when 5s motionless fall tracker is legitimately verifying (>= 1.5s) or confirmed
         motionless_sec = accident_data.get("motionless_sec", 0.0)
-        if motionless_sec > 0.0:
-            is_confirmed = accident_data.get("detected", False)
+        is_confirmed = accident_data.get("detected", False)
+        if is_confirmed or motionless_sec >= 1.5:
             banner_color = (0, 0, 220) if is_confirmed else (0, 140, 255)
             fall_box = accident_data.get("box")
             if fall_box and len(fall_box) == 4:
                 fx1, fy1, fx2, fy2 = fall_box
                 cv2.rectangle(annotated, (fx1, fy1), (fx2, fy2), banner_color, 2)
-                fall_tag = f"NGA XE: {motionless_sec:.1f}s/5s" if not is_confirmed else f"CANH BAO NGA: {motionless_sec:.1f}s"
-                cv2.rectangle(annotated, (fx1, max(0, fy1 - 22)), (fx1 + 155, fy1), banner_color, -1)
+                fall_tag = f"KIEM TRA NGA: {motionless_sec:.1f}s/5s" if not is_confirmed else f"CANH BAO NGA: {motionless_sec:.1f}s"
+                cv2.rectangle(annotated, (fx1, max(0, fy1 - 22)), (fx1 + 165, fy1), banner_color, -1)
                 cv2.putText(annotated, fall_tag, (fx1 + 5, max(14, fy1 - 6)),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.42, (255, 255, 255), 1, cv2.LINE_AA)
 

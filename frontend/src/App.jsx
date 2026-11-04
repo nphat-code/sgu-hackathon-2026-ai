@@ -513,7 +513,7 @@ export default function App() {
                 <span className={`gauge-status-text ${metrics.accident?.detected || (hasRefObject && metrics.flood?.level === 'DANGER') ? 'text-danger' : 'text-warning'}`}>
                   {metrics.accident?.detected ? (
                     <>CẢNH BÁO NGÃ XE: Bất động quá 5 giây — Đã gửi tin nhắn hỗ trợ</>
-                  ) : metrics.accident?.motionless_sec > 0 ? (
+                  ) : metrics.accident?.motionless_sec >= 1.5 ? (
                     <>Đang kiểm tra bất động: {metrics.accident.motionless_sec}s / 5.0s</>
                   ) : (hasRefObject && metrics.flood?.detected) ? (
                     <>
