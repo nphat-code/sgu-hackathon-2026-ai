@@ -399,27 +399,6 @@ export default function App() {
         </div>
 
         <div className="header-actions">
-          {/* Interactive 5s Fall Detection Test Button */}
-          {motionlessSec > 0 ? (
-            <button
-              className="header-btn warning-btn"
-              onClick={() => handleFallTest('cancel')}
-              title="Mô phỏng người dân tự đứng dậy trước 5 giây"
-            >
-              <RotateCcw size={14} />
-              <span>Đứng dậy ({motionlessSec}s)</span>
-            </button>
-          ) : (
-            <button
-              className="header-btn test-fall-btn"
-              onClick={() => handleFallTest('start')}
-              title="Kiểm thử bộ đếm bất động 5 giây"
-            >
-              <Timer size={14} />
-              <span>Mô phỏng ngã 5s</span>
-            </button>
-          )}
-
           {/* Open Plain-Text Report Button */}
           <button
             className="header-btn report-btn"

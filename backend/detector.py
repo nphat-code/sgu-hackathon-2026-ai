@@ -401,7 +401,7 @@ class UrbanShieldDetector:
             }
 
         # ----------------------------------------------------
-        # 2. REAL FALL DETECTION WITH 5.0s MOTIONLESS TRACKING
+        # 2. AUTOMATIC FALL & ROAD HAZARD DETECTION (5.0s TRACKER)
         # ----------------------------------------------------
         vehicle_centers = [v["center"] for v in vehicles]
         active_fallen_person = None
@@ -410,13 +410,20 @@ class UrbanShieldDetector:
             eval_check = evaluate_fall_candidate(
                 p["width"], p["height"], p["center"], vehicle_centers, 0.0
             )
-            if eval_check["is_candidate"]:
+            # Also catch riders/pedestrians slipping or struggling in flooded road lane near vehicles
+            in_road_hazard = (
+                p["aspect_ratio"] >= 0.42
+                and p["center"][1] >= 0.30 * h
+                and (len(vehicle_centers) == 0 or min(np.hypot(p["center"][0] - vx, p["center"][1] - vy) for vx, vy in vehicle_centers) < 260.0)
+            )
+            if eval_check["is_candidate"] or in_road_hazard:
                 active_fallen_person = p
                 break
 
         accident_detected = False
         accident_reason = ""
         motionless_duration_sec = 0.0
+        tracked_fall_box = None
 
         if self.fall_test_active:
             elapsed_test = curr_time - self.fall_test_start_time
@@ -434,47 +441,66 @@ class UrbanShieldDetector:
             else:
                 self.fall_test_active = False
 
-        elif active_fallen_person is not None:
-            px, py = active_fallen_person["center"]
+        elif active_fallen_person is not None or len(self.fallen_candidates) > 0:
+            # First try to match any detected person in road hazard zone to an existing tracked candidate
             matched_id = None
-
+            matched_person = None
             for cid, cand in list(self.fallen_candidates.items()):
-                dist = np.hypot(px - cand["cx"], py - cand["cy"])
-                if dist < 60:
-                    matched_id = cid
+                for p in persons:
+                    if np.hypot(p["center"][0] - cand["cx"], p["center"][1] - cand["cy"]) < 320:
+                        matched_id = cid
+                        matched_person = p
+                        break
+                if matched_id is not None:
                     break
 
-            if matched_id is not None:
+            if matched_id is not None and matched_person is not None:
                 cand = self.fallen_candidates[matched_id]
                 cand["last_seen"] = curr_time
-                cand["cx"] = px
-                cand["cy"] = py
-                motionless_duration_sec = curr_time - cand["first_seen"]
-            else:
+                cand["cx"], cand["cy"] = matched_person["center"]
+                cand["box"] = matched_person["box"]
+            elif active_fallen_person is not None and len(self.fallen_candidates) == 0:
+                px, py = active_fallen_person["center"]
                 new_id = self.next_candidate_id
                 self.next_candidate_id += 1
                 self.fallen_candidates[new_id] = {
                     "cx": px,
                     "cy": py,
+                    "box": active_fallen_person["box"],
                     "first_seen": curr_time,
                     "last_seen": curr_time
                 }
-                motionless_duration_sec = 0.0
 
-            fall_res = evaluate_fall_candidate(
-                active_fallen_person["width"],
-                active_fallen_person["height"],
-                active_fallen_person["center"],
-                vehicle_centers,
-                motionless_duration_sec
-            )
-            accident_detected = fall_res["detected"]
-            accident_reason = fall_res["reason"]
-            motionless_duration_sec = fall_res["motionless_sec"]
-        else:
+            # Evaluate the primary active candidate (maintaining continuity across up to 5.5s of rain-splash occlusion)
+            best_cand = None
             for cid in list(self.fallen_candidates.keys()):
-                if curr_time - self.fallen_candidates[cid]["last_seen"] > 1.5:
+                cand = self.fallen_candidates[cid]
+                if curr_time - cand["last_seen"] <= 5.5:
+                    elapsed_c = curr_time - cand["first_seen"]
+                    if elapsed_c > 8.5:
+                        cand["first_seen"] = curr_time
+                        elapsed_c = 0.2
+                    if best_cand is None or elapsed_c > (curr_time - best_cand["first_seen"]):
+                        best_cand = cand
+                else:
                     del self.fallen_candidates[cid]
+
+            if best_cand is not None:
+                motionless_duration_sec = max(0.2, curr_time - best_cand["first_seen"])
+                tracked_fall_box = best_cand.get("box")
+                bw = tracked_fall_box[2] - tracked_fall_box[0] if tracked_fall_box else 140
+                bh = tracked_fall_box[3] - tracked_fall_box[1] if tracked_fall_box else 95
+                eff_w = max(bw, int(bh * 1.25))
+                fall_res = evaluate_fall_candidate(
+                    eff_w,
+                    bh,
+                    (best_cand["cx"], best_cand["cy"]),
+                    vehicle_centers,
+                    motionless_duration_sec
+                )
+                accident_detected = fall_res["detected"]
+                accident_reason = fall_res["reason"]
+                motionless_duration_sec = fall_res["motionless_sec"]
 
         # Privacy-by-design: increment RAM frame counter and explicitly release intermediate buffers
         self.frames_processed_in_ram += 1
@@ -501,7 +527,8 @@ class UrbanShieldDetector:
             "accident": {
                 "detected": accident_detected,
                 "reason": accident_reason,
-                "motionless_sec": round(motionless_duration_sec, 1)
+                "motionless_sec": round(motionless_duration_sec, 1),
+                "box": tracked_fall_box
             },
             "flood": {
                 "detected": flood_detected,
@@ -571,6 +598,15 @@ class UrbanShieldDetector:
         if motionless_sec > 0.0:
             is_confirmed = accident_data.get("detected", False)
             banner_color = (0, 0, 220) if is_confirmed else (0, 140, 255)
+            fall_box = accident_data.get("box")
+            if fall_box and len(fall_box) == 4:
+                fx1, fy1, fx2, fy2 = fall_box
+                cv2.rectangle(annotated, (fx1, fy1), (fx2, fy2), banner_color, 2)
+                fall_tag = f"NGA XE: {motionless_sec:.1f}s/5s" if not is_confirmed else f"CANH BAO NGA: {motionless_sec:.1f}s"
+                cv2.rectangle(annotated, (fx1, max(0, fy1 - 22)), (fx1 + 155, fy1), banner_color, -1)
+                cv2.putText(annotated, fall_tag, (fx1 + 5, max(14, fy1 - 6)),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.42, (255, 255, 255), 1, cv2.LINE_AA)
+
             cv2.rectangle(annotated, (14, h - 50), (w - 14, h - 12), (15, 23, 42), -1)
             cv2.rectangle(annotated, (14, h - 50), (w - 14, h - 12), banner_color, 2)
             status_txt = (
