@@ -378,6 +378,7 @@ NODE_LATEST_METRICS: Dict[str, Any] = {
 NODE_ANALYSIS_CACHE: Dict[str, Any] = {}
 AI_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 AI_FUTURES: Dict[str, concurrent.futures.Future] = {}
+LAST_AUTO_ALERT_TIME: Dict[str, float] = {}
 
 
 def stream_generator(node_id: str, custom_fps: Optional[float] = None):
@@ -423,6 +424,64 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
                         "flood": flood_info,
                         "updated_at": time.time()
                     }
+
+                    # Tự động phát cảnh báo Telegram khi đạt mốc Đỏ (DANGER >= 20cm hoặc ngã xe >= 5s)
+                    is_danger_flood = (flood_info.get("level") == "DANGER" and float(flood_info.get("depth_cm", 0.0)) >= 20.0)
+                    is_fall_detected = bool(acc_info.get("detected"))
+
+                    if is_danger_flood or is_fall_detected:
+                        now_ts = time.time()
+                        alert_key = f"{node_id}_{'accident' if is_fall_detected else 'flood'}"
+                        last_sent = LAST_AUTO_ALERT_TIME.get(alert_key, 0.0)
+
+                        # Cooldown 45s chống spam tin nhắn liên tục vào bot
+                        if (now_ts - last_sent) >= 45.0:
+                            LAST_AUTO_ALERT_TIME[alert_key] = now_ts
+                            inc_type = "ACCIDENT" if is_fall_detected else "FLOOD"
+                            depth_val = float(flood_info.get("depth_cm", 0.0))
+                            mot_val = float(acc_info.get("motionless_sec", 0.0))
+
+                            auto_report = generate_instant_alert_text(
+                                node_name=node["name"],
+                                event_type=inc_type,
+                                level="DANGER",
+                                depth_cm=depth_val,
+                                motionless_sec=mot_val,
+                                gps=f"{node['lat']}, {node['lng']}"
+                            )
+
+                            new_auto_inc = {
+                                "id": f"inc-{node_id}-{int(now_ts)}",
+                                "node_id": node_id,
+                                "node_name": node["name"].split("(")[0].strip(),
+                                "type": inc_type,
+                                "level": "DANGER",
+                                "title": "Ngã xe máy nằm bất động > 5s" if is_fall_detected else f"Ngập nước nguy hiểm ({depth_val}cm)",
+                                "message": acc_info.get("reason", "Phát hiện người ngã xe nằm bất động quá 5 giây") if is_fall_detected else f"Nước ngập sâu {depth_val}cm vượt nửa bánh xe máy, nguy cơ chết máy cao",
+                                "depth_cm": depth_val,
+                                "payload_bytes": p_bytes,
+                                "payload_json": p_json,
+                                "time": time.strftime("%H:%M:%S"),
+                                "timestamp": int(now_ts),
+                                "status": "active",
+                                "text_report": auto_report
+                            }
+
+                            global INCIDENTS
+                            INCIDENTS = [inc for inc in INCIDENTS if inc.get("node_id") != node_id or inc.get("type") != inc_type]
+                            INCIDENTS.insert(0, new_auto_inc)
+                            INCIDENTS = INCIDENTS[:6]
+
+                            save_incident_to_db(
+                                new_auto_inc["id"], node_id, inc_type, "DANGER",
+                                depth_val, mot_val, p_bytes, auto_report
+                            )
+
+                            threading.Thread(
+                                target=send_telegram_alert,
+                                args=(auto_report, new_auto_inc["id"]),
+                                daemon=True
+                            ).start()
             except Exception:
                 pass
             AI_FUTURES[node_id] = None

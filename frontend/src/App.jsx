@@ -208,6 +208,14 @@ export default function App() {
           setNodes(data);
           setBackendConnected(true);
         }
+
+        const incRes = await fetch(`${API_BASE}/api/incidents`);
+        if (incRes.ok) {
+          const incData = await incRes.json();
+          if (Array.isArray(incData) && incData.length > 0) {
+            setIncidents(incData);
+          }
+        }
       } catch (e) {
         setBackendConnected(false);
       }
