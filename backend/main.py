@@ -256,7 +256,8 @@ REAL_VIDEOS_MAP = {
     "real_flood_2": ["real_flood_2.mp4", "flood2.mp4"],
     "real_flood_3": ["real_flood_3.mp4", "flood3.mp4"],
     "real_flood_4": ["real_flood_4.mp4", "flood4.mp4"],
-    "real_accident_1": ["real_accident_1.mp4", "accident_1.mp4", "flood_accident_1.mp4"]
+    "real_flood_5": ["flood_5.mp4", "real_flood_5.mp4"],
+    "real_accident_1": ["accident_1.mp4", "real_accident_1.mp4", "flood_accident_1.mp4"]
 }
 
 
