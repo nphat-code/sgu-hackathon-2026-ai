@@ -4,6 +4,28 @@ import requests
 from typing import Dict, Any
 
 
+def _load_env_if_needed():
+    """Tự động nạp cấu hình từ file .env nếu có mà không cần thư viện bên thứ ba."""
+    for candidate in [".env", os.path.join(os.path.dirname(__file__), "..", ".env"), os.path.join(os.path.dirname(__file__), ".env")]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            k = k.strip()
+                            v = v.strip().strip("'").strip('"')
+                            if k and k not in os.environ:
+                                os.environ[k] = v
+                break
+            except Exception:
+                pass
+
+
+_load_env_if_needed()
+
+
 def send_telegram_alert(text_report: str, incident_id: str = "") -> Dict[str, Any]:
     """
     Dispatches plain-text incident report to Telegram Bot API.
