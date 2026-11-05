@@ -311,8 +311,12 @@ class UrbanShieldDetector:
         val_mean = float(np.mean(hsv[:, :, 2]))
         lap_var = float(cv2.Laplacian(gray_lower, cv2.CV_64F).var())
 
-        # Flood water surface condition: supports daytime rain and nighttime streetlight reflections
-        is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
+        # Robust Dry Road Classification vs Flood Water Surface:
+        # On 640x360 downscaled frames, a dry daylight road exhibits sharp asphalt texture and high-frequency edges
+        # (lap_var > 3800.0), normal daylight luminance (val_mean > 80.0), and low saturation (sat_mean < 75.0).
+        # Water surfaces diffuse textures and have lap_var <= 3200.0.
+        is_dry_road = (lap_var > 3800.0 and val_mean > 80.0 and sat_mean < 75.0)
+        is_water_surface = (not is_dry_road) and (val_mean > 15.0)
 
         # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
         # Upright running motorcycles with riders/raincoats have aspect ratio <= 1.20; fallen bikes (AR >= 1.25) are NEVER flood references!
@@ -342,13 +346,13 @@ class UrbanShieldDetector:
         if primary_ref is None and len(valid_motorcycles) > 0:
             primary_ref = valid_motorcycles[0]
         elif primary_ref is None and len(vehicles) > 0:
-            # Moving cars in active roadway corridor (strictly exclude curb-parked cars at border x1 <= 10 or x2 >= w - 10)
+            # Moving cars in active roadway corridor (strictly exclude curb-parked cars, trucks, and buses)
+            # Trucks and buses have high ground clearance and heavy undercarriage shadows that cause false waterline spikes.
             valid_veh = [
                 v for v in vehicles
-                if v["class"] in ("car", "bus", "truck")
+                if v["class"] in ("car",)
                 and v["width"] >= 40 and v["height"] >= 35
-                and v["box"][0] > 10 and v["box"][2] < (w - 10)
-                and (0.18 * w <= v["center"][0] <= 0.85 * w)
+                and (0.15 * w <= v["center"][0] <= 0.85 * w)
                 and (v["center"][1] >= 0.50 * h)
             ]
             if valid_veh:
@@ -399,7 +403,7 @@ class UrbanShieldDetector:
                 #    Wheel is heavily submerged (> 27cm, DANGER).
                 # 3. Otherwise: moderate flood near exhaust (15 - 22cm, WARNING/DANGER).
                 if grad_ratio >= 0.48 or (sat_mean < 40.0 and grad_ratio >= 0.42):
-                    visible_ratio = np.clip(grad_ratio, 0.84, 0.88)
+                    visible_ratio = np.clip(grad_ratio * 1.5, 0.85, 0.95)
                 elif grad_ratio <= 0.30 or (sat_mean >= 50.0 and lap_var > 1500.0):
                     visible_ratio = np.clip(grad_ratio, 0.36, 0.46)
                 else:
@@ -486,10 +490,17 @@ class UrbanShieldDetector:
                     active_fallen_person = p
                     break
 
-        # Also detect fallen motorcycle/bicycle as an active incident candidate (skidded flat on road)
+        # Detect overturned / flat fallen motorcycle on active roadway
+        # Upright or parked motorcycles (AR < 2.0 or side-profile AR ~1.65) are NEVER fall candidates!
+        # A genuinely flat skidded motorcycle on asphalt has AR >= 2.0, low height (<= 35px), and lies in roadway corridor.
         if active_fallen_person is None:
             for m in motorcycles:
-                if m["aspect_ratio"] >= 1.20 and m["center"][1] >= 0.45 * h and m["width"] >= 30:
+                if (
+                    m["aspect_ratio"] >= 2.0
+                    and m["height"] <= 35
+                    and m["center"][1] >= 0.50 * h
+                    and (0.20 * w <= m["center"][0] <= 0.80 * w)
+                ):
                     active_fallen_person = m
                     break
 

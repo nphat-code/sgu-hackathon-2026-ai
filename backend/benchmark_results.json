@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05 18:57:30",
+  "timestamp": "2026-11-05 19:29:37",
   "platform": {
     "os": "win32",
     "python": "3.10.11",
@@ -10,50 +10,50 @@
     "real_flood_1": {
       "name": "Trạm 01 - Bờ kè Trần Xuân Soạn (Triều cường Kênh Tẻ)",
       "gt_depth_cm": 22.4,
-      "measured_depth_cm": 18.2,
-      "abs_error_cm": 4.2,
+      "measured_depth_cm": 15.9,
+      "abs_error_cm": 6.5,
       "gt_level": "DANGER",
       "pred_level": "WARNING",
       "hazard_match": false,
-      "ref_availability_pct": 84.3,
+      "ref_availability_pct": 88.6,
       "frames_tested": 70,
-      "avg_infer_ms": 68.7
+      "avg_infer_ms": 273.4
     },
     "real_flood_2": {
       "name": "Trạm 02 - Tuyến Huỳnh Tấn Phát (Đoạn trũng ngập úng)",
       "gt_depth_cm": 18.2,
-      "measured_depth_cm": 23.4,
-      "abs_error_cm": 5.2,
+      "measured_depth_cm": 22.6,
+      "abs_error_cm": 4.45,
       "gt_level": "WARNING",
       "pred_level": "DANGER",
       "hazard_match": false,
       "ref_availability_pct": 34.3,
       "frames_tested": 70,
-      "avg_infer_ms": 33.6
+      "avg_infer_ms": 168.2
     },
     "flood_6": {
       "name": "Trạm 03 - Tuyến Lê Văn Lương (Khu ngập triều Rạch Đỉa)",
       "gt_depth_cm": 13.0,
-      "measured_depth_cm": 14.4,
-      "abs_error_cm": 1.4,
+      "measured_depth_cm": 12.9,
+      "abs_error_cm": 0.15,
       "gt_level": "WARNING",
       "pred_level": "WARNING",
       "hazard_match": true,
-      "ref_availability_pct": 92.9,
+      "ref_availability_pct": 94.3,
       "frames_tested": 70,
-      "avg_infer_ms": 33.3
+      "avg_infer_ms": 164.4
     },
     "flood_5": {
       "name": "Trạm 04 - Hẻm 803 Huỳnh Tấn Phát (Khu dân cư ven rạch)",
       "gt_depth_cm": 8.0,
-      "measured_depth_cm": 15.1,
-      "abs_error_cm": 7.15,
+      "measured_depth_cm": 14.5,
+      "abs_error_cm": 6.5,
       "gt_level": "SAFE",
       "pred_level": "WARNING",
       "hazard_match": false,
       "ref_availability_pct": 74.3,
       "frames_tested": 70,
-      "avg_infer_ms": 33.6
+      "avg_infer_ms": 172.1
     }
   },
   "fall_benchmark": {
@@ -69,9 +69,9 @@
   },
   "performance": {
     "total_frames_analyzed": 340,
-    "avg_inference_ms": 40.07,
+    "avg_inference_ms": 184.09,
     "effective_throughput_fps": 28.5,
-    "ram_consumption_mb": 353.9,
+    "ram_consumption_mb": 353.7,
     "zero_disk_verified": true,
     "disk_files_written": 0,
     "payload_bytes_min": 78,
@@ -79,8 +79,8 @@
     "bandwidth_saved_pct": 99.99
   },
   "summary": {
-    "mae_depth_cm": 4.49,
-    "rmse_depth_cm": 4.94,
+    "mae_depth_cm": 4.4,
+    "rmse_depth_cm": 5.11,
     "hazard_zone_accuracy_pct": 25.0,
     "fall_f1_score_pct": 100.0,
     "avg_fps": 28.5,
