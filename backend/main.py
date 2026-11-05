@@ -24,7 +24,35 @@ from database import (
 )
 from notify import send_telegram_alert
 
+
+def _load_env_if_needed():
+    """Tự động nạp cấu hình từ .env nếu có mà không phụ thuộc thư viện ngoài."""
+    for candidate in [".env", os.path.join(os.path.dirname(__file__), "..", ".env"), os.path.join(os.path.dirname(__file__), ".env")]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            k = k.strip()
+                            v = v.strip().strip("'").strip('"')
+                            if k and k not in os.environ:
+                                os.environ[k] = v
+                break
+            except Exception:
+                pass
+
+
+_load_env_if_needed()
+
 START_TIME = time.time()
+
+# Configurable Target Stream FPS (Default: 28.5 FPS)
+try:
+    DEFAULT_STREAM_FPS = float(os.environ.get("STREAM_FPS", os.environ.get("TARGET_FPS", "28.5")))
+except ValueError:
+    DEFAULT_STREAM_FPS = 28.5
 
 app = FastAPI(
     title="UrbanShield Lite - Edge AI Minimal API Gateway",
@@ -352,9 +380,12 @@ AI_POOL = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 AI_FUTURES: Dict[str, concurrent.futures.Future] = {}
 
 
-def stream_generator(node_id: str):
-    """Zero-stutter MJPEG stream generator sustaining rock-solid 28.5 FPS playback."""
+def stream_generator(node_id: str, custom_fps: Optional[float] = None):
+    """Zero-stutter MJPEG stream generator supporting configurable FPS playback."""
     node = NODES.get(node_id, NODES["node-sgu-01"])
+    target_fps = custom_fps if (custom_fps is not None and custom_fps > 0) else DEFAULT_STREAM_FPS
+    frame_delay = 1.0 / max(1.0, min(60.0, target_fps))
+
     while True:
         cycle_start = time.time()
         scenario = node["scenario"]
@@ -380,7 +411,7 @@ def stream_generator(node_id: str):
                     p_json, p_bytes = build_compact_payload(node_id, ev_type, ev_val, ev_unit)
 
                     NODE_LATEST_METRICS[node_id] = {
-                        "fps": 28.5,
+                        "fps": round(target_fps, 1),
                         "infer_time_ms": res.get("infer_time_ms", 32.0),
                         "clahe_active": res.get("clahe_active", False),
                         "detections_count": res.get("detections_count", 0),
@@ -400,7 +431,7 @@ def stream_generator(node_id: str):
             AI_FUTURES[node_id] = AI_POOL.submit(detector.infer, frame.copy(), node_id)
 
         analysis = NODE_ANALYSIS_CACHE.get(node_id, detector.get_default_analysis())
-        annotated = detector.render_hud(frame, analysis, stream_fps=28.5)
+        annotated = detector.render_hud(frame, analysis, stream_fps=target_fps)
 
         ret, buffer = cv2.imencode(".jpg", annotated, [cv2.IMWRITE_JPEG_QUALITY, 78])
         if not ret:
@@ -415,7 +446,7 @@ def stream_generator(node_id: str):
                b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n")
 
         elapsed = time.time() - cycle_start
-        sleep_dur = max(0.005, 0.035 - elapsed)
+        sleep_dur = max(0.002, frame_delay - elapsed)
         time.sleep(sleep_dur)
 
 
@@ -929,9 +960,9 @@ def trigger_telegram_alert(req: TelegramAlertRequest):
 
 
 @app.get("/api/video_feed/{node_id}")
-def video_feed(node_id: str):
+def video_feed(node_id: str, fps: Optional[float] = Query(None, ge=1.0, le=60.0, description="Tùy chỉnh FPS luồng phát video")):
     return StreamingResponse(
-        stream_generator(node_id),
+        stream_generator(node_id, custom_fps=fps),
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
 
