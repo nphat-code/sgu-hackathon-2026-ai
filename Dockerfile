@@ -35,3 +35,4 @@ ENV STREAM_FPS=28.5
 EXPOSE 8080
 
 CMD ["sh", "-c", "uvicorn main:app --app-dir backend --host 0.0.0.0 --port ${PORT:-8080}"]
+

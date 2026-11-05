@@ -76,3 +76,4 @@ Khi Ban Giám khảo hỏi về phần triển khai Cloud (Tiêu chí VII), mìn
 2. **Kiến trúc Serverless:** Cloud Run tự động co giãn từ 0 đến n instances. Khi không có truy vấn thì scale về 0, giúp tiết kiệm chi phí 0đ khi không sử dụng.
 3. **Region Đông Nam Á (asia-southeast1 - Singapore):** Đặt tại cụm máy chủ gần Việt Nam nhất, độ trễ phản hồi API cực thấp (< 40ms).
 4. **Cô lập bộ nhớ:** Ứng dụng chạy trong Sandbox container an toàn, tuân thủ nguyên tắc Privacy-by-design (Zero-Disk).
+
