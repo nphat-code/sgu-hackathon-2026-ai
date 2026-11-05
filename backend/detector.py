@@ -6,6 +6,28 @@ from typing import Dict, Any, List, Tuple, Optional
 from ultralytics import YOLO
 
 
+def _load_env_if_needed():
+    """Tự động nạp cấu hình từ .env nếu có mà không phụ thuộc thư viện ngoài."""
+    for candidate in [".env", os.path.join(os.path.dirname(__file__), "..", ".env"), os.path.join(os.path.dirname(__file__), ".env")]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#") and "=" in line:
+                            k, v = line.split("=", 1)
+                            k = k.strip()
+                            v = v.strip().strip("'").strip('"')
+                            if k and k not in os.environ:
+                                os.environ[k] = v
+                break
+            except Exception:
+                pass
+
+
+_load_env_if_needed()
+
+
 def estimate_wheel_flood_depth(
     visible_wheel_h_px: float,
     full_wheel_h_px: float,
@@ -234,7 +256,11 @@ class UrbanShieldDetector:
 
         # Run edge inference on CPU with conf=0.10 so partially-submerged motorcycles/vehicles are captured
         # Classes: 0=person, 1=bicycle, 2=car, 3=motorcycle, 5=bus, 7=truck
-        results = self.model(proc_frame, imgsz=416, verbose=False, conf=0.10, classes=[0, 1, 2, 3, 5, 7])[0]
+        try:
+            model_imgsz = int(os.environ.get("MODEL_IMGSZ", "320"))
+        except ValueError:
+            model_imgsz = 320
+        results = self.model(proc_frame, imgsz=model_imgsz, verbose=False, conf=0.10, classes=[0, 1, 2, 3, 5, 7])[0]
 
         detections = []
         persons = []

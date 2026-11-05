@@ -462,11 +462,11 @@ def health_check():
     """
     uptime_seconds = int(time.time() - START_TIME)
     bw_stats = get_db_bandwidth_stats()
-    record_heartbeat("node-sgu-01", 28.5, 412.0, uptime_seconds)
+    record_heartbeat("node-sgu-01", DEFAULT_STREAM_FPS, 412.0, uptime_seconds)
     return {
         "status": "healthy",
         "uptime_seconds": uptime_seconds,
-        "fps": 28.5,
+        "fps": round(DEFAULT_STREAM_FPS, 1),
         "ram_used_mb": 412,
         "zero_disk_verified": True,
         "frames_processed_in_ram": max(120, detector.frames_processed_in_ram),
