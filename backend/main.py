@@ -160,7 +160,7 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.673377, 10.752242]
         ],
         "type": "Camera Dân Sinh #04",
-        "scenario": "real_flood_4",
+        "scenario": "real_flood_5",
         "status": "warning",
         "last_ping": time.time(),
         "device": "Camera IP hẻm dân cư"
@@ -360,7 +360,7 @@ NODE_LATEST_METRICS: Dict[str, Any] = {
         "payload_json": _p4_json,
         "privacy": {"ram_only": True, "frames_processed_in_ram": 80, "disk_writes": 0},
         "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
-        "flood": {"detected": True, "depth_cm": 16.0, "level": "WARNING"},
+        "flood": {"detected": True, "depth_cm": 11.2, "level": "WARNING"},
         "updated_at": time.time()
     },
     "node-sgu-05": {

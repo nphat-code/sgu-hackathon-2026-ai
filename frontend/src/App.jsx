@@ -105,7 +105,7 @@ const INITIAL_NODES = [
       [106.673377, 10.752242]
     ],
     type: "Camera Dân Sinh #04",
-    scenario: "real_flood_4",
+    scenario: "real_flood_5",
     status: "warning",
     device: "Camera IP hẻm dân cư"
   },
@@ -254,6 +254,7 @@ export default function App() {
     else if (scenario === 'real_flood_2') incMsg = 'Nước ngập mấp mé ống xả, phương tiện di chuyển chậm';
     else if (scenario === 'real_flood_3') incMsg = 'Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng cứu hộ';
     else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa, người dân lưu thông khó khăn';
+    else if (scenario === 'real_flood_5') incMsg = 'Đường ngập nước mưa diện rộng, nhiều phương tiện và người đi bộ lội nước';
     else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
 
     const cleanNodeName = activeNode.name.split('(')[0].trim();
