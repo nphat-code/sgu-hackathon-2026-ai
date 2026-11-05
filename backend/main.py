@@ -1030,6 +1030,30 @@ def video_feed(node_id: str, fps: Optional[float] = Query(None, ge=1.0, le=60.0,
     )
 
 
+# Production Single-Container SPA static serving (for Google Cloud Run / Cloud deployment)
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+if not os.path.exists(STATIC_DIR):
+    parent_dist = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "dist")
+    if os.path.exists(parent_dist):
+        STATIC_DIR = parent_dist
+
+if os.path.exists(STATIC_DIR) and os.path.exists(os.path.join(STATIC_DIR, "index.html")):
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+    assets_dir = os.path.join(STATIC_DIR, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa_frontend(full_path: str):
+        if full_path.startswith("api/") or full_path.startswith("health") or full_path.startswith("docs") or full_path.startswith("openapi.json"):
+            raise HTTPException(status_code=404, detail="API endpoint not found")
+        target_file = os.path.join(STATIC_DIR, full_path)
+        if full_path and os.path.exists(target_file) and os.path.isfile(target_file):
+            return FileResponse(target_file)
+        return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
