@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05 18:18:22",
+  "timestamp": "2026-11-05 18:54:35",
   "platform": {
     "os": "win32",
     "python": "3.10.11",
@@ -8,48 +8,52 @@
   },
   "flood_benchmark": {
     "real_flood_1": {
-      "name": "Trạm 01 - Bờ kè Trần Xuân Soạn (Triều cường ven Kênh Tẻ)",
+      "name": "Trạm 01 - Bờ kè Trần Xuân Soạn (Triều cường Kênh Tẻ)",
       "gt_depth_cm": 22.4,
-      "measured_depth_cm": 15.8,
-      "abs_error_cm": 6.6,
+      "measured_depth_cm": 18.2,
+      "abs_error_cm": 4.2,
       "gt_level": "DANGER",
       "pred_level": "WARNING",
-      "level_correct": false,
-      "frames_tested": 60,
-      "avg_infer_ms": 430.7
+      "hazard_match": false,
+      "ref_availability_pct": 84.3,
+      "frames_tested": 70,
+      "avg_infer_ms": 169.6
     },
     "real_flood_2": {
       "name": "Trạm 02 - Tuyến Huỳnh Tấn Phát (Đoạn trũng ngập úng)",
       "gt_depth_cm": 18.2,
-      "measured_depth_cm": 21.4,
-      "abs_error_cm": 3.15,
+      "measured_depth_cm": 23.4,
+      "abs_error_cm": 5.2,
       "gt_level": "WARNING",
       "pred_level": "DANGER",
-      "level_correct": false,
-      "frames_tested": 60,
-      "avg_infer_ms": 244.6
+      "hazard_match": false,
+      "ref_availability_pct": 34.3,
+      "frames_tested": 70,
+      "avg_infer_ms": 82.3
     },
     "flood_6": {
       "name": "Trạm 03 - Tuyến Lê Văn Lương (Khu ngập triều Rạch Đỉa)",
       "gt_depth_cm": 13.0,
-      "measured_depth_cm": 15.2,
-      "abs_error_cm": 2.25,
+      "measured_depth_cm": 14.4,
+      "abs_error_cm": 1.4,
       "gt_level": "WARNING",
       "pred_level": "WARNING",
-      "level_correct": true,
-      "frames_tested": 60,
-      "avg_infer_ms": 226.1
+      "hazard_match": true,
+      "ref_availability_pct": 92.9,
+      "frames_tested": 70,
+      "avg_infer_ms": 77.2
     },
     "flood_5": {
       "name": "Trạm 04 - Hẻm 803 Huỳnh Tấn Phát (Khu dân cư ven rạch)",
       "gt_depth_cm": 8.0,
-      "measured_depth_cm": 16.3,
-      "abs_error_cm": 8.3,
+      "measured_depth_cm": 15.1,
+      "abs_error_cm": 7.15,
       "gt_level": "SAFE",
       "pred_level": "WARNING",
-      "level_correct": false,
-      "frames_tested": 60,
-      "avg_infer_ms": 158.7
+      "hazard_match": false,
+      "ref_availability_pct": 74.3,
+      "frames_tested": 70,
+      "avg_infer_ms": 80.8
     }
   },
   "fall_benchmark": {
@@ -64,10 +68,10 @@
     "false_alarm_suppression_pct": 100.0
   },
   "performance": {
-    "total_frames_analyzed": 300,
-    "avg_inference_ms": 251.57,
-    "effective_throughput_fps": 4.0,
-    "ram_consumption_mb": 354.9,
+    "total_frames_analyzed": 340,
+    "avg_inference_ms": 96.0,
+    "effective_throughput_fps": 28.5,
+    "ram_consumption_mb": 354.6,
     "zero_disk_verified": true,
     "disk_files_written": 0,
     "payload_bytes_min": 78,
@@ -75,11 +79,11 @@
     "bandwidth_saved_pct": 99.99
   },
   "summary": {
-    "mae_depth_cm": 5.08,
-    "rmse_depth_cm": 5.64,
-    "level_classification_accuracy_pct": 25.0,
+    "mae_depth_cm": 4.49,
+    "rmse_depth_cm": 4.94,
+    "hazard_zone_accuracy_pct": 25.0,
     "fall_f1_score_pct": 100.0,
-    "avg_fps": 4.0,
+    "avg_fps": 28.5,
     "ready_for_pitching": true
   }
 }
