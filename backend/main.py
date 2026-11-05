@@ -132,7 +132,7 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.7063, 10.7400]
         ],
         "type": "Camera Tổ Dân Phố #03",
-        "scenario": "real_flood_6",
+        "scenario": "real_flood_3",
         "status": "warning",
         "last_ping": time.time(),
         "device": "Webcam USB tiêu chuẩn"
@@ -151,7 +151,7 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.7295, 10.7365]
         ],
         "type": "Camera Dân Sinh #04",
-        "scenario": "real_flood_5",
+        "scenario": "real_flood_4",
         "status": "warning",
         "last_ping": time.time(),
         "device": "Camera IP hẻm dân cư"
@@ -244,11 +244,11 @@ VIDEO_CAPS: Dict[str, Any] = {}
 REAL_VIDEOS_MAP = {
     "real_flood_1": ["real_flood_1.mp4", "flood.mp4"],
     "real_flood_2": ["real_flood_2.mp4", "flood2.mp4"],
-    "real_flood_3": ["real_flood_3.mp4", "flood3.mp4"],
-    "real_flood_4": ["real_flood_4.mp4", "flood4.mp4"],
-    "real_flood_5": ["flood_5.mp4", "real_flood_5.mp4"],
-    "real_flood_6": ["flood_6.mp4", "real_flood_6.mp4"],
-    "real_accident_1": ["accident_1.mp4", "real_accident_1.mp4", "flood_accident_1.mp4"]
+    "real_flood_3": ["real_flood_3.mp4", "flood_6.mp4", "flood3.mp4"],
+    "real_flood_4": ["real_flood_4.mp4", "flood_5.mp4", "flood4.mp4"],
+    "real_flood_5": ["real_flood_4.mp4", "flood_5.mp4"],
+    "real_flood_6": ["real_flood_3.mp4", "flood_6.mp4"],
+    "real_accident_1": ["real_accident_1.mp4", "accident_1.mp4", "flood_accident_1.mp4"]
 }
 
 

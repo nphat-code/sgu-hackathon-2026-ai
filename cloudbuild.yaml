@@ -24,3 +24,4 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/urbanshield-sgu:$COMMIT_SHA'
+

@@ -29,3 +29,4 @@ jobs:
             --region asia-southeast1 \
             --platform managed \
             --allow-unauthenticated
+

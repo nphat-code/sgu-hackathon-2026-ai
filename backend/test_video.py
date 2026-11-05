@@ -7,7 +7,7 @@ Usage:
 
 Examples:
   backend\\venv\\Scripts\\python.exe backend/test_video.py my_flood_video.mp4
-  backend\\venv\\Scripts\\python.exe backend/test_video.py backend/videos/flood_6.mp4 --show
+  backend\\venv\\Scripts\\python.exe backend/test_video.py backend/videos/real_flood_3.mp4 --show
   backend\\venv\\Scripts\\python.exe backend/test_video.py test.mp4 --save output.mp4
 """
 

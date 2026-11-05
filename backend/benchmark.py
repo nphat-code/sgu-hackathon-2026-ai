@@ -42,16 +42,16 @@ GROUND_TRUTH_DATA = {
         "target_class": ["motorcycle", "car"],
         "description": "Nước ngập ngang ống pô xe máy, đi lại khó khăn"
     },
-    "flood_6": {
-        "file": "flood_6.mp4",
+    "real_flood_3": {
+        "file": "real_flood_3.mp4",
         "name": "Trạm 03 - Tuyến Lê Văn Lương (Khu ngập triều Rạch Đỉa)",
         "gt_depth_cm": 13.0,
         "gt_level": "WARNING",
         "target_class": ["motorcycle", "car"],
         "description": "Nước ngập mấp mé pô xe, phương tiện giảm tốc"
     },
-    "flood_5": {
-        "file": "flood_5.mp4",
+    "real_flood_4": {
+        "file": "real_flood_4.mp4",
         "name": "Trạm 04 - Hẻm 803 Huỳnh Tấn Phát (Khu dân cư ven rạch)",
         "gt_depth_cm": 8.0,
         "gt_level": "SAFE",
@@ -204,7 +204,9 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
     # 2. EVALUATE FALL DETECTION & 5-SECOND DEBOUNCE
     # -------------------------------------------------------------
     print("\n[2/3] Đang đánh giá phát hiện ngã xe và triệt tiêu báo động giả 5s...")
-    acc_path = os.path.join(VIDEOS_DIR, "accident_1.mp4")
+    acc_path = os.path.join(VIDEOS_DIR, "real_accident_1.mp4")
+    if not os.path.exists(acc_path):
+        acc_path = os.path.join(VIDEOS_DIR, "accident_1.mp4")
 
     # Real incident video frame test
     if os.path.exists(acc_path):

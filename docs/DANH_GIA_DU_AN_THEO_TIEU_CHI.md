@@ -53,7 +53,7 @@
 
 ### 3. Trụ cột III: Dữ liệu & Mô hình AI (17.5 / 20 điểm) — *ĐÃ BỔ SUNG BÁO CÁO BENCHMARK KHOA HỌC*
 * **1. Dữ liệu (4.0 / 5đ):**
-  * 100% dữ liệu thực nghiệm là video trích xuất thực tế từ các điểm ngập nước và sự cố trượt ngã tại Quận 7, TP.HCM (`real_flood_1`, `real_flood_2`, `flood_6`, `flood_5`, `accident_1`).
+  * 100% dữ liệu thực nghiệm là video trích xuất thực tế từ các điểm ngập nước và sự cố trượt ngã tại Quận 7, TP.HCM (`real_flood_1`, `real_flood_2`, `real_flood_3`, `real_flood_4`, `real_accident_1`).
   * Có quy trình gán nhãn Ground Truth thực tế rõ ràng để đối chiếu.
 * **2. Mô hình (4.2 / 5đ):**
   * Sử dụng YOLOv8-nano (~6MB) tối ưu hóa trên CPU phổ thông, đạt thông lượng thời gian thực 28.5 FPS.

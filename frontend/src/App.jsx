@@ -78,7 +78,7 @@ const INITIAL_NODES = [
       [106.7063, 10.7400]
     ],
     type: "Camera Tổ Dân Phố #03",
-    scenario: "real_flood_6",
+    scenario: "real_flood_3",
     status: "warning",
     device: "Webcam USB tiêu chuẩn"
   },
@@ -96,7 +96,7 @@ const INITIAL_NODES = [
       [106.7295, 10.7365]
     ],
     type: "Camera Dân Sinh #04",
-    scenario: "real_flood_5",
+    scenario: "real_flood_4",
     status: "warning",
     device: "Camera IP hẻm dân cư"
   },
@@ -242,9 +242,8 @@ export default function App() {
     let incMsg = 'Phát hiện ngập lụt tại cung đường';
     if (scenario === 'real_flood_1') incMsg = 'Phát hiện ngập triều cường vượt nửa bánh xe máy, nguy cơ chết máy cao';
     else if (scenario === 'real_flood_2') incMsg = 'Nước ngập mấp mé ống xả, phương tiện di chuyển chậm';
-    else if (scenario === 'real_flood_3') incMsg = 'Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng cứu hộ';
-    else if (scenario === 'real_flood_4') incMsg = 'Ngõ hẻm ngập nước mưa, người dân lưu thông khó khăn';
-    else if (scenario === 'real_flood_5') incMsg = 'Đường ngập nước mưa diện rộng, nhiều phương tiện và người đi bộ lội nước';
+    else if (scenario === 'real_flood_3' || scenario === 'real_flood_6') incMsg = 'Nước ngập mấp mé ống pô xe máy, phương tiện giảm tốc';
+    else if (scenario === 'real_flood_4' || scenario === 'real_flood_5') incMsg = 'Nước xăm xắp mặt đường ngõ hẻm, xe máy di chuyển an toàn';
     else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
 
     const cleanNodeName = activeNode.name.split('(')[0].trim();
