@@ -22,9 +22,15 @@ out/
 *.sqlite3
 .pytest_cache/
 
-# Large video recordings (local evaluation and demo only, do not commit)
-backend/videos/real_*.mp4
-flood*.mp4
+# Unused large video recordings (only track the 5 official station demo videos)
+backend/videos/real_flood_3.mp4
+backend/videos/real_flood_4.mp4
+backend/videos/flood_7.mp4
+flood.mp4
+flood2.mp4
+flood3.mp4
+flood4.mp4
+flood_accident_1.mp4
 
 # OS & Editor
 .DS_Store
