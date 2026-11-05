@@ -462,28 +462,40 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
                                 "payload_bytes": p_bytes,
                                 "payload_json": p_json,
                                 "time": time.strftime("%H:%M:%S"),
-                                "timestamp": int(now_ts),
+                                "timestamp": time.strftime("%H:%M:%S"),
                                 "status": "active",
                                 "text_report": auto_report
                             }
 
-                            global INCIDENTS
-                            INCIDENTS = [inc for inc in INCIDENTS if inc.get("node_id") != node_id or inc.get("type") != inc_type]
-                            INCIDENTS.insert(0, new_auto_inc)
-                            INCIDENTS = INCIDENTS[:6]
+                            new_auto_inc["val"] = mot_val if is_fall_detected else depth_val
+                            new_auto_inc["unit"] = "s" if is_fall_detected else "cm"
+                            new_auto_inc["created_at"] = int(now_ts)
+                            new_auto_inc["gps"] = f"{node['lat']}, {node['lng']}"
+                            new_auto_inc["telegram_sent"] = True
+                            new_auto_inc["synced"] = True
 
-                            save_incident_to_db(
-                                new_auto_inc["id"], node_id, inc_type, "DANGER",
-                                depth_val, mot_val, p_bytes, auto_report
-                            )
+                            # Cập nhật in-place danh sách sự cố
+                            INCIDENTS[:] = [new_auto_inc] + [inc for inc in INCIDENTS if inc.get("node_id") != node_id or inc.get("type") != inc_type][:5]
+
+                            try:
+                                save_incident_to_db(new_auto_inc)
+                            except Exception as db_err:
+                                print(f"[DB AUTO-SAVE ERROR] {db_err}")
+
+                            def _dispatch_tg(text_msg, inc_ident):
+                                try:
+                                    tg_res = send_telegram_alert(text_msg, inc_ident)
+                                    print(f"[*] AUTO TELEGRAM ALERT DELIVERED: {tg_res.get('mode')} -> {tg_res.get('message')}")
+                                except Exception as tg_err:
+                                    print(f"[!] TELEGRAM DISPATCH ERROR: {tg_err}")
 
                             threading.Thread(
-                                target=send_telegram_alert,
+                                target=_dispatch_tg,
                                 args=(auto_report, new_auto_inc["id"]),
                                 daemon=True
                             ).start()
-            except Exception:
-                pass
+            except Exception as loop_err:
+                print(f"[STREAM PROCESSING ERROR] {loop_err}")
             AI_FUTURES[node_id] = None
 
         if AI_FUTURES.get(node_id) is None:

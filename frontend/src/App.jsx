@@ -621,7 +621,11 @@ export default function App() {
                   <div className="inc-info">
                     <div className="inc-title">
                       <span>{inc.node_name}</span>
-                      <span className="inc-time">{inc.timestamp}</span>
+                      <span className="inc-time">
+                        {typeof inc.timestamp === 'number'
+                          ? new Date(inc.timestamp * (inc.timestamp > 10000000000 ? 1 : 1000)).toLocaleTimeString('vi-VN')
+                          : (inc.timestamp || inc.time || new Date().toLocaleTimeString('vi-VN'))}
+                      </span>
                     </div>
                     <div className="inc-desc">
                       {inc.message}
