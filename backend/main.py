@@ -140,8 +140,8 @@ NODES: Dict[str, Dict[str, Any]] = {
             [106.684140, 10.754628]
         ],
         "type": "Camera Tổ Dân Phố #03",
-        "scenario": "real_flood_3",
-        "status": "alert",
+        "scenario": "real_flood_6",
+        "status": "warning",
         "last_ping": time.time(),
         "device": "Webcam USB tiêu chuẩn"
     },
@@ -190,8 +190,8 @@ NODES: Dict[str, Dict[str, Any]] = {
 # Initial seeded incidents with compact payload metadata (< 150 bytes)
 _p1_json, _p1_bytes = build_compact_payload("node-sgu-01", "FLOOD", 22.4, "cm")
 _p2_json, _p2_bytes = build_compact_payload("node-sgu-02", "FLOOD", 18.2, "cm")
-_p3_json, _p3_bytes = build_compact_payload("node-sgu-03", "FLOOD", 31.5, "cm")
-_p4_json, _p4_bytes = build_compact_payload("node-sgu-04", "FLOOD", 16.0, "cm")
+_p3_json, _p3_bytes = build_compact_payload("node-sgu-03", "FLOOD", 13.0, "cm")
+_p4_json, _p4_bytes = build_compact_payload("node-sgu-04", "FLOOD", 8.0, "cm")
 _p5_json, _p5_bytes = build_compact_payload("node-sgu-05", "ACCIDENT", 5.2, "s")
 
 INCIDENTS: List[Dict[str, Any]] = [
@@ -215,12 +215,12 @@ INCIDENTS: List[Dict[str, Any]] = [
         "node_id": "node-sgu-03",
         "node_name": "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt",
         "type": "FLOOD",
-        "level": "DANGER",
-        "val": 31.5,
+        "level": "WARNING",
+        "val": 13.0,
         "unit": "cm",
         "payload_json": _p3_json,
         "payload_bytes": _p3_bytes,
-        "message": "Ngập sâu diện rộng trên lòng đường, chạm gầm xe ô tô",
+        "message": "Nước ngập 13.0cm mép pô xe máy, phương tiện bắt đầu khó đi",
         "timestamp": "10:17:45",
         "gps": "10.754270, 106.682694",
         "telegram_sent": True
@@ -257,6 +257,7 @@ REAL_VIDEOS_MAP = {
     "real_flood_3": ["real_flood_3.mp4", "flood3.mp4"],
     "real_flood_4": ["real_flood_4.mp4", "flood4.mp4"],
     "real_flood_5": ["flood_5.mp4", "real_flood_5.mp4"],
+    "real_flood_6": ["flood_6.mp4", "real_flood_6.mp4"],
     "real_accident_1": ["accident_1.mp4", "real_accident_1.mp4", "flood_accident_1.mp4"]
 }
 
@@ -348,7 +349,7 @@ NODE_LATEST_METRICS: Dict[str, Any] = {
         "payload_json": _p3_json,
         "privacy": {"ram_only": True, "frames_processed_in_ram": 110, "disk_writes": 0},
         "accident": {"detected": False, "reason": "", "motionless_sec": 0.0},
-        "flood": {"detected": True, "depth_cm": 31.5, "level": "DANGER"},
+        "flood": {"detected": True, "depth_cm": 13.0, "level": "WARNING"},
         "updated_at": time.time()
     },
     "node-sgu-04": {

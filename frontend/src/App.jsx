@@ -86,8 +86,8 @@ const INITIAL_NODES = [
       [106.684140, 10.754628]
     ],
     type: "Camera Tổ Dân Phố #03",
-    scenario: "real_flood_3",
-    status: "alert",
+    scenario: "real_flood_6",
+    status: "warning",
     device: "Webcam USB tiêu chuẩn"
   },
   {
