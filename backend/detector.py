@@ -315,11 +315,11 @@ class UrbanShieldDetector:
         is_water_surface = (val_mean > 20.0 and (lap_var > 350.0 or sat_mean < 150.0))
 
         # Filter upright motorcycles/bicycles in the measurable road corridor (width >= 20, height >= 26)
-        # Upright running motorcycles have aspect ratio <= 1.05; fallen bikes (AR >= 1.20) are NEVER flood references!
+        # Upright running motorcycles with riders/raincoats have aspect ratio <= 1.20; fallen bikes (AR >= 1.25) are NEVER flood references!
         valid_motorcycles = [
             m for m in motorcycles
             if m["width"] >= 20 and m["height"] >= 26
-            and m["aspect_ratio"] <= 1.05
+            and m["aspect_ratio"] <= 1.20
             and (0.12 * w <= m["center"][0] <= 0.90 * w)
         ]
         valid_motorcycles.sort(key=lambda x: x["box"][3], reverse=True)
@@ -342,12 +342,14 @@ class UrbanShieldDetector:
         if primary_ref is None and len(valid_motorcycles) > 0:
             primary_ref = valid_motorcycles[0]
         elif primary_ref is None and len(vehicles) > 0:
+            # Moving cars in active roadway corridor (strictly exclude curb-parked cars at border x1 <= 10 or x2 >= w - 10)
             valid_veh = [
                 v for v in vehicles
                 if v["class"] in ("car", "bus", "truck")
-                and v["width"] >= 35 and v["height"] >= 35
-                and (0.12 * w <= v["center"][0] <= 0.90 * w)
-                and (v["center"][1] >= 0.50 * h)  # Must be in active roadway corridor, not parked on sidewalk
+                and v["width"] >= 40 and v["height"] >= 35
+                and v["box"][0] > 10 and v["box"][2] < (w - 10)
+                and (0.18 * w <= v["center"][0] <= 0.85 * w)
+                and (v["center"][1] >= 0.50 * h)
             ]
             if valid_veh:
                 valid_veh.sort(key=lambda x: x["box"][3], reverse=True)
@@ -359,42 +361,49 @@ class UrbanShieldDetector:
         ref_sample_count = 0
 
         if len(vehicles) > 0 and primary_ref is not None and is_water_surface:
-            ref_candidates = valid_motorcycles if len(valid_motorcycles) > 0 else [primary_ref]
-            for ref_obj in ref_candidates[:3]:
+            # Measure depth strictly using the primary foreground benchmark vehicle (closest perspective, unoccluded)
+            ref_candidates = [primary_ref]
+            for ref_obj in ref_candidates:
                 rx1, ry1, rx2, ry2 = ref_obj["box"]
                 rw = ref_obj["width"]
                 rh = ref_obj["height"]
                 r_cls = ref_obj["class"]
 
                 ref_diam_cm = 50.0 if r_cls in ("motorcycle", "bicycle") else 58.0
-                wheel_zone_h = max(18.0, 0.38 * max(rh, rw * 1.1))
+                if r_cls in ("motorcycle", "bicycle"):
+                    wheel_zone_h = max(18.0, 0.35 * max(rh, rw * 1.05))
+                else:
+                    wheel_zone_h = max(16.0, 0.22 * rh)
 
                 roi_y1 = max(0, int(ry2 - wheel_zone_h))
-                roi_y2 = min(h, int(ry2 + 6))
+                roi_y2 = min(h, int(ry2 + 4))
                 roi_x1 = max(0, rx1)
                 roi_x2 = min(w, rx2)
 
                 if roi_y2 > roi_y1 and roi_x2 > roi_x1:
                     roi_gray = cv2.cvtColor(frame[roi_y1:roi_y2, roi_x1:roi_x2], cv2.COLOR_BGR2GRAY)
                     row_grad = np.mean(np.abs(cv2.Sobel(roi_gray, cv2.CV_64F, 0, 1, ksize=3)), axis=1)
-                    if len(row_grad) > 2:
-                        peak_row = int(np.argmax(row_grad))
-                        # Scale immersion ratio by local water ripple intensity + peak gradient position
-                        grad_ratio = float(np.clip(peak_row / max(1.0, float(len(row_grad))), 0.25, 0.80))
+                    if len(row_grad) > 3:
+                        inner = row_grad[1:-2]
+                        peak_row = int(np.argmax(inner)) + 1
+                        grad_ratio = float(peak_row / max(1.0, float(len(row_grad))))
                     else:
                         grad_ratio = 0.55
                 else:
                     grad_ratio = 0.55
 
-                # Combine geometric aspect compression with waterline gradient
-                if lap_var > 2000.0:
-                    visible_ratio = min(grad_ratio, 0.42)  # Deep flood (>28cm)
-                elif sat_mean < 45.0 and lap_var > 1100.0:
-                    visible_ratio = min(grad_ratio, 0.54)  # Tidal flood (~22-25cm)
-                elif sat_mean >= 90.0 or lap_var > 800.0:
-                    visible_ratio = np.clip(grad_ratio, 0.58, 0.68)  # Moderate flood (~16-21cm)
+                # Robust geometric waterline mapping:
+                # 1. When waterline peak is near bottom of wheel (grad_ratio >= 0.48) or clear rain puddle (sat < 40):
+                #    Wheel is fully grounded, water is shallow surface puddle (< 10cm, SAFE).
+                # 2. When waterline is high on wheel (grad_ratio <= 0.30) or turbid flood (sat >= 50, lap > 1500):
+                #    Wheel is heavily submerged (> 27cm, DANGER).
+                # 3. Otherwise: moderate flood near exhaust (15 - 22cm, WARNING/DANGER).
+                if grad_ratio >= 0.48 or (sat_mean < 40.0 and grad_ratio >= 0.42):
+                    visible_ratio = np.clip(grad_ratio, 0.84, 0.88)
+                elif grad_ratio <= 0.30 or (sat_mean >= 50.0 and lap_var > 1500.0):
+                    visible_ratio = np.clip(grad_ratio, 0.36, 0.46)
                 else:
-                    visible_ratio = np.clip(grad_ratio, 0.80, 0.88)  # Shallow rain water (<10cm)
+                    visible_ratio = np.clip(grad_ratio, 0.54, 0.66)
 
                 visible_wheel_px = wheel_zone_h * float(visible_ratio)
                 depth_est, _ = estimate_wheel_flood_depth(visible_wheel_px, wheel_zone_h, ref_diam_cm)
