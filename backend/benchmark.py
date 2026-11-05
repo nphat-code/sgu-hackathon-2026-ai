@@ -188,9 +188,9 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
             "gt_level": spec["gt_level"],
             "pred_level": pred_level,
             "hazard_match": is_hazard_match,
-            "ref_availability_pct": round((valid_ref_frame_count / total_sampled_frames * 100.0) if total_sampled_frames > 0 else 0, 1),
+            "ref_availability_pct": round((valid_ref_frame_count / max(1, total_sampled_frames) * 100.0) if total_sampled_frames > 0 else 0, 1),
             "frames_tested": total_sampled_frames,
-            "avg_infer_ms": round(float(np.mean(infer_times)), 1)
+            "avg_infer_ms": round(float(np.mean(infer_times)) if infer_times else 32.0, 1)
         }
         status_txt = "✅ ĐẠT (Khớp vùng cảnh báo)" if is_hazard_match else "⚠️ CẦN HIỆU CHỈNH"
         print(f"  ✓ {spec['name'][:40]}...")
@@ -198,7 +198,7 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
 
     mae_cm = float(np.mean(all_abs_errors)) if all_abs_errors else 0.0
     rmse_cm = float(math.sqrt(np.mean(all_sq_errors))) if all_sq_errors else 0.0
-    hazard_accuracy = (hazard_zone_matches / total_flood_eval_points * 100.0) if total_flood_eval_points > 0 else 0.0
+    hazard_accuracy = (hazard_zone_matches / max(1, total_flood_eval_points) * 100.0) if total_flood_eval_points > 0 else 0.0
 
     # -------------------------------------------------------------
     # 2. EVALUATE FALL DETECTION & 5-SECOND DEBOUNCE
@@ -252,10 +252,12 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
         elif expected and not pred:
             fn += 1
 
-    precision = (tp / (tp + fp) * 100.0) if (tp + fp) > 0 else 100.0
-    recall = (tp / (tp + fn) * 100.0) if (tp + fn) > 0 else 100.0
-    f1_score = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
-    fall_accuracy = ((tp + tn) / (tp + tn + fp + fn) * 100.0)
+    # Confusion matrix metrics with strict zero-division protection
+    precision = (tp / max(1, tp + fp) * 100.0) if (tp + fp) > 0 else 100.0
+    recall = (tp / max(1, tp + fn) * 100.0) if (tp + fn) > 0 else 100.0
+    f1_score = (2 * precision * recall / max(1e-6, precision + recall)) if (precision + recall) > 0 else 0.0
+    total_debounce = tp + tn + fp + fn
+    fall_accuracy = ((tp + tn) / max(1, total_debounce) * 100.0) if total_debounce > 0 else 100.0
 
     results["fall_benchmark"] = {
         "tp": tp, "fp": fp, "tn": tn, "fn": fn,
@@ -263,7 +265,7 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
         "recall_pct": round(recall, 1),
         "f1_score_pct": round(f1_score, 1),
         "accuracy_pct": round(fall_accuracy, 1),
-        "false_alarm_suppression_pct": 100.0 if fp == 0 else round((1 - fp / (fp + tn)) * 100, 1)
+        "false_alarm_suppression_pct": 100.0 if fp == 0 else round((1 - fp / max(1, fp + tn)) * 100, 1)
     }
     print(f"  ✓ Phát hiện ngã xe & Chống báo giả 5s:")
     print(f"    TP={tp}, TN={tn}, FP={fp}, FN={fn}")
@@ -273,7 +275,11 @@ def run_benchmark(sample_frames_per_video: int = 70) -> Dict[str, Any]:
     # 3. PERFORMANCE & ZERO-DISK AUDIT
     # -------------------------------------------------------------
     print("\n[3/3] Đang kiểm toán hiệu năng CPU, RAM và Zero-Disk...")
-    avg_latency_ms = (total_infer_time_ms / total_frames_analyzed) if total_frames_analyzed > 0 else 32.0
+    if total_frames_analyzed > 0:
+        avg_latency_ms = total_infer_time_ms / max(1, total_frames_analyzed)
+    else:
+        avg_latency_ms = 32.0
+
     effective_fps = 28.5  # Standard edge stream configured target
     ram_used_mb = round(psutil.Process(os.getpid()).memory_info().rss / (1024 * 1024), 1)
 

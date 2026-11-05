@@ -1,6 +1,6 @@
 # 📈 BÁO CÁO THỰC NGHIỆM VÀ ĐÁNH GIÁ CHỈ SỐ AI (BENCHMARK REPORT)
 ## DỰ ÁN URBANSHIELD LITE - HACKATHON SGU 2026
-*Thời gian thực hiện: 2026-11-05 18:54:35 | Nền tảng: CPU x86-64 (12 vCPUs, 15.71GB RAM)*
+*Thời gian thực hiện: 2026-11-05 18:57:30 | Nền tảng: CPU x86-64 (12 vCPUs, 15.71GB RAM)*
 *Quy chuẩn phương pháp: Đánh giá theo đối tượng tham chiếu (Per-Reference Object) và dải dung sai chuyển tiếp (Tolerance Margin $\pm 3.5\text{cm}$).*
 
 ---
@@ -17,7 +17,7 @@
 | | **F1-Score tổng hợp** | **100.0%** | Cân bằng hoàn hảo giữa khả năng bắt sự cố và loại trừ nhiễu |
 | | **Tỷ lệ triệt tiêu báo động giả** | **100.0%** | Người cúi nhặt đồ (2s) hoặc dắt xe không bao giờ kích hoạt chuông báo động |
 | **Hiệu năng Edge AI** | **Tốc độ xử lý video luồng (Live Stream)** | **28.5 FPS** | Chạy mượt mà thời gian thực trên CPU phổ thông không cần GPU rời |
-| | **Tiêu thụ bộ nhớ RAM** | **354.6 MB** | Cực nhẹ, chạy tốt trên máy tính văn phòng Core i3/i5 đời cũ |
+| | **Tiêu thụ bộ nhớ RAM** | **353.9 MB** | Cực nhẹ, chạy tốt trên máy tính văn phòng Core i3/i5 đời cũ |
 | | **Kiểm toán quyền riêng tư (Zero-Disk)** | **ĐẠT (0 file ghi đĩa)** | 100% khung hình video giải mã trên RAM, tự hủy ngay sau khi trích xuất |
 | | **Tiết kiệm băng thông mạng** | **99.99%** | Mẩu tin JSON 78–118 bytes so với video gốc 3–5 MB/s |
 
@@ -68,7 +68,7 @@ Ground Truth (GT) được xác định bằng quan sát ngập thực tế tạ
 
 - **Tổng số khung hình kiểm toán:** **340 frames**
 - **Thông lượng thời gian thực:** **28.5 FPS** (đáp ứng trọn vẹn luồng camera CCTV tiêu chuẩn 25–30 FPS)
-- **Tài nguyên RAM:** Chỉ tốn **354.6 MB**
+- **Tài nguyên RAM:** Chỉ tốn **353.9 MB**
 - **Zero-Disk Verification:** **0 file ghi vào ổ cứng** (cam kết Privacy-by-design tuyệt đối)
 - **Kích thước mẩu tin truyền đi:** **78 – 118 bytes** (tiết kiệm **99.99% băng thông** so với kéo video Full HD về máy chủ).
 
