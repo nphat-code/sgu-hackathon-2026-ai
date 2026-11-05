@@ -80,19 +80,17 @@ EDGE_API_KEY = os.environ.get("EDGE_API_KEY", "urbanshield-sgu-2026-key")
 NODES: Dict[str, Dict[str, Any]] = {
     "node-sgu-01": {
         "id": "node-sgu-01",
-        "name": "Trạm 01 - Hẻm 273 An Dương Vương (Khu vực ĐH Sài Gòn)",
-        "street_segment": "Tuyến An Dương Vương - Hẻm 273, Quận 5",
-        "lat": 10.760567,
-        "lng": 106.681823,
+        "name": "Trạm 01 - Đường Trần Xuân Soạn (Bờ kè Kênh Tẻ)",
+        "street_segment": "Tuyến Trần Xuân Soạn - Hẻm 793, Phường Tân Hưng, Quận 7",
+        "lat": 10.7545,
+        "lng": 106.7115,
         "line_coords": [
-            [106.680131, 10.759887],
-            [106.681404, 10.760398],
-            [106.681547, 10.760456],
-            [106.681823, 10.760567],
-            [106.681927, 10.760608],
-            [106.682336, 10.760773],
-            [106.682586, 10.760874],
-            [106.682977, 10.761031]
+            [106.7085, 10.7540],
+            [106.7098, 10.7542],
+            [106.7115, 10.7545],
+            [106.7135, 10.7548],
+            [106.7155, 10.7551],
+            [106.7180, 10.7555]
         ],
         "type": "Camera Khu Phố #01",
         "scenario": "real_flood_1",
@@ -102,19 +100,17 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-02": {
         "id": "node-sgu-02",
-        "name": "Trạm 02 - Hẻm 21 Nguyễn Văn Cừ (Ngã tư Trần Hưng Đạo)",
-        "street_segment": "Tuyến Nguyễn Văn Cừ - Hẻm 21, Quận 5",
-        "lat": 10.756229,
-        "lng": 106.684653,
+        "name": "Trạm 02 - Tuyến Huỳnh Tấn Phát (Đoạn trũng Phú Thuận)",
+        "street_segment": "Tuyến Huỳnh Tấn Phát - Hẻm 860, Phường Phú Thuận, Quận 7",
+        "lat": 10.7335,
+        "lng": 106.7320,
         "line_coords": [
-            [106.683692, 10.755956],
-            [106.683854, 10.756002],
-            [106.684653, 10.756229],
-            [106.684844, 10.756283],
-            [106.685075, 10.756349],
-            [106.685180, 10.756372],
-            [106.685444, 10.755850],
-            [106.685628, 10.755584]
+            [106.7305, 10.7350],
+            [106.7312, 10.7342],
+            [106.7320, 10.7335],
+            [106.7328, 10.7327],
+            [106.7335, 10.7320],
+            [106.7342, 10.7312]
         ],
         "type": "Camera Khu Phố #02",
         "scenario": "real_flood_2",
@@ -124,20 +120,16 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-03": {
         "id": "node-sgu-03",
-        "name": "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt (Chợ Quán)",
-        "street_segment": "Tuyến Cao Đạt - Hẻm 57 Trần Bình Trọng, Quận 5",
-        "lat": 10.754270,
-        "lng": 106.682694,
+        "name": "Trạm 03 - Tuyến Lê Văn Lương (Khu ngập triều Rạch Đỉa)",
+        "street_segment": "Tuyến Lê Văn Lương - Hẻm 482, Phường Tân Phong, Quận 7",
+        "lat": 10.7420,
+        "lng": 106.7055,
         "line_coords": [
-            [106.681486, 10.754022],
-            [106.681817, 10.754089],
-            [106.682060, 10.754129],
-            [106.682339, 10.754189],
-            [106.682694, 10.754270],
-            [106.682974, 10.754333],
-            [106.683226, 10.754392],
-            [106.683574, 10.754468],
-            [106.684140, 10.754628]
+            [106.7048, 10.7440],
+            [106.7051, 10.7430],
+            [106.7055, 10.7420],
+            [106.7059, 10.7410],
+            [106.7063, 10.7400]
         ],
         "type": "Camera Tổ Dân Phố #03",
         "scenario": "real_flood_6",
@@ -147,17 +139,16 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-04": {
         "id": "node-sgu-04",
-        "name": "Trạm 04 - Hẻm 180 Bùi Hữu Nghĩa (Khu trũng thấp)",
-        "street_segment": "Tuyến Bùi Hữu Nghĩa - Hẻm 180, Quận 5",
-        "lat": 10.752352,
-        "lng": 106.673301,
+        "name": "Trạm 04 - Hẻm 803 Huỳnh Tấn Phát (Khu dân cư ven rạch)",
+        "street_segment": "Tuyến Huỳnh Tấn Phát - Hẻm 803, Phường Tân Phú, Quận 7",
+        "lat": 10.7360,
+        "lng": 106.7285,
         "line_coords": [
-            [106.673274, 10.752500],
-            [106.673276, 10.752447],
-            [106.673301, 10.752352],
-            [106.673329, 10.752232],
-            [106.673346, 10.752233],
-            [106.673377, 10.752242]
+            [106.7275, 10.7355],
+            [106.7280, 10.7358],
+            [106.7285, 10.7360],
+            [106.7290, 10.7362],
+            [106.7295, 10.7365]
         ],
         "type": "Camera Dân Sinh #04",
         "scenario": "real_flood_5",
@@ -167,17 +158,16 @@ NODES: Dict[str, Dict[str, Any]] = {
     },
     "node-sgu-05": {
         "id": "node-sgu-05",
-        "name": "Trạm 05 - Hẻm 57 Trần Bình Trọng (Dốc trơn trượt)",
-        "street_segment": "Tuyến Trần Bình Trọng - Dốc Hẻm 57, Quận 5",
-        "lat": 10.757078,
-        "lng": 106.678164,
+        "name": "Trạm 05 - Dốc Cầu Kênh Tẻ (Đoạn dốc trơn trượt)",
+        "street_segment": "Tuyến Dạ Cầu Kênh Tẻ - Đường số 10, Phường Tân Hưng, Quận 7",
+        "lat": 10.7565,
+        "lng": 106.7035,
         "line_coords": [
-            [106.678514, 10.756956],
-            [106.678413, 10.756954],
-            [106.678222, 10.756908],
-            [106.678164, 10.757078],
-            [106.678128, 10.757183],
-            [106.678267, 10.757239]
+            [106.7025, 10.7558],
+            [106.7030, 10.7561],
+            [106.7035, 10.7565],
+            [106.7040, 10.7568],
+            [106.7045, 10.7572]
         ],
         "type": "Camera Giám Sát Sự Cố #05",
         "scenario": "real_accident_1",
@@ -198,7 +188,7 @@ INCIDENTS: List[Dict[str, Any]] = [
     {
         "id": "inc-001",
         "node_id": "node-sgu-01",
-        "node_name": "Trạm 01 - Hẻm 273 An Dương Vương",
+        "node_name": "Trạm 01 - Đường Trần Xuân Soạn",
         "type": "FLOOD",
         "level": "DANGER",
         "val": 22.4,
@@ -207,13 +197,13 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p1_bytes,
         "message": "Nước ngập sâu 22.4cm vượt nửa bánh xe máy (50cm), nguy cơ chết máy cao",
         "timestamp": "10:15:30",
-        "gps": "10.760567, 106.681823",
+        "gps": "10.7545, 106.7115",
         "telegram_sent": True
     },
     {
         "id": "inc-003",
         "node_id": "node-sgu-03",
-        "node_name": "Trạm 03 - Đoạn Trần Hưng Đạo - Cao Đạt",
+        "node_name": "Trạm 03 - Tuyến Lê Văn Lương",
         "type": "FLOOD",
         "level": "WARNING",
         "val": 13.0,
@@ -222,13 +212,13 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p3_bytes,
         "message": "Nước ngập 13.0cm mép pô xe máy, phương tiện bắt đầu khó đi",
         "timestamp": "10:17:45",
-        "gps": "10.754270, 106.682694",
+        "gps": "10.7420, 106.7055",
         "telegram_sent": True
     },
     {
         "id": "inc-005",
         "node_id": "node-sgu-05",
-        "node_name": "Trạm 05 - Hẻm 57 Trần Bình Trọng",
+        "node_name": "Trạm 05 - Dốc Cầu Kênh Tẻ",
         "type": "ACCIDENT",
         "level": "DANGER",
         "val": 5.2,
@@ -237,7 +227,7 @@ INCIDENTS: List[Dict[str, Any]] = [
         "payload_bytes": _p5_bytes,
         "message": "Phát hiện người ngã xe nằm bất động 5.2s, cần hỗ trợ y tế cơ sở",
         "timestamp": "10:18:12",
-        "gps": "10.757078, 106.678164",
+        "gps": "10.7565, 106.7035",
         "telegram_sent": True
     }
 ]

@@ -13,8 +13,8 @@ export default function MapViewer({ nodes, activeNodeId, onSelectNode }) {
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        center: [10.7575, 106.6860],
-        zoom: 15,
+        center: [10.7450, 106.7180],
+        zoom: 14,
         zoomControl: false,
         attributionControl: false
       });
