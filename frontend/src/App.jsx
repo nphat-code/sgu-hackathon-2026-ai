@@ -23,7 +23,7 @@ import {
 import MapViewer from './components/MapViewer';
 import './App.css';
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = import.meta.env.VITE_API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://127.0.0.1:8000' : window.location.origin);
 
 const INITIAL_NODES = [
   {
