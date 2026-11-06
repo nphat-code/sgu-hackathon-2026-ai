@@ -604,10 +604,10 @@ class UrbanShieldDetector:
         del hsv
 
         raw_latency = (time.time() - start_time) * 1000
-        self.last_infer_time_ms = round(min(38.0, max(25.0, raw_latency * 0.25)), 1)
+        self.last_infer_time_ms = round(raw_latency, 1)
 
         return {
-            "fps": 28.5,
+            "fps": round(1000.0 / max(1.0, raw_latency), 1),
             "infer_time_ms": self.last_infer_time_ms,
             "clahe_active": clahe_used,
             "detections_count": len(detections),

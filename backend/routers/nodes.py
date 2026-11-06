@@ -58,48 +58,11 @@ def set_node_scenario(node_id: str, data: ScenarioPayload):
         except Exception:
             pass
 
-    is_flood = "flood" in data.scenario
-    inc_type = "FLOOD" if is_flood else "WEATHER"
-    if data.scenario == "real_flood_1":
-        msg = "Phát hiện ngập triều cường vượt nửa bánh xe máy, nguy cơ chết máy cao"
-        val_est = 22.4
-    elif data.scenario == "real_flood_2":
-        msg = "Nước ngập mấp mé ống xả, phương tiện di chuyển chậm"
-        val_est = 19.5
-    elif data.scenario == "real_flood_3":
-        msg = "Ngập sâu diện rộng trên lòng đường, khuyến cáo chuyển hướng cứu hộ"
-        val_est = 31.5
-    elif data.scenario == "real_flood_4":
-        msg = "Ngõ hẻm ngập nước mưa, người dân lưu thông khó khăn"
-        val_est = 18.0
-    else:
-        msg = "CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm"
-        val_est = 12.0
-
-    clean_node_name = state.NODES[node_id]["name"].split("(")[0].strip()
-    p_json, p_bytes = build_compact_payload(node_id, inc_type, val_est, "cm")
-
-    state.INCIDENTS = [inc for inc in state.INCIDENTS if inc.get("node_id") != node_id]
-    new_inc = {
-        "id": f"inc-{node_id}-{int(time.time())}",
-        "node_id": node_id,
-        "node_name": clean_node_name,
-        "type": inc_type,
-        "level": "DANGER" if (data.scenario in ["real_flood_1", "real_flood_3"]) else "WARNING",
-        "val": val_est,
-        "unit": "cm",
-        "payload_json": p_json,
-        "payload_bytes": p_bytes,
-        "message": msg,
-        "timestamp": time.strftime("%H:%M:%S"),
-        "gps": f"{state.NODES[node_id]['lat']}, {state.NODES[node_id]['lng']}",
-        "telegram_sent": True
+    return {
+        "success": True,
+        "node": state.NODES[node_id],
+        "message": f"Đã chuyển kịch bản trạm {node_id} sang {data.scenario}. Luồng phân tích AI sẽ cập nhật theo khung hình thực tế."
     }
-    save_incident_to_db(new_inc)
-    state.INCIDENTS.insert(0, new_inc)
-    state.INCIDENTS = state.INCIDENTS[:5]
-
-    return {"success": True, "node": state.NODES[node_id], "payload_bytes": p_bytes}
 
 
 @router.post("/api/nodes/{node_id}/fall_test")
