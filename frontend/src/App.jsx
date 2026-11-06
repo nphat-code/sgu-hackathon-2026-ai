@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import Header from './components/Header';
 import StationTabs from './components/StationTabs';
-import TelemetryBar from './components/TelemetryBar';
 import VideoMonitor from './components/VideoMonitor';
 import MapViewer from './components/MapViewer';
 import IncidentFeed from './components/IncidentFeed';
-import ReportModal from './components/ReportModal';
 import './App.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE || (
@@ -165,11 +163,6 @@ export default function App() {
   const [telegramToast, setTelegramToast] = useState(null);
   const [streamError, setStreamError] = useState(false);
 
-  // Text Report Modal state
-  const [reportModalOpen, setReportModalOpen] = useState(false);
-  const [reportTab, setReportTab] = useState('instant'); // 'instant' | 'shift'
-  const [reportData, setReportData] = useState(null);
-
   // Auto-recover stream if momentarily interrupted
   useEffect(() => {
     if (streamError) {
@@ -230,21 +223,9 @@ export default function App() {
     setStreamError(false);
   };
 
-  // Open Text Report Modal & Fetch Summary from Minimal API
-  const handleOpenTextReport = async () => {
-    setReportModalOpen(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/reports/summary?type=${reportTab}&node_id=${activeNodeId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setReportData(data);
-      }
-    } catch (e) { }
-  };
-
   // Trigger Telegram Alert
   const handleSendTelegram = async (incident) => {
-    setTelegramToast(`🔔 Đã gửi mẩu tin cảnh báo (${incident?.payload_bytes || 82} Bytes < 150B) về Telegram @UrbanShield_SGU_Emergency!`);
+    setTelegramToast(`🔔 Đã gửi mẩu tin cảnh báo (${incident?.payload_bytes || 82} Bytes) về Telegram @UrbanShield_SGU_Emergency!`);
     setTimeout(() => setTelegramToast(null), 3500);
 
     try {
@@ -256,17 +237,7 @@ export default function App() {
     } catch (e) { }
   };
 
-  const handleCopyText = (text) => {
-    if (!text) return;
-    navigator.clipboard.writeText(text);
-    setTelegramToast('📋 Đã sao chép nội dung Text Report vào bộ nhớ tạm!');
-    setTimeout(() => setTelegramToast(null), 2500);
-  };
-
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-  const depthValue = metrics.flood?.detected ? metrics.flood.depth_cm : 0;
-  const framesInRam = metrics.privacy?.frames_processed_in_ram || 240;
-  const payloadBytes = metrics.payload_bytes || 82;
 
   return (
     <div className="app-container">
@@ -278,27 +249,9 @@ export default function App() {
         </div>
       )}
 
-      {/* Text Report Modal */}
-      <ReportModal
-        isOpen={reportModalOpen}
-        onClose={() => setReportModalOpen(false)}
-        reportTab={reportTab}
-        setReportTab={setReportTab}
-        reportData={reportData}
-        activeNode={activeNode}
-        depthValue={depthValue}
-        framesInRam={framesInRam}
-        payloadBytes={payloadBytes}
-        payloadJson={metrics.payload_json}
-        onCopyText={handleCopyText}
-        onSendTelegram={handleSendTelegram}
-        firstIncident={incidents[0]}
-      />
-
       {/* Top Header */}
       <Header
         backendConnected={backendConnected}
-        onOpenTextReport={handleOpenTextReport}
         mobileTab={mobileTab}
         onSelectMobileTab={setMobileTab}
       />
