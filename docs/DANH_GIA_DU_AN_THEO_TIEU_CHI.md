@@ -21,9 +21,9 @@
 ---
 
 ## 🌐 LINK TRIỂN KHAI PRODUCTION CHÍNH THỨC (GOOGLE CLOUD RUN)
-- **URL công khai có HTTPS:** [https://urbanshield-sgu-932955180439.asia-southeast1.run.app](https://urbanshield-sgu-932955180439.asia-southeast1.run.app)
-- **Kiểm tra Healthcheck:** [https://urbanshield-sgu-932955180439.asia-southeast1.run.app/health](https://urbanshield-sgu-932955180439.asia-southeast1.run.app/health)
-- **API Danh mục Video:** [https://urbanshield-sgu-932955180439.asia-southeast1.run.app/api/videos/catalog](https://urbanshield-sgu-932955180439.asia-southeast1.run.app/api/videos/catalog)
+- **URL công khai có HTTPS:** [https://urbanshield-sgu-128758538305.asia-southeast1.run.app](https://urbanshield-sgu-128758538305.asia-southeast1.run.app)
+- **Kiểm tra Healthcheck:** [https://urbanshield-sgu-128758538305.asia-southeast1.run.app/health](https://urbanshield-sgu-128758538305.asia-southeast1.run.app/health)
+- **API Danh mục Video:** [https://urbanshield-sgu-128758538305.asia-southeast1.run.app/api/videos/catalog](https://urbanshield-sgu-128758538305.asia-southeast1.run.app/api/videos/catalog)
 - **Hạ tầng:** Google Cloud Platform (GCP) - Cloud Run (Serverless Container, Region `asia-southeast1`).
 - **Bảo mật:** SSL/TLS tự động bởi Google Trust Services, Zero-Disk RAM verify (`"zero_disk_verified": True`).
 
