@@ -32,3 +32,4 @@ class FallTestPayload(BaseModel):
 class TelegramAlertPayload(BaseModel):
     incident_id: str
     node_id: Optional[str] = None
+

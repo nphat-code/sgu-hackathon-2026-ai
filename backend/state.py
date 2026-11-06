@@ -467,3 +467,4 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
         elapsed = time.time() - cycle_start
         sleep_dur = max(0.002, frame_delay - elapsed)
         time.sleep(sleep_dur)
+

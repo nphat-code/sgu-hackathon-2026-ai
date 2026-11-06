@@ -181,3 +181,4 @@ def trigger_telegram_alert(req: TelegramAlertPayload):
         gps=f"{node['lat']}, {node['lng']}"
     )
     return send_telegram_alert(text_report, req.incident_id)
+

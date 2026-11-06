@@ -139,3 +139,4 @@ def video_feed(
         state.stream_generator(node_id, custom_fps=fps),
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
+
