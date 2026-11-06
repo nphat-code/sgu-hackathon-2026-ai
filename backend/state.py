@@ -377,10 +377,13 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
                         "updated_at": time.time()
                     }
 
-                    is_danger_flood = (flood_info.get("level") == "DANGER" and float(flood_info.get("depth_cm", 0.0)) >= 20.0)
+                    depth_val = float(flood_info.get("depth_cm", 0.0))
+                    mot_val = float(acc_info.get("motionless_sec", 0.0))
+                    is_danger_flood = (flood_info.get("level") == "DANGER" and depth_val >= 20.0)
+                    is_warning_flood = (flood_info.get("level") == "WARNING" and depth_val >= 12.0)
                     is_fall_detected = bool(acc_info.get("detected"))
 
-                    if is_danger_flood or is_fall_detected:
+                    if is_danger_flood or is_warning_flood or is_fall_detected:
                         now_ts = time.time()
                         alert_key = f"{node_id}_{'accident' if is_fall_detected else 'flood'}"
                         last_sent = LAST_AUTO_ALERT_TIME.get(alert_key, 0.0)
@@ -388,26 +391,35 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
                         if (now_ts - last_sent) >= 45.0:
                             LAST_AUTO_ALERT_TIME[alert_key] = now_ts
                             inc_type = "ACCIDENT" if is_fall_detected else "FLOOD"
-                            depth_val = float(flood_info.get("depth_cm", 0.0))
-                            mot_val = float(acc_info.get("motionless_sec", 0.0))
+                            alert_level = "DANGER" if (is_fall_detected or is_danger_flood) else "WARNING"
 
                             auto_report = generate_instant_alert_text(
                                 node_name=node["name"],
                                 event_type=inc_type,
-                                level="DANGER",
+                                level=alert_level,
                                 depth_cm=depth_val,
                                 motionless_sec=mot_val,
                                 gps=f"{node['lat']}, {node['lng']}"
                             )
+
+                            if is_fall_detected:
+                                title_txt = "Ngã xe máy nằm bất động > 5s"
+                                msg_txt = acc_info.get("reason", "Phát hiện người ngã xe nằm bất động quá 5 giây")
+                            elif is_danger_flood:
+                                title_txt = f"Ngập nước nguy hiểm ({depth_val}cm)"
+                                msg_txt = f"Nước ngập sâu {depth_val}cm vượt nửa bánh xe máy, nguy cơ chết máy cao"
+                            else:
+                                title_txt = f"Ngập nước chú ý ({depth_val}cm)"
+                                msg_txt = f"Nước ngập {depth_val}cm mấp mé ống xả, phương tiện di chuyển chậm"
 
                             new_auto_inc = {
                                 "id": f"inc-{node_id}-{int(now_ts)}",
                                 "node_id": node_id,
                                 "node_name": node["name"].split("(")[0].strip(),
                                 "type": inc_type,
-                                "level": "DANGER",
-                                "title": "Ngã xe máy nằm bất động > 5s" if is_fall_detected else f"Ngập nước nguy hiểm ({depth_val}cm)",
-                                "message": acc_info.get("reason", "Phát hiện người ngã xe nằm bất động quá 5 giây") if is_fall_detected else f"Nước ngập sâu {depth_val}cm vượt nửa bánh xe máy, nguy cơ chết máy cao",
+                                "level": alert_level,
+                                "title": title_txt,
+                                "message": msg_txt,
                                 "depth_cm": depth_val,
                                 "payload_bytes": p_bytes,
                                 "payload_json": p_json,

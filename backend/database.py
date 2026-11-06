@@ -18,6 +18,8 @@ def init_db():
         conn = sqlite3.connect(DB_PATH)
         try:
             cur = conn.cursor()
+            cur.execute("PRAGMA journal_mode=WAL;")
+            cur.execute("PRAGMA synchronous=NORMAL;")
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS incidents (
                     id TEXT PRIMARY KEY,

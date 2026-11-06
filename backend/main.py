@@ -57,10 +57,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mount Modular Domain Routers
-app.include_router(reports_router)
-app.include_router(incidents_router)
-app.include_router(nodes_router)
+# Mount Modular Domain Routers with OpenAPI Tags
+app.include_router(reports_router, tags=["Reports & Health Monitoring"])
+app.include_router(incidents_router, tags=["Incidents & Telegram Alerts"])
+app.include_router(nodes_router, tags=["Nodes & Camera Streams"])
 
 # Production Single-Container SPA static serving (for Google Cloud Run / Cloud deployment)
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")

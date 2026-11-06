@@ -139,6 +139,15 @@ class UrbanShieldDetector:
         if model_name is None:
             default_path = os.path.join(os.path.dirname(__file__), "yolov8n.pt")
             model_name = default_path if os.path.exists(default_path) else "yolov8n.pt"
+
+        # Edge CPU parallelism optimization: allocate 2-4 worker threads for optimal PyTorch CPU throughput
+        try:
+            import torch
+            num_cpus = os.cpu_count() or 2
+            torch.set_num_threads(max(1, min(4, num_cpus)))
+        except Exception:
+            pass
+
         print(f"[*] Initializing YOLOv8 CPU Edge Model: {model_name}...")
         self.model = YOLO(model_name)
         self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
