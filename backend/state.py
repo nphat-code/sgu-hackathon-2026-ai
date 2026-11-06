@@ -14,7 +14,8 @@ from typing import Dict, Any, List, Optional
 from detector import UrbanShieldDetector
 from reporting import (
     build_compact_payload,
-    generate_instant_alert_text
+    generate_instant_alert_text,
+    get_vn_time_str
 )
 from database import (
     init_db,
@@ -423,8 +424,8 @@ def stream_generator(node_id: str, custom_fps: Optional[float] = None):
                                 "depth_cm": depth_val,
                                 "payload_bytes": p_bytes,
                                 "payload_json": p_json,
-                                "time": time.strftime("%H:%M:%S"),
-                                "timestamp": time.strftime("%H:%M:%S"),
+                                "time": get_vn_time_str("%H:%M:%S"),
+                                "timestamp": get_vn_time_str("%H:%M:%S"),
                                 "status": "active",
                                 "text_report": auto_report
                             }

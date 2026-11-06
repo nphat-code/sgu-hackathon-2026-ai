@@ -1,6 +1,14 @@
 import json
 import time
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, List, Tuple
+
+VN_TZ = timezone(timedelta(hours=7))
+
+
+def get_vn_time_str(fmt: str = "%H:%M:%S") -> str:
+    """Returns current timestamp formatted in Vietnam local timezone (UTC+7 / GMT+7)."""
+    return datetime.now(timezone.utc).astimezone(VN_TZ).strftime(fmt)
 
 
 def build_compact_payload(
@@ -45,7 +53,7 @@ def generate_instant_alert_text(
     Strictly adheres to Anti-hype & Problem-First standards.
     """
     if not timestamp_str:
-        timestamp_str = time.strftime("%H:%M:%S - %d/%m/%Y")
+        timestamp_str = get_vn_time_str("%H:%M:%S - %d/%m/%Y")
 
     clean_name = node_name.split("(")[0].strip()
 
@@ -95,7 +103,7 @@ def generate_shift_digest_text(
     """
     Generates Template B: Shift Summary Text Report (Mẫu B - Bản tin tổng hợp ca trực).
     """
-    date_str = time.strftime("%d/%m/%Y (%H:%M)")
+    date_str = get_vn_time_str("%d/%m/%Y (%H:%M)")
     flood_list = [inc for inc in incidents if inc.get("type") == "FLOOD"]
     fall_list = [inc for inc in incidents if inc.get("type") in ("ACCIDENT", "FALL")]
     weather_list = [inc for inc in incidents if inc.get("type") == "WEATHER"]

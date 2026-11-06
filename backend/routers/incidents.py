@@ -9,7 +9,11 @@ from fastapi import APIRouter, Header, HTTPException
 
 from schemas import FloodIncidentPayload, AccidentIncidentPayload, TelegramAlertPayload
 from detector import estimate_wheel_flood_depth
-from reporting import build_compact_payload, generate_instant_alert_text
+from reporting import (
+    build_compact_payload,
+    generate_instant_alert_text,
+    get_vn_time_str
+)
 from database import save_incident_to_db
 from notify import send_telegram_alert
 import state
@@ -61,7 +65,7 @@ def post_flood_incident(
         "payload_json": compact_json,
         "payload_bytes": byte_size,
         "message": msg,
-        "timestamp": time.strftime("%H:%M:%S"),
+        "timestamp": get_vn_time_str("%H:%M:%S"),
         "gps": gps_str,
         "telegram_sent": True
     }
@@ -133,7 +137,7 @@ def post_accident_incident(
         "payload_json": compact_json,
         "payload_bytes": byte_size,
         "message": msg,
-        "timestamp": time.strftime("%H:%M:%S"),
+        "timestamp": get_vn_time_str("%H:%M:%S"),
         "gps": gps_str,
         "telegram_sent": True
     }

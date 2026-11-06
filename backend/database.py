@@ -3,6 +3,7 @@ import sqlite3
 import threading
 import time
 from typing import Dict, Any, List
+from reporting import get_vn_time_str
 
 DB_PATH = os.environ.get(
     "URBANSHIELD_DB_PATH",
@@ -77,7 +78,7 @@ def save_incident_to_db(incident: Dict[str, Any]):
                 incident.get("payload_json", "{}"),
                 int(incident.get("payload_bytes", 84)),
                 incident.get("message", ""),
-                incident.get("timestamp", time.strftime("%H:%M:%S")),
+                incident.get("timestamp", get_vn_time_str("%H:%M:%S")),
                 int(incident.get("created_at", time.time())),
                 incident.get("gps", "10.7599, 106.6823"),
                 1 if incident.get("telegram_sent", True) else 0,

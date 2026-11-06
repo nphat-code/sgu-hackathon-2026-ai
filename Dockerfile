@@ -31,6 +31,7 @@ COPY --from=frontend-builder /app/frontend/dist ./backend/static/
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 ENV STREAM_FPS=28.5
+ENV TZ=Asia/Ho_Chi_Minh
 
 EXPOSE 8080
 
