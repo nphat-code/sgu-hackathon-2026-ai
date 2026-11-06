@@ -303,12 +303,6 @@ export default function App() {
         onSelectMobileTab={setMobileTab}
       />
 
-      {/* Hardware & Edge AI Telemetry Dock */}
-      <TelemetryBar
-        metrics={metrics}
-        backendConnected={backendConnected}
-      />
-
       {/* Main Command Center Grid */}
       <div className={`dashboard-grid ${mobileTab === 'map' ? 'show-map-only' : 'show-camera-only'}`}>
         {/* Left Column: Video Surveillance & Calibrated Gauge */}
