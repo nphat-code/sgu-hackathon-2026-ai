@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Shield,
-  AlertTriangle,
-  Activity,
-  Cpu,
-  Send,
-  CheckCircle2,
-  MapPin,
-  Droplets,
-  Radio,
-  Waves,
-  CloudRain,
-  Gauge,
-  Lock,
-  Wifi,
-  FileText,
-  Timer,
-  RotateCcw,
-  Copy,
-  X
-} from 'lucide-react';
+import { Send } from 'lucide-react';
+import Header from './components/Header';
+import StationTabs from './components/StationTabs';
+import TelemetryBar from './components/TelemetryBar';
+import VideoMonitor from './components/VideoMonitor';
 import MapViewer from './components/MapViewer';
+import IncidentFeed from './components/IncidentFeed';
+import ReportModal from './components/ReportModal';
 import './App.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://127.0.0.1:8000' : window.location.origin);
+const API_BASE = import.meta.env.VITE_API_BASE || (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
+    : window.location.origin
+);
 
 const INITIAL_NODES = [
   {
@@ -123,6 +113,7 @@ const INITIAL_NODES = [
 export default function App() {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [activeNodeId, setActiveNodeId] = useState("node-sgu-01");
+  const [mobileTab, setMobileTab] = useState("camera"); // 'camera' | 'map'
   const [metrics, setMetrics] = useState({
     fps: 28.5,
     infer_time_ms: 32.0,
@@ -169,6 +160,7 @@ export default function App() {
       gps: "10.7420, 106.7055"
     }
   ]);
+
   const [backendConnected, setBackendConnected] = useState(false);
   const [telegramToast, setTelegramToast] = useState(null);
   const [streamError, setStreamError] = useState(false);
@@ -232,62 +224,10 @@ export default function App() {
     return () => clearInterval(interval);
   }, [activeNodeId, backendConnected]);
 
-  // Handle switching scenario between real videos
-  const handleScenarioChange = async (scenario) => {
+  // Select node from tabs or directly from Map marker click
+  const handleSelectNode = (nodeId) => {
+    setActiveNodeId(nodeId);
     setStreamError(false);
-    setNodes(prev => prev.map(n => n.id === activeNodeId ? { ...n, scenario } : n));
-
-    const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-    const isFlood = scenario.includes('flood');
-    let incMsg = 'Phát hiện ngập lụt tại cung đường';
-    if (scenario === 'real_flood_1') incMsg = 'Phát hiện ngập triều cường vượt nửa bánh xe máy, nguy cơ chết máy cao';
-    else if (scenario === 'real_flood_2') incMsg = 'Nước ngập mấp mé ống xả, phương tiện di chuyển chậm';
-    else if (scenario === 'real_flood_3' || scenario === 'real_flood_6') incMsg = 'Nước ngập mấp mé ống pô xe máy, phương tiện giảm tốc';
-    else if (scenario === 'real_flood_4' || scenario === 'real_flood_5') incMsg = 'Nước xăm xắp mặt đường ngõ hẻm, xe máy di chuyển an toàn';
-    else if (scenario === 'real_accident_1') incMsg = 'CẢNH BÁO: Mưa to mặt đường ngập trơn trượt lưu thông chậm';
-
-    const cleanNodeName = activeNode.name.split('(')[0].trim();
-    setIncidents(prev => {
-      const filtered = prev.filter(item => item.node_id !== activeNode.id);
-      const newInc = {
-        id: `inc-${activeNode.id}-${Date.now()}`,
-        node_id: activeNode.id,
-        node_name: cleanNodeName,
-        type: isFlood ? 'FLOOD' : 'WEATHER',
-        level: scenario === 'real_flood_3' || scenario === 'real_flood_1' ? 'DANGER' : 'WARNING',
-        payload_bytes: 82,
-        message: incMsg,
-        timestamp: new Date().toLocaleTimeString('vi-VN'),
-        gps: `${activeNode.lat}, ${activeNode.lng}`
-      };
-      return [newInc, ...filtered].slice(0, 5);
-    });
-
-    try {
-      await fetch(`${API_BASE}/api/nodes/${activeNodeId}/scenario`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ scenario })
-      });
-    } catch (e) { }
-  };
-
-  // Trigger or Cancel 5s Fall Detection Counter
-  const handleFallTest = async (action = 'start') => {
-    try {
-      await fetch(`${API_BASE}/api/nodes/${activeNodeId}/fall_test`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
-      });
-      if (action === 'cancel') {
-        setTelegramToast('✅ Người dân đã tự đứng dậy trước 5 giây — Tự động đặt lại bộ đếm về 0s, không báo giả!');
-        setTimeout(() => setTelegramToast(null), 3200);
-      } else {
-        setTelegramToast('⏱️ Đang kiểm thử Bộ đếm bất động 5 giây (W/H > 1.15)... Hãy bấm "Đứng dậy (<5s)" nếu muốn thử chống báo giả!');
-        setTimeout(() => setTelegramToast(null), 3500);
-      }
-    } catch (e) { }
   };
 
   // Open Text Report Modal & Fetch Summary from Minimal API
@@ -324,12 +264,7 @@ export default function App() {
   };
 
   const activeNode = nodes.find(n => n.id === activeNodeId) || nodes[0];
-  const vehiclesCount = metrics.vehicles_count ?? (metrics.flood?.has_reference ? 1 : 0);
-  const hasRefObject = Boolean(vehiclesCount > 0 && metrics.flood?.has_reference === true);
-  const depthValue = (hasRefObject && metrics.flood?.detected) ? metrics.flood.depth_cm : 0;
-  const lastRefDepth = metrics.flood?.last_ref_depth_cm || 0;
-  const depthPercent = Math.min(100, Math.max(0, (depthValue / 50) * 100));
-  const motionlessSec = metrics.accident?.motionless_sec || 0;
+  const depthValue = metrics.flood?.detected ? metrics.flood.depth_cm : 0;
   const framesInRam = metrics.privacy?.frames_processed_in_ram || 240;
   const payloadBytes = metrics.payload_bytes || 82;
 
@@ -343,296 +278,72 @@ export default function App() {
         </div>
       )}
 
-      {/* Text Report Modal (Mẫu A & Mẫu B + <150 Bytes Proof) */}
-      {reportModalOpen && (
-        <div className="modal-backdrop" onClick={() => setReportModalOpen(false)}>
-          <div className="report-modal" onClick={e => e.stopPropagation()}>
-            <div className="report-modal-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FileText size={18} style={{ color: '#0284c7' }} />
-                <h3>BÁO CÁO VĂN BẢN MỘC MẠC (TEXT REPORT) & GÓI TIN &lt; 150 BYTES</h3>
-              </div>
-              <button className="modal-close-btn" onClick={() => setReportModalOpen(false)}>
-                <X size={18} />
-              </button>
-            </div>
+      {/* Text Report Modal */}
+      <ReportModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        reportTab={reportTab}
+        setReportTab={setReportTab}
+        reportData={reportData}
+        activeNode={activeNode}
+        depthValue={depthValue}
+        framesInRam={framesInRam}
+        payloadBytes={payloadBytes}
+        payloadJson={metrics.payload_json}
+        onCopyText={handleCopyText}
+        onSendTelegram={handleSendTelegram}
+        firstIncident={incidents[0]}
+      />
 
-            <div className="report-tabs-bar">
-              <button
-                className={`report-tab-btn ${reportTab === 'instant' ? 'active' : ''}`}
-                onClick={() => setReportTab('instant')}
-              >
-                Mẫu A: Cảnh Báo Tức Thời (Gửi Dân Quân / Tổ Dân Phố)
-              </button>
-              <button
-                className={`report-tab-btn ${reportTab === 'shift' ? 'active' : ''}`}
-                onClick={() => setReportTab('shift')}
-              >
-                Mẫu B: Bản Tin Tổng Hợp Ca Trực
-              </button>
-            </div>
+      {/* Top Header */}
+      <Header
+        backendConnected={backendConnected}
+        onOpenTextReport={handleOpenTextReport}
+        mobileTab={mobileTab}
+        onSelectMobileTab={setMobileTab}
+      />
 
-            <div className="report-modal-body">
-              <pre className="report-text-box">
-                {reportTab === 'instant'
-                  ? (reportData?.instant_report || `🚨 [CẢNH BÁO SỰ CỐ NGÕ HẺM]\n- Vị trí: ${activeNode.name}\n- Loại sự cố: Ngập nước sâu (${depthValue} cm - Vượt nửa bánh xe máy 50cm)\n- Tình trạng: Nước ngập qua ống xả và lọc gió, xe máy đi vào rất dễ chết máy.\n- Đề xuất: Đề nghị dân quân đặt biển cảnh báo và hướng dẫn bà con đi đường vòng.`)
-                  : (reportData?.shift_report || `📊 BẢN TIN TỔNG HỢP AN TOÀN KHU PHỐ\n1. TÌNH HÌNH NGẬP NƯỚC: 2 điểm ngập vượt 20cm.\n2. SỰ CỐ TRƯỢT NGÃ: 0 vụ bất động quá 5 giây.\n3. BẢO MẬT ĐỜI TƯ: Xử lý ${framesInRam} khung hình trên RAM, 0 file video lưu ổ cứng.`)}
-              </pre>
-
-              <div className="payload-proof-card">
-                <div className="payload-proof-header">
-                  <span>MINIMAL API JSON PAYLOAD (CHỈ GỬI MẨU TIN KHI CÓ SỰ CỐ):</span>
-                  <span className="byte-pill">
-                    {reportData?.payload_proof?.byte_size || payloadBytes} Bytes / 150 Bytes (Tiết kiệm 99.98% băng thông)
-                  </span>
-                </div>
-                <code className="payload-code">
-                  {reportData?.payload_proof?.compact_json || metrics.payload_json}
-                </code>
-              </div>
-            </div>
-
-            <div className="report-modal-footer">
-              <button
-                className="action-btn secondary"
-                onClick={() => handleCopyText(reportTab === 'instant' ? reportData?.instant_report : reportData?.shift_report)}
-              >
-                <Copy size={14} />
-                <span>Sao chép văn bản</span>
-              </button>
-              <button
-                className="action-btn primary"
-                onClick={() => {
-                  handleSendTelegram(incidents[0]);
-                  setReportModalOpen(false);
-                }}
-              >
-                <Send size={14} />
-                <span>Gửi ngay qua Telegram Bot</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Top Header - Clean & Minimal */}
-      <header className="app-header glass-panel">
-        <div className="logo-group">
-          <div className="shield-icon-badge">
-            <Shield size={20} />
-          </div>
-          <div>
-            <h1 className="brand-title">UrbanShield Lite</h1>
-            <div className="brand-subtitle">
-              Giám sát ngập nước & sự cố ngõ hẻm
-            </div>
-          </div>
-        </div>
-
-        <div className="header-actions">
-          {/* Open Plain-Text Report Button */}
-          <button
-            className="header-btn report-btn"
-            onClick={handleOpenTextReport}
-            title="Xem báo cáo tin nhắn văn bản"
-          >
-            <FileText size={14} />
-            <span>Báo cáo tin nhắn</span>
-          </button>
-
-          <div className="header-status-pill">
-            <Radio size={12} className="radar-dot" style={{ color: backendConnected ? '#10b981' : '#f59e0b' }} />
-            <span>{backendConnected ? 'Đang hoạt động' : 'Ngoại tuyến'}</span>
-          </div>
-        </div>
-      </header>
+      {/* Hardware & Edge AI Telemetry Dock */}
+      <TelemetryBar
+        metrics={metrics}
+        backendConnected={backendConnected}
+      />
 
       {/* Main Command Center Grid */}
-      <div className="dashboard-grid">
+      <div className={`dashboard-grid ${mobileTab === 'map' ? 'show-map-only' : 'show-camera-only'}`}>
         {/* Left Column: Video Surveillance & Calibrated Gauge */}
         <section className="video-column glass-panel">
-          {/* Top Camera Node Selector Bar */}
-          <div className="camera-toolbar">
-            <div className="node-selector-tabs">
-              {nodes.map(node => (
-                <button
-                  key={node.id}
-                  className={`node-tab-btn ${node.id === activeNodeId ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveNodeId(node.id);
-                    setStreamError(false);
-                  }}
-                  title={node.name}
-                >
-                  <MapPin size={13} />
-                  <span>{node.name.split('-')[0].trim()}</span>
-                  <span className={`tab-dot ${(node.status === 'alert' || node.scenario === 'real_flood_1' || node.scenario === 'real_flood_3' || node.scenario === 'real_accident_1') ? 'red' : 'amber'}`} />
-                </button>
-              ))}
-            </div>
+          <StationTabs
+            nodes={nodes}
+            activeNodeId={activeNodeId}
+            onSelectNode={handleSelectNode}
+            activeNode={activeNode}
+          />
 
-            <div className="camera-node-meta">
-              <span className="camera-meta-street">{activeNode.street_segment || activeNode.name}</span>
-              <span className="camera-meta-divider">•</span>
-              <span className="camera-meta-device">{activeNode.device}</span>
-            </div>
-          </div>
-
-          {/* Video Feed Screen - Unobstructed */}
-          <div className="video-feed-wrapper">
-            {backendConnected && !streamError ? (
-              <img
-                key={`${activeNode.id}-${activeNode.scenario}`}
-                src={`${API_BASE}/api/video_feed/${activeNode.id}`}
-                alt="Live Camera Feed"
-                className="video-stream-img"
-                onError={() => setStreamError(true)}
-              />
-            ) : (
-              <div className="video-placeholder">
-                <Cpu size={40} className="placeholder-icon" />
-                <h3>{activeNode.name}</h3>
-                <p>Đang kết nối luồng hình ảnh...</p>
-              </div>
-            )}
-
-            <div className="hud-overlay">
-              <div className="live-badge">
-                <div className="live-indicator" />
-                <span>{activeNode.name}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Unified Flood & Incident Status Bar */}
-          <div className="telemetry-gauge-card">
-            <div className="gauge-calibrator">
-              <div className="gauge-header">
-                <span className={`gauge-status-text ${metrics.accident?.detected || (hasRefObject && metrics.flood?.level === 'DANGER') ? 'text-danger' : 'text-warning'}`}>
-                  {metrics.accident?.detected ? (
-                    <>CẢNH BÁO NGÃ XE: Bất động quá 5 giây — Đã gửi tin nhắn hỗ trợ</>
-                  ) : metrics.accident?.motionless_sec >= 1.5 ? (
-                    <>Đang kiểm tra bất động: {metrics.accident.motionless_sec}s / 5.0s</>
-                  ) : (hasRefObject && metrics.flood?.detected) ? (
-                    <>
-                      {metrics.flood.level === 'DANGER'
-                        ? 'Ngập nguy hiểm (Vượt nửa bánh xe máy 50cm)'
-                        : 'Ngập chú ý (Mấp mé ống xả xe máy)'}
-                    </>
-                  ) : !hasRefObject && metrics.flood?.water_surface_present ? (
-                    <>Phát hiện mặt nước ngập — Đang chờ xe đi qua để đo{lastRefDepth > 0 ? ` (Đo gần nhất: ${lastRefDepth}cm)` : ''}</>
-                  ) : (
-                    <>Mặt đường thông thoáng, di chuyển an toàn</>
-                  )}
-                </span>
-
-                <span className="gauge-val">
-                  {metrics.accident?.detected ? (
-                    <strong style={{ color: '#ef4444' }}>Sự cố ngã xe: {metrics.accident.motionless_sec || 5.0}s</strong>
-                  ) : metrics.accident?.motionless_sec >= 1.5 ? (
-                    <span>Thời gian nằm: {metrics.accident.motionless_sec}s / 5.0s</span>
-                  ) : hasRefObject ? (
-                    <>Mực nước: <strong>{depthValue} cm</strong> / 50 cm</>
-                  ) : metrics.flood?.water_surface_present ? (
-                    <>Chờ xe đi qua vùng đo</>
-                  ) : (
-                    <span>Mặt đường khô ráo</span>
-                  )}
-                </span>
-              </div>
-
-              {/* Progress Bar with 3 Visual Danger Zones */}
-              <div className="gauge-track">
-                {metrics.accident?.detected ? (
-                  <div
-                    className="gauge-fill danger"
-                    style={{ width: '100%' }}
-                  />
-                ) : metrics.accident?.motionless_sec >= 1.5 && depthValue === 0 ? (
-                  <div
-                    className="gauge-fill warning"
-                    style={{ width: `${Math.min(100, (metrics.accident.motionless_sec / 5.0) * 100)}%` }}
-                  />
-                ) : (
-                  <>
-                    <div className="track-marker safe-mark" style={{ left: '20%' }}>
-                      <span className="mark-label">10cm (Ống xả)</span>
-                    </div>
-                    <div className="track-marker danger-mark" style={{ left: '50%' }}>
-                      <span className="mark-label">25cm (Nửa bánh xe)</span>
-                    </div>
-                    <div className="track-marker full-mark" style={{ left: '100%' }}>
-                      <span className="mark-label">50cm</span>
-                    </div>
-
-                    <div
-                      className={`gauge-fill ${metrics.flood?.level === 'DANGER' ? 'danger' : 'warning'}`}
-                      style={{ width: `${depthPercent}%` }}
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+          <VideoMonitor
+            activeNode={activeNode}
+            backendConnected={backendConnected}
+            streamError={streamError}
+            setStreamError={setStreamError}
+            apiBase={API_BASE}
+            metrics={metrics}
+          />
         </section>
 
         {/* Right Column: Live Map & Emergency Incidents Feed */}
         <section className="right-column">
-          {/* Live Map Panel */}
           <div className="glass-panel map-card-wrapper">
             <MapViewer
               nodes={nodes}
               activeNodeId={activeNodeId}
-              onSelectNode={setActiveNodeId}
+              onSelectNode={handleSelectNode}
             />
           </div>
 
-          {/* Real-time Incidents Feed */}
-          <div className="glass-panel incidents-panel">
-            <div className="panel-header">
-              <div className="panel-title">
-                <Activity size={16} style={{ color: '#dc2626' }} />
-                <span>CẢNH BÁO GẦN ĐÂY</span>
-              </div>
-              <span className="inc-counter-badge">
-                {incidents.length} điểm
-              </span>
-            </div>
-
-            <div className="incidents-list">
-              {incidents.map(inc => (
-                <div
-                  key={inc.id}
-                  className={`incident-item ${inc.level === 'DANGER' ? 'danger' : 'warning'}`}
-                >
-                  <span className={`inc-badge ${inc.level === 'DANGER' ? 'danger' : 'warning'}`}>
-                    {inc.level === 'DANGER' ? 'NGUY HIỂM' : 'CHÚ Ý'}
-                  </span>
-                  <div className="inc-info">
-                    <div className="inc-title">
-                      <span>{inc.node_name}</span>
-                      <span className="inc-time">
-                        {typeof inc.timestamp === 'number'
-                          ? new Date(inc.timestamp * (inc.timestamp > 10000000000 ? 1 : 1000)).toLocaleTimeString('vi-VN')
-                          : (inc.timestamp || inc.time || new Date().toLocaleTimeString('vi-VN'))}
-                      </span>
-                    </div>
-                    <div className="inc-desc">
-                      {inc.message}
-                    </div>
-                  </div>
-                  <button
-                    className="telegram-btn"
-                    onClick={() => handleSendTelegram(inc)}
-                    title="Gửi tin nhắn cảnh báo qua Telegram"
-                  >
-                    <Send size={11} />
-                    <span>Gửi tin</span>
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
+          <IncidentFeed
+            incidents={incidents}
+            onSendTelegram={handleSendTelegram}
+          />
         </section>
       </div>
     </div>
