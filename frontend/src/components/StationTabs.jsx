@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, HardDrive } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 export default function StationTabs({ nodes, activeNodeId, onSelectNode, activeNode }) {
   return (
@@ -27,11 +27,6 @@ export default function StationTabs({ nodes, activeNodeId, onSelectNode, activeN
 
       <div className="camera-node-meta">
         <span className="camera-meta-street">{activeNode.street_segment || activeNode.name}</span>
-        <span className="camera-meta-divider">•</span>
-        <span className="camera-meta-device">
-          <HardDrive size={11} style={{ marginRight: '4px', display: 'inline' }} />
-          {activeNode.device}
-        </span>
       </div>
     </div>
   );
