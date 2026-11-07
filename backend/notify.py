@@ -34,7 +34,7 @@ def send_telegram_alert(text_report: str, incident_id: str = "") -> Dict[str, An
     """
     start_ts = time.time()
     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip() or "9000579387:AAET2Fbjy1d2zUh9fHL6MGN7YKK4syqz5WI"
-    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or "5768661719"
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or "-5108096407"
 
     if bot_token and chat_id:
         try:
@@ -49,7 +49,7 @@ def send_telegram_alert(text_report: str, incident_id: str = "") -> Dict[str, An
                 return {
                     "success": True,
                     "mode": "live_telegram_api",
-                    "channel": "@UrbanShield_SGU_Emergency",
+                    "channel": "UrbanShield - Cảnh Báo An Toàn Khu Phố",
                     "delivered_to": ["Tổ Dân Phố Phường 3", "Đội Dân Quân Khu Phố", "Cán Bộ Trực Ban"],
                     "latency_ms": latency_ms,
                     "text_report": text_report,
@@ -62,7 +62,7 @@ def send_telegram_alert(text_report: str, incident_id: str = "") -> Dict[str, An
     return {
         "success": True,
         "mode": "edge_local_dispatcher",
-        "channel": "@UrbanShield_SGU_Emergency",
+        "channel": "UrbanShield - Cảnh Báo An Toàn Khu Phố",
         "delivered_to": ["Tổ Dân Phố Phường 3", "Đội Dân Quân Khu Phố", "Cán Bộ Trực Ban"],
         "latency_ms": latency_ms,
         "text_report": text_report,
