@@ -34,3 +34,13 @@ Mỗi khi hoàn thành xong bất kỳ phần việc nào (tạo file mới, ch�
 - **So sánh phải đối xứng, chặt chẽ:** Khi nêu rào cản, phải rõ 2 vế đối lập: *"mua camera chuyên dụng thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng"*.
 - **Luôn có từ nối dẫn dắt theo sơ đồ thị giác:** Khi chuyển khối trên slide, luôn dùng từ mồi và thứ tự thời gian: *"Quy trình rất đơn giản: Đầu tiên... truyền về máy tính... Tại đây, máy tính tự phân tích... và chỉ khi có sự cố thì mới gửi tin nhắn..."*.
 - **Tránh tranh cãi con số giá tiền:** Thay vì nêu con số cụ thể dễ bị Giám khảo bắt bẻ (*15-25 triệu*), hãy đánh thẳng vào bản chất: *"camera chuyên dụng thì quá đắt đỏ"*.
+
+### ⚖️ 5. Liêm chính học thuật & Tuyệt đối Không dùng Dữ liệu Giả (Academic Integrity & Zero-Fake-Data)
+- **Tuyệt đối cấm Fake Data & Hardcode kết quả:**
+  - Nghiêm cấm tạo dữ liệu giả, dữ liệu mồi hoặc hardcode số liệu (như tự gán sẵn mực nước ngập, gán cứng RAM, gán cứng độ trễ hay cắm cờ sự cố giả) nhằm mục đích "làm đẹp" kết quả hoặc qua mắt kiểm thử.
+  - Không được chứng minh tính hiệu quả của hệ thống bằng cách tự sinh ra các mẫu dữ liệu ảo/giả định không có thật.
+- **Nguyên tắc Chứng minh Thực chứng & Minh bạch (Empirical & Transparent Verification):**
+  - Mọi số liệu đo lường (mực nước ngập, tốc độ khung hình FPS, dung lượng RAM thực tế, độ trễ xử lý, thời gian bất động) phải được đo đạc và trích xuất trực tiếp từ runtime thực tế của hệ thống, nhân hệ điều hành (`psutil.Process()`) hoặc chạy suy luận thực tế trên video thực nghiệm.
+  - Phương pháp chứng minh phải dựa trên cơ sở khoa học minh bạch: công thức hình học thực tế (tỷ lệ bánh xe máy 50cm, đạo hàm mép nước Sobel), ma trận nhầm lẫn thực nghiệm và kiểm thử tự động với video thực tế.
+- **Trung thực về Giới hạn Khoa học (Scientific Honesty):**
+  - Thẳng thắn thừa nhận các điều kiện biên và giới hạn thực tế của giải pháp (ví dụ: cần có xe máy chạy qua để làm mốc đo, góc quay camera nghiêng quá lớn) thay vì ngụy tạo kết quả hoàn hảo. Ban Giám khảo chấm điểm rất cao sự liêm chính và hiểu sâu bản chất kỹ thuật của thí sinh.
