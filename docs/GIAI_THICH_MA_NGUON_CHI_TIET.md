@@ -398,8 +398,8 @@ def record_heartbeat(node_id: str, fps: float, ram_mb: float, uptime_sec: int):
 
 ---
 
-### 4. Tính toán mức tiết kiệm băng thông mạng: `get_db_bandwidth_stats()`
-* **Vị trí:** Dòng `107` đến `128`
+### 4. Tính toán thực chứng mức tiết kiệm băng thông mạng: `get_db_bandwidth_stats()`
+* **Vị trí:** Dòng `110` đến `148`
 * **Đoạn code thực tế:**
 ```python
 def get_db_bandwidth_stats() -> Dict[str, Any]:
@@ -407,24 +407,37 @@ def get_db_bandwidth_stats() -> Dict[str, Any]:
         conn = sqlite3.connect(DB_PATH)
         try:
             cur = conn.cursor()
-            cur.execute("SELECT COUNT(*), COALESCE(SUM(payload_bytes), 0), COALESCE(AVG(payload_bytes), 84) FROM incidents")
+            cur.execute("SELECT COUNT(*), COALESCE(SUM(payload_bytes), 0) FROM incidents")
             row = cur.fetchone()
-            total_events = row[0] if row else 0
-            total_bytes = row[1] if row else 0
-            avg_bytes = int(row[2]) if row and row[2] else 84
+            total_events = int(row[0]) if row and row[0] is not None else 0
+            total_bytes = int(row[1]) if row and row[1] is not None else 0
+            avg_bytes = round(total_bytes / total_events, 1) if total_events > 0 else 0.0
+
+            baseline_raw_stream_bytes_per_hour = 450 * 1024 * 1024  # 471,859,200 Bytes
+            if total_bytes == 0:
+                saved_pct = 100.0
+            else:
+                saved_ratio = 1.0 - (total_bytes / baseline_raw_stream_bytes_per_hour)
+                saved_pct = round(max(0.0, min(100.0, saved_ratio * 100.0)), 2)
 
             return {
-                "total_events_logged": max(3, total_events),
-                "total_payload_bytes": max(252, total_bytes),
-                "avg_payload_bytes": min(148, max(72, avg_bytes)),
-                "bandwidth_saved_percent": 99.98
+                "total_events_logged": total_events,
+                "total_payload_bytes": total_bytes,
+                "avg_payload_bytes": avg_bytes,
+                "bandwidth_saved_percent": saved_pct
             }
         finally:
             conn.close()
 ```
-* **Giải thích chi tiết:**
-  - Dùng câu lệnh SQL gom nhóm `COUNT(*)`, `SUM(payload_bytes)` và `AVG(payload_bytes)` để đo kích thước trung bình của các gói tin cảnh báo JSON đã phát sinh (chỉ khoảng **84 Bytes**).
-  - So sánh: Nếu kéo luồng video 640x480 28FPS liên tục về máy chủ sẽ tốn khoảng **450 MB mỗi giờ**. Trong khi đó Edge AI chỉ gửi vài mẩu tin 84 Bytes $\implies$ Chứng minh bằng con số thực chứng hệ thống **tiết kiệm 99.98% băng thông mạng**!
+* **Giải thích chi tiết (Tuân thủ 100% Zero-Fake-Data):**
+  - **Không ép sàn giả định:** Tuyệt đối loại bỏ các hàm ép số tối thiểu (`max(3, ...)` hay `max(252, ...)`). Nếu trạm vừa bật và chưa có sự cố nào, hệ thống báo trung thực `total_events = 0`, `total_payload_bytes = 0`, `avg_payload_bytes = 0.0`.
+  - **Công thức toán học minh bạch:**
+    - Chuẩn truyền video dân dụng 640x480 H.264 @ 28 FPS: $\approx 1.2\text{ Mbps} = 150,000\text{ B/s} \implies 450\text{ MB/giờ} = 471,859,200\text{ Bytes}$.
+    - Khi Edge AI xử lý tại chỗ:
+      - Nếu chưa có sự cố: Tiêu thụ 0 Bytes $\implies$ Tiết kiệm $100.0\%$ băng thông.
+      - Khi có sự cố (ví dụ 10 sự cố $\approx 820\text{ Bytes}$):
+        $$\% \text{ Tiết kiệm} = \left(1.0 - \frac{820}{471,859,200}\right) \times 100\% = 99.9998\%$$
+    - Mọi con số đều được tính toán động (dynamically computed) từ dữ liệu thực tế trong SQLite, chứng minh bằng cơ sở khoa học rõ ràng trước Ban Giám khảo.
 
 ---
 

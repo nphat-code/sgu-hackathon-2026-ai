@@ -51,7 +51,7 @@ def health_check():
         "fps": measured_fps,
         "ram_used_mb": ram_used_mb,
         "zero_disk_verified": True,
-        "frames_processed_in_ram": max(120, state.detector.frames_processed_in_ram),
+        "frames_processed_in_ram": state.detector.frames_processed_in_ram,
         "disk_files_written": 0,
         "last_payload_bytes": bw_stats["avg_payload_bytes"]
     }
@@ -70,7 +70,7 @@ def get_system_status():
         "edge_ai_model": "YOLOv8n (~6MB CPU Inference)",
         "cost_savings": "99.9% bandwidth & server cost saved",
         "avg_payload_bytes": bw["avg_payload_bytes"],
-        "frames_processed_in_ram": max(150, state.detector.frames_processed_in_ram),
+        "frames_processed_in_ram": state.detector.frames_processed_in_ram,
         "disk_writes": 0
     }
 
@@ -162,13 +162,15 @@ def get_text_report_summary(
     )
 
     bw_stats = get_db_bandwidth_stats()
+    flood_depths = [float(m.get("flood", {}).get("depth_cm", 0.0)) for m in state.NODE_LATEST_METRICS.values() if "flood" in m]
+    max_recorded_depth = max(flood_depths) if flood_depths else float(flood_info.get("depth_cm", 0.0))
     shift_text = generate_shift_digest_text(
         nodes=list(state.NODES.values()),
         incidents=state.INCIDENTS,
         stats={
-            "max_depth_cm": max([ float(m.get("flood", {}).get("depth_cm", 0.0)) for m in state.NODE_LATEST_METRICS.values() ] + [31.5]),
+            "max_depth_cm": round(max_recorded_depth, 1),
             "last_payload_bytes": byte_size,
-            "frames_processed_in_ram": max(240, state.detector.frames_processed_in_ram)
+            "frames_processed_in_ram": state.detector.frames_processed_in_ram
         }
     )
 
