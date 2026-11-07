@@ -5,7 +5,7 @@ Endpoints for flood events, accident events, and Telegram alerts.
 
 import time
 from typing import Optional
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Query
 
 from schemas import FloodIncidentPayload, AccidentIncidentPayload, TelegramAlertPayload
 from detector import estimate_wheel_flood_depth
@@ -14,7 +14,7 @@ from reporting import (
     generate_instant_alert_text,
     get_vn_time_str
 )
-from database import save_incident_to_db
+from database import save_incident_to_db, get_incidents_history
 from notify import send_telegram_alert
 import state
 
@@ -22,9 +22,23 @@ router = APIRouter(tags=["Incidents"])
 
 
 @router.get("/api/incidents")
+@router.get("/api/v1/incidents")
 def get_incidents():
     """Returns the most recent active and recorded incidents."""
     return state.INCIDENTS
+
+
+@router.get("/api/incidents/history")
+@router.get("/api/v1/incidents/history")
+def get_historical_incidents(
+    limit: int = Query(10, ge=1, le=100, description="Số lượng sự cố trên một trang"),
+    page: int = Query(1, ge=1, description="Số trang phân trang"),
+    node_id: Optional[str] = Query(None, description="Lọc theo mã trạm camera")
+):
+    """
+    Returns indexed historical incident records from SQLite edge database with limit/offset pagination.
+    """
+    return get_incidents_history(limit=limit, page=page, node_id=node_id)
 
 
 @router.post("/api/v1/incidents/flood")
@@ -167,6 +181,7 @@ def post_accident_incident(
 
 
 @router.post("/api/alerts/telegram")
+@router.post("/api/v1/alerts/telegram")
 def trigger_telegram_alert(req: TelegramAlertPayload):
     """Manual or automated dispatch of instant text alert to Telegram."""
     node_id = req.node_id or "node-sgu-01"

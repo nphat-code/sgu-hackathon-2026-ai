@@ -21,6 +21,8 @@ router = APIRouter(tags=["Reports & System"])
 
 
 @router.get("/health")
+@router.get("/api/health")
+@router.get("/api/v1/health")
 def health_check():
     """
     Minimal API Health Check.

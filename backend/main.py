@@ -5,7 +5,8 @@ Refactored Clean Architecture with FastAPI APIRouter.
 
 import os
 import sys
-from fastapi import FastAPI, HTTPException
+import time
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 # Ensure backend root is on sys.path
@@ -56,6 +57,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def add_process_time_and_arch_headers(request: Request, call_next):
+    """Measures precise backend API response latency and attaches diagnostic headers."""
+    start_time = time.time()
+    response = await call_next(request)
+    duration_ms = (time.time() - start_time) * 1000.0
+    response.headers["X-Process-Time"] = f"{duration_ms:.2f}ms"
+    response.headers["X-Backend-Architecture"] = "Clean-FastAPI-Edge-v2"
+    return response
 
 # Mount Modular Domain Routers with OpenAPI Tags
 app.include_router(reports_router, tags=["Reports & Health Monitoring"])

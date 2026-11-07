@@ -83,3 +83,36 @@ def test_text_reports_anti_hype_compliance():
     for phrase in banned_phrases:
         assert phrase not in combined_text
 
+
+def test_process_time_and_clean_arch_headers():
+    """Kiểm tra Header X-Process-Time và X-Backend-Architecture gắn tự động bởi middleware."""
+    resp = client.get("/health")
+    assert resp.status_code == 200
+    assert "x-process-time" in resp.headers
+    assert "ms" in resp.headers["x-process-time"]
+    assert resp.headers.get("x-backend-architecture") == "Clean-FastAPI-Edge-v2"
+
+
+def test_historical_incidents_pagination_from_sqlite():
+    """Kiểm tra API phân trang lịch sử sự cố có Index từ SQLite: /api/v1/incidents/history."""
+    resp = client.get("/api/v1/incidents/history?limit=2&page=1")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "items" in data
+    assert "pagination" in data
+    assert data["pagination"]["limit"] == 2
+    assert data["pagination"]["page"] == 1
+    assert data["pagination"]["total_items"] >= 1
+    assert len(data["items"]) <= 2
+
+
+def test_consistent_v1_api_versioning():
+    """Kiểm tra toàn bộ API hỗ trợ chuẩn RESTful v1: /api/v1/nodes, /api/v1/health."""
+    resp_nodes = client.get("/api/v1/nodes")
+    assert resp_nodes.status_code == 200
+    assert len(resp_nodes.json()) >= 5
+
+    resp_health = client.get("/api/v1/health")
+    assert resp_health.status_code == 200
+    assert resp_health.json()["status"] == "healthy"
+

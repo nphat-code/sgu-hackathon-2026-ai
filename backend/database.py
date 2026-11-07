@@ -2,7 +2,7 @@ import os
 import sqlite3
 import threading
 import time
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from reporting import get_vn_time_str
 
 DB_PATH = os.environ.get(
@@ -122,6 +122,53 @@ def get_db_bandwidth_stats() -> Dict[str, Any]:
                 "total_payload_bytes": max(252, total_bytes),
                 "avg_payload_bytes": min(148, max(72, avg_bytes)),
                 "bandwidth_saved_percent": 99.98
+            }
+        finally:
+            conn.close()
+
+
+def get_incidents_history(
+    limit: int = 10,
+    page: int = 1,
+    node_id: Optional[str] = None
+) -> Dict[str, Any]:
+    """Queries indexed historical incidents from SQLite with clean limit/offset pagination."""
+    limit = max(1, min(100, int(limit)))
+    page = max(1, int(page))
+    offset = (page - 1) * limit
+
+    with _db_lock:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        try:
+            cur = conn.cursor()
+            if node_id:
+                count_res = cur.execute("SELECT COUNT(*) FROM incidents WHERE node_id = ?", (node_id,)).fetchone()
+                total_items = count_res[0] if count_res else 0
+                cur.execute(
+                    "SELECT * FROM incidents WHERE node_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                    (node_id, limit, offset)
+                )
+            else:
+                count_res = cur.execute("SELECT COUNT(*) FROM incidents").fetchone()
+                total_items = count_res[0] if count_res else 0
+                cur.execute(
+                    "SELECT * FROM incidents ORDER BY created_at DESC LIMIT ? OFFSET ?",
+                    (limit, offset)
+                )
+
+            rows = [dict(r) for r in cur.fetchall()]
+            total_pages = max(1, (total_items + limit - 1) // limit)
+            return {
+                "items": rows,
+                "pagination": {
+                    "total_items": total_items,
+                    "page": page,
+                    "limit": limit,
+                    "total_pages": total_pages,
+                    "has_next": page < total_pages,
+                    "has_prev": page > 1
+                }
             }
         finally:
             conn.close()

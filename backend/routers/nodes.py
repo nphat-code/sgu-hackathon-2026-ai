@@ -17,12 +17,14 @@ router = APIRouter(tags=["Nodes & Streams"])
 
 
 @router.get("/api/nodes")
+@router.get("/api/v1/nodes")
 def get_nodes():
     """Returns list of monitored camera stations."""
     return list(state.NODES.values())
 
 
 @router.get("/api/nodes/{node_id}/metrics")
+@router.get("/api/v1/nodes/{node_id}/metrics")
 def get_node_metrics(node_id: str):
     """Returns real-time edge AI telemetry metrics for a station."""
     if node_id not in state.NODES:
@@ -41,6 +43,7 @@ def get_node_metrics(node_id: str):
 
 
 @router.post("/api/nodes/{node_id}/scenario")
+@router.post("/api/v1/nodes/{node_id}/scenario")
 def set_node_scenario(node_id: str, data: ScenarioPayload):
     """Changes active scenario recording for a camera node."""
     if node_id not in state.NODES:
@@ -66,6 +69,7 @@ def set_node_scenario(node_id: str, data: ScenarioPayload):
 
 
 @router.post("/api/nodes/{node_id}/fall_test")
+@router.post("/api/v1/nodes/{node_id}/fall_test")
 def control_fall_test(node_id: str, req: FallTestPayload):
     """
     Demonstrates the 5.0-second motionless debounce counter against false alarms.
@@ -92,7 +96,9 @@ def control_fall_test(node_id: str, req: FallTestPayload):
 
 
 @router.get("/api/video_feed/{node_id}")
+@router.get("/api/v1/video_feed/{node_id}")
 @router.get("/stream/{node_id}")
+@router.get("/api/v1/stream/{node_id}")
 def video_feed(
     node_id: str,
     fps: Optional[float] = Query(None, ge=1.0, le=60.0, description="Tùy chỉnh FPS luồng phát video")
