@@ -5,15 +5,19 @@ Endpoints for health checks, GeoJSON map segments, and Text Reports.
 
 import os
 import time
+import unicodedata
 import psutil
+from typing import Optional, List, Dict, Any
 from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse
 
 from reporting import (
     build_compact_payload,
     generate_instant_alert_text,
-    generate_shift_digest_text
+    generate_shift_digest_text,
+    get_vn_time_str
 )
+from detector import get_vehicle_water_advisory
 from database import record_heartbeat, get_db_bandwidth_stats
 import state
 
@@ -229,5 +233,93 @@ def get_videos_catalog():
                 "available": state.resolve_real_video_path("real_accident_1") is not None
             }
         ]
+    }
+
+
+DETOUR_RECOMMENDATIONS = {
+    "node-sgu-01": "Lộ trình vòng tránh: Đi theo trục đường Lâm Văn Bền hoặc Nguyễn Thị Thập để tránh triều cường ven sông.",
+    "node-sgu-02": "Lộ trình vòng tránh: Đi theo đường Gò Ô Môi hoặc trục đại lộ Nguyễn Lương Bằng.",
+    "node-sgu-03": "Lộ trình vòng tránh: Đi vòng qua trục đường Nguyễn Hữu Thọ hướng về cầu Rạch Đĩa 2.",
+    "node-sgu-04": "Lộ trình vòng tránh: Đi theo đường Mai Văn Vĩnh hoặc Nguyễn Thị Thập hướng ra Huỳnh Tấn Phát.",
+    "node-sgu-05": "Lộ trình vòng tránh: Giảm tốc độ tối đa qua dốc cầu, đi sát dải phân cách giữa hoặc chuyển hướng qua Cầu Nguyễn Văn Cừ."
+}
+
+
+def _strip_vn_accents(text: str) -> str:
+    """Loại bỏ dấu tiếng Việt để người dân gõ có dấu hay không dấu đều tìm ra đường."""
+    if not text:
+        return ""
+    nfkd = unicodedata.normalize("NFKD", text)
+    return "".join([c for c in nfkd if not unicodedata.combining(c)]).replace("đ", "d").replace("Đ", "D").lower()
+
+
+@router.get("/api/v1/public/route-advisory")
+@router.get("/api/public/route-advisory")
+@router.get("/api/v1/public/flood-status")
+@router.get("/api/public/flood-status")
+def get_public_route_advisory(
+    query: Optional[str] = Query(default=None, description="Tìm theo tên đường hoặc trạm (vd: tran xuan soan, huynh tan phat, kenh te)"),
+    vehicle: Optional[str] = Query(default=None, description="Lọc theo phương tiện: 'scooter', 'underbone', 'car'")
+):
+    """
+    Cổng thông tin tra cứu lộ trình dân sinh công khai phục vụ người dân (Public Citizen Advisory).
+    Cung cấp mực nước thực tế, cảnh báo nguy cơ chết máy theo từng dòng phương tiện
+    và lộ trình vòng tránh thay thế tức thời.
+    """
+    results = []
+    q_clean = _strip_vn_accents(query.strip()) if query else None
+
+    for node_id, node in state.NODES.items():
+        name = node.get("name", "")
+        street = node.get("street_segment", "")
+        
+        # Lọc theo từ khóa tìm kiếm (hỗ trợ cả tiếng Việt có dấu và không dấu)
+        if q_clean:
+            name_norm = _strip_vn_accents(name)
+            street_norm = _strip_vn_accents(street)
+            node_id_norm = node_id.lower()
+            if q_clean not in name_norm and q_clean not in street_norm and q_clean not in node_id_norm:
+                continue
+
+        metrics = state.NODE_LATEST_METRICS.get(node_id, {})
+        flood_data = metrics.get("flood", {"depth_cm": 0.0, "level": "SAFE"})
+        acc_data = metrics.get("accident", {"detected": False, "motionless_sec": 0.0})
+
+        depth_cm = float(flood_data.get("depth_cm", 0.0))
+        level = flood_data.get("level", "SAFE")
+        is_accident = bool(acc_data.get("detected", False))
+
+        advisory = get_vehicle_water_advisory(depth_cm)
+
+        # Lọc theo dòng xe cụ thể nếu người dùng yêu cầu
+        vehicle_info = advisory
+        if vehicle:
+            v_key = vehicle.strip().lower()
+            if v_key in ["scooter", "underbone", "car"]:
+                vehicle_info = {
+                    "water_depth_cm": depth_cm,
+                    v_key: advisory[v_key],
+                    "overall_action": advisory["overall_action"]
+                }
+
+        results.append({
+            "station_id": node_id,
+            "station_name": name,
+            "street_segment": street,
+            "coordinates": {"lat": node["lat"], "lng": node["lng"]},
+            "water_depth_cm": depth_cm,
+            "flood_level": "DANGER" if is_accident else level,
+            "accident_alert": is_accident,
+            "motionless_sec": round(float(acc_data.get("motionless_sec", 0.0)), 1) if is_accident else 0.0,
+            "advisory": vehicle_info,
+            "detour_recommendation": DETOUR_RECOMMENDATIONS.get(node_id, "Lưu thông chậm và chú ý quan sát.")
+        })
+
+    return {
+        "status": "success",
+        "service": "UrbanShield Lite Public Route Advisory",
+        "timestamp_vn": get_vn_time_str(),
+        "total_routes_monitored": len(results),
+        "routes": results
     }
 

@@ -116,3 +116,38 @@ def test_consistent_v1_api_versioning():
     assert resp_health.status_code == 200
     assert resp_health.json()["status"] == "healthy"
 
+
+def test_public_route_advisory_for_citizens():
+    """Kiểm tra Cổng thông tin tra cứu lộ trình dân sinh: /api/v1/public/route-advisory."""
+    resp = client.get("/api/v1/public/route-advisory")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status"] == "success"
+    assert "timestamp_vn" in data
+    assert data["total_routes_monitored"] >= 5
+    assert len(data["routes"]) >= 5
+
+    first_route = data["routes"][0]
+    assert "station_name" in first_route
+    assert "water_depth_cm" in first_route
+    assert "detour_recommendation" in first_route
+    assert "advisory" in first_route
+    assert "scooter" in first_route["advisory"]
+    assert "underbone" in first_route["advisory"]
+    assert "car" in first_route["advisory"]
+    assert "overall_action" in first_route["advisory"]
+
+
+def test_public_route_advisory_filter_by_query_and_vehicle():
+    """Kiểm tra lọc tra cứu lộ trình theo từ khóa tên đường và phân loại xe."""
+    resp = client.get("/api/v1/public/route-advisory?query=tran+xuan+soan&vehicle=scooter")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["total_routes_monitored"] >= 1
+    matched = data["routes"][0]
+    assert "Trần Xuân Soạn" in matched["station_name"]
+    # Kiểm tra đã lọc đúng thông tin xe tay ga
+    assert "scooter" in matched["advisory"]
+    assert matched["advisory"]["scooter"]["status"] in ("SAFE", "WARNING", "DANGER")
+
+

@@ -58,6 +58,105 @@ def estimate_wheel_flood_depth(
     return depth_cm, level
 
 
+def get_vehicle_water_advisory(depth_cm: float) -> Dict[str, Any]:
+    """
+    Đánh giá mức độ an toàn và rủi ro ngập nước chi tiết theo từng dòng phương tiện:
+    - Xe tay ga (Scooter: Vision, Lead, SH - gầm thấp ~13cm, bầu lọc gió và ống xả sát đất)
+    - Xe máy số (Underbone: Wave, Sirius, Future - gầm ~16cm, cổ pô vểnh cao)
+    - Xe ô tô con (Car / Sedan: gầm ~18-20cm, cửa hút gió động cơ)
+    """
+    depth = max(0.0, float(depth_cm))
+
+    # 1. Xe tay ga (Scooter)
+    if depth < 10.0:
+        scooter = {
+            "status": "SAFE",
+            "label": "An toàn",
+            "risk_level": "Thấp",
+            "advice": "Mực nước an toàn, xe tay ga lưu thông bình thường qua khu vực."
+        }
+    elif depth < 14.0:
+        scooter = {
+            "status": "WARNING",
+            "label": "Cảnh báo ngập gầm",
+            "risk_level": "Trung bình",
+            "advice": "Nước ngấp nghé gầm xe. Cần đi vào tim đường cao ráo, giữ đều ga, không nhấp nhả phanh."
+        }
+    else:
+        scooter = {
+            "status": "DANGER",
+            "label": "Nguy hiểm chết máy",
+            "risk_level": "Rất cao",
+            "advice": f"Nước ngập {depth:.1f}cm vượt mức an toàn bầu lọc gió (13cm). Khuyến cáo KHÔNG ĐI VÀO để tránh hỏng động cơ."
+        }
+
+    # 2. Xe số (Underbone)
+    if depth < 14.0:
+        underbone = {
+            "status": "SAFE",
+            "label": "An toàn",
+            "risk_level": "Thấp",
+            "advice": "Mực nước thấp, xe số lưu thông ổn định."
+        }
+    elif depth < 20.0:
+        underbone = {
+            "status": "WARNING",
+            "label": "Cần chú ý",
+            "risk_level": "Trung bình",
+            "advice": "Nước gần ngang ống xả. Về số thấp (số 1 hoặc số 2), giữ ga đều tay để áp suất khí xả ngăn nước tràn vào pô."
+        }
+    else:
+        underbone = {
+            "status": "DANGER",
+            "label": "Nguy cơ chết máy",
+            "risk_level": "Cao",
+            "advice": f"Mực nước {depth:.1f}cm ngập qua cổ pô xe máy. Rất dễ tắt máy nếu có sóng xe lớn, nên chuyển hướng đường vòng."
+        }
+
+    # 3. Xe ô tô con (Car)
+    if depth < 18.0:
+        car = {
+            "status": "SAFE",
+            "label": "An toàn",
+            "risk_level": "Thấp",
+            "advice": "Xe ô tô con lưu thông bình thường."
+        }
+    elif depth < 28.0:
+        car = {
+            "status": "WARNING",
+            "label": "Chú ý xe gầm thấp",
+            "risk_level": "Trung bình",
+            "advice": "Xe sedan gầm thấp cần chạy chậm đều dưới 15km/h để tránh tạo sóng nước dềnh vào nhà dân ven đường."
+        }
+    else:
+        car = {
+            "status": "DANGER",
+            "label": "Nguy cơ thủy kích",
+            "risk_level": "Rất cao",
+            "advice": f"Nước ngập sâu {depth:.1f}cm, nguy cơ tràn vào sàn xe và họng hút gió gây thủy kích động cơ. Tuyệt đối không cố vượt qua."
+        }
+
+    overall_action = (
+        "Tuyến đường thông thoáng, các phương tiện lưu thông bình thường."
+        if depth < 10.0 else (
+            "Đường bắt đầu ngập nhẹ, người đi xe tay ga cần giảm tốc độ."
+            if depth < 14.0 else (
+                f"Cảnh báo ngập {depth:.1f}cm: Xe tay ga có nguy cơ chết máy cao, người dân nên chuyển hướng đường vòng."
+                if depth < 20.0 else
+                f"Cảnh báo khẩn cấp: Ngập sâu {depth:.1f}cm, hạn chế toàn bộ phương tiện hai bánh di chuyển vào."
+            )
+        )
+    )
+
+    return {
+        "water_depth_cm": depth,
+        "scooter": scooter,
+        "underbone": underbone,
+        "car": car,
+        "overall_action": overall_action
+    }
+
+
 def evaluate_fall_candidate(
     box_w: float,
     box_h: float,
