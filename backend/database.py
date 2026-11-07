@@ -50,6 +50,9 @@ def init_db():
                 )
             """)
             cur.execute("CREATE INDEX IF NOT EXISTS idx_incidents_created ON incidents(created_at DESC)")
+            # Tự động dọn dẹp các sự cố cũ hơn 90 ngày để bảo vệ dung lượng đĩa (Data Retention)
+            cutoff_90d = int(time.time() - (90 * 86400))
+            cur.execute("DELETE FROM incidents WHERE created_at < ?", (cutoff_90d,))
             conn.commit()
         finally:
             conn.close()
@@ -172,4 +175,45 @@ def get_incidents_history(
             }
         finally:
             conn.close()
+
+
+def purge_old_incidents(retention_days: int = 90) -> int:
+    """
+    Tự động dọn dẹp các sự cố cũ hơn số ngày chỉ định (Data Retention Policy).
+    Chống tràn bộ nhớ đĩa cho máy tính khu phố khi chạy liên tục nhiều tháng/năm.
+    """
+    cutoff_timestamp = int(time.time() - (retention_days * 86400))
+    with _db_lock:
+        conn = sqlite3.connect(DB_PATH)
+        try:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM incidents WHERE created_at < ?", (cutoff_timestamp,))
+            deleted_count = cur.rowcount
+            conn.commit()
+            return max(0, deleted_count)
+        finally:
+            conn.close()
+
+
+def create_online_backup(backup_path: Optional[str] = None) -> str:
+    """
+    Tạo bản sao lưu nóng (Online Hot-Backup) của SQLite thông qua cơ chế snapshot của engine.
+    Không làm gián đoạn luồng AI đang phân tích và không làm dừng server.
+    """
+    if not backup_path:
+        backup_dir = os.path.join(os.path.dirname(DB_PATH), "backups")
+        os.makedirs(backup_dir, exist_ok=True)
+        backup_path = os.path.join(backup_dir, f"backup_{int(time.time())}.db")
+
+    with _db_lock:
+        source_conn = sqlite3.connect(DB_PATH)
+        dest_conn = sqlite3.connect(backup_path)
+        try:
+            source_conn.backup(dest_conn)
+            dest_conn.commit()
+            return backup_path
+        finally:
+            dest_conn.close()
+            source_conn.close()
+
 

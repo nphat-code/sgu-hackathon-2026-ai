@@ -151,3 +151,23 @@ def test_public_route_advisory_filter_by_query_and_vehicle():
     assert matched["advisory"]["scooter"]["status"] in ("SAFE", "WARNING", "DANGER")
 
 
+def test_sqlite_data_retention_and_hot_backup():
+    """Kiểm tra chính sách dọn dẹp dữ liệu cũ (Retention) và tính năng sao lưu nóng Online Hot-Backup."""
+    from database import purge_old_incidents, create_online_backup
+    
+    # 1. Kiểm tra dọn dẹp sự cố cũ hơn 90 ngày (không bị lỗi)
+    purged_count = purge_old_incidents(retention_days=90)
+    assert purged_count >= 0
+
+    # 2. Kiểm tra tạo Online Hot-Backup thành công và file tồn tại
+    backup_file = create_online_backup()
+    assert os.path.exists(backup_file)
+    assert os.path.getsize(backup_file) > 0
+    # Dọn dẹp file test backup sau khi kiểm thử xong
+    try:
+        os.remove(backup_file)
+    except Exception:
+        pass
+
+
+

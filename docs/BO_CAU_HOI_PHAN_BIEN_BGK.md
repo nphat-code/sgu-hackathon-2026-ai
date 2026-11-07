@@ -97,3 +97,4 @@
 1. **Luôn bắt đầu bằng:** *"Dạ thưa Thầy Cô, câu hỏi của Thầy/Cô chạm đúng vào bài toán cốt lõi mà nhóm em đã trăn trở và giải quyết trong phần code..."* (Tỏ rõ sự khiêm tốn nhưng tự tin).
 2. **Nói vào bản chất kỹ thuật:** Dẫn chứng cụ thể: *50cm bánh xe, 82 Bytes, 63ms CPU, bộ đếm 5s, Zero-Disk*.
 3. **Không cãi lại:** Nếu Giám khảo góp ý thêm hướng phát triển, hãy tiếp thu: *"Dạ tụi em xin ghi nhận góp ý rất sắc bén của Thầy/Cô để nâng cấp thêm trong phiên bản tiếp theo ạ!"*
+
