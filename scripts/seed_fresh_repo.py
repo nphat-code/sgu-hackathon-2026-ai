@@ -128,10 +128,12 @@ STAGES = [
     },
     {
         "step": 7,
-        "title": "Bộ 16 Unit Tests & Tối ưu CPU Operator Parallelism",
-        "commit_msg": "test & perf: add 16 integration tests, CPU parallelism and SQLite WAL mode",
-        "commit_desc": "- Add comprehensive test suite (flood, fall, API v1, X-Process-Time)\n- Optimize PyTorch CPU operator parallelism for 4.4x faster edge inference\n- Include benchmark evaluation results",
+        "title": "Bộ 19 Unit Tests, Tối ưu CPU Parallelism & Dọn dẹp Database",
+        "commit_msg": "test & perf: add 19 integration tests, dynamic bandwidth calculation and retention policy",
+        "commit_desc": "- Add comprehensive test suite (flood, fall, route advisory, retention policy)\n- Optimize PyTorch CPU operator parallelism for edge inference\n- Implement SQLite retention policy auto-purge and zero-fake dynamic telemetry metrics",
         "files": [
+            "backend/database.py",
+            "backend/routers/reports.py",
             "tests/test_flood_measurement.py",
             "tests/test_fall_detection.py",
             "tests/test_api_endpoints.py",
