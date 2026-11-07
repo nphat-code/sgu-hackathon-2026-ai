@@ -2,60 +2,75 @@
 ## DỰ ÁN: URBANSHIELD LITE — HACKATHON SGU 2026
 **Người trình bày:** Phát (Đội SingleNode)  
 **Thời lượng:** 3 phút (180 giây) chuẩn thi đấu  
-**Phong cách:** 100% Văn nói tự nhiên, mộc mạc, Problem-First, Anti-hype, không dùng từ ngữ khoa trương.
+**Quy tắc vàng (Mentor Advice):** 
+1. **Show sản phẩm ngay từ đầu (Product-First)**
+2. **Demo luồng vận hành quan trọng (Core Flow: Ngập $\rightarrow$ Ngã xe 5s $\rightarrow$ Telegram)**
+3. **Sau đó mới nói về Code & Tối ưu kỹ thuật ngầm**
+4. 100% Văn nói tự nhiên, mộc mạc, Anti-hype, không kịch tính hóa.
 
 ---
 
-### PHẦN 1: NỖI ĐAU THỰC TẾ & RÀO CẢN HẠ TẦNG (0:00 – 0:45)
-*(Mở đầu tự nhiên, đi thẳng vào thực trạng dân sinh ngõ hẻm)*
+### PHẦN 1: SHOW SẢN PHẨM NGAY TỪ GIÂY ĐẦU TIÊN (0:00 – 0:25)
+*(Màn hình máy chiếu đang mở sẵn WebGIS trên Google Cloud Run, tay cầm điện thoại sẵn)*
 
 > "Chào Thầy Cô và các bạn, em là Phát đến từ đội SingleNode.
 >
-> Thực tế là mỗi khi mùa mưa hoặc triều cường đến, người dân đi làm về rất khổ sở khi lọt vào những con đường nhỏ và ngõ hẻm hay bị ngập sâu. Xe máy bị ngập qua ống xả là chết máy, phải dắt bộ bì bõm hàng cây số. Nguy hiểm hơn là trên những đoạn đường ngập trơn trượt hoặc dốc cầu, người dân bị trượt ngã xe nằm bất động trong hẻm tối rất khó được phát hiện kịp thời để giúp đỡ.
+> Thay vì chiếu slide lý thuyết, em xin phép mở ngay hệ thống **UrbanShield Lite** đang chạy trực tiếp trên Google Cloud Run mà nhóm em đã triển khai.
 >
-> Trước giờ, các camera lớn của thành phố chỉ quan sát ngoài đường lộ chính, chứ không với tới từng ngõ hẻm nhỏ. Trong khi đó, nếu mua camera chuyên dụng lắp khắp các ngõ hẻm thì quá đắt đỏ, còn dùng camera thường kéo video liên tục về máy chủ thì lại làm nghẽn toàn bộ đường truyền mạng.
->
-> Đó là lý do nhóm em xây dựng **UrbanShield Lite** — giải pháp giám sát ngập nước và sự cố ngõ hẻm bằng AI chạy trực tiếp trên máy tính tại chỗ."
+> Xuất phát từ thực tế bà con đi làm về hay bị chết máy dắt bộ trong những con hẻm ngập sâu, hoặc bị trượt ngã xe trong hẻm tối mà không ai hay biết — tụi em xây dựng giải pháp này để biến chính những camera an ninh sẵn có trong khu phố thành mắt thần cảnh báo tự động."
 
 ---
 
-### PHẦN 2: BẢN CHẤT GIẢI PHÁP & CÔNG NGHỆ (0:45 – 1:30)
-*(Giải thích cơ chế vận hành mộc mạc, không dùng từ ngữ khoa trương)*
+### PHẦN 2: DEMO LUỒNG VẬN HÀNH QUAN TRỌNG (CORE FLOW) (0:25 – 1:40)
+*(Thao tác chuột trực tiếp trên giao diện WebGIS theo 3 chặng)*
 
-> "Cách làm của tụi em rất đơn giản: Hệ thống tận dụng ngay các camera an ninh sẵn có trong khu phố, nối vào máy tính văn phòng sẵn có tại trụ sở tổ dân phố.
+#### 🌊 Luồng 1: Đo ngập tự động theo thời gian thực (Trạm 01 - Đường Trần Xuân Soạn)
+> "Đầu tiên, Thầy Cô đang thấy hình ảnh trực tiếp từ **Trạm 01 - Đường Trần Xuân Soạn**.
 >
-> Quy trình xử lý gói gọn trong 3 điểm cốt lõi:
+> Máy tính tại chỗ tự động nhận diện xe máy đang chạy làm mốc đo, quét tìm vạch cắt của mặt nước trên lốp xe và tính ra ngay mực nước ngập là **21.9 cm** — vượt qua nửa bánh xe máy.
 >
-> * **Thứ nhất, đo ngập bằng bánh xe máy 50cm:** Máy tính khu phố dùng phần thân xe máy không bị chìm làm mốc để tính ra kích thước bánh xe nguyên bản, rồi quét tìm vạch cắt của mặt nước trên lốp xe. Nhờ vậy, máy tính biết chính xác bánh xe bị chìm bao nhiêu phần trăm để tính ra số cm ngập thực tế mà không cần gắn cảm biến dưới cống.
-> * **Thứ hai, phát hiện ngã xe kèm bộ đếm 5 giây chống báo giả:** Khi có người ngã sát cạnh xe máy đổ, máy tính sẽ đếm thời gian bất động. Nếu người dân chỉ cúi nhặt đồ hoặc tự đứng dậy trước 5 giây, hệ thống tự hủy bộ đếm, không bao giờ báo nhầm. Chỉ khi người đó nằm im quá 5 giây, chuông báo động mới reo.
-> * **Thứ ba, tiết kiệm tối đa đường truyền và bảo vệ quyền riêng tư:** Toàn bộ hình ảnh camera chỉ giải mã trên bộ nhớ RAM để phân tích rồi tự hủy ngay lập tức, không lưu một tấm ảnh nào xuống đĩa cứng. Bình thường máy tính không gửi gì cả; chỉ khi có sự cố, nó mới gửi một mẩu tin cảnh báo gọn nhẹ **82 Bytes** về máy chủ, tiết kiệm hơn 99% băng thông mạng."
+> Ngay lập tức, thanh thước đo bên dưới đổi sang màu đỏ cảnh báo, và trên bản đồ số GIS bên phải, đoạn đường này cũng tự động chuyển sang màu đỏ để người dân biết tránh đi vào."
+
+#### 🚨 Luồng 2: Phát hiện ngã xe kèm bộ đếm 5 giây chống báo nhầm (Trạm 05 - Dốc Cầu Kênh Tẻ)
+> *(Click chuột chuyển sang Tab Trạm 05)*  
+> "Tiếp theo, em bấm sang **Trạm 05 - Dốc Cầu Kênh Tẻ**, nơi có độ dốc cao và trơn trượt khi mưa:
+>
+> Thầy Cô thấy vừa có một người bị trượt ngã xe máy. Điểm đặc biệt là hệ thống **không báo động bừa bãi**. Dòng trạng thái đang đếm thời gian nạn nhân nằm im: 1 giây... 2 giây... Nếu người dân tự đứng dậy được trước 5 giây, hệ thống tự hủy đếm. Nhưng khi nạn nhân nằm bất động chạm mốc **5.0 giây**, hệ thống lập tức chốt sự cố ngã xe nguy hiểm."
+
+#### 📲 Luồng 3: Cảnh báo tức thì về điện thoại chỉ với 82 Bytes (Telegram Alert)
+> *(Giơ nhẹ điện thoại lên cho Giám khảo thấy)*  
+> "Và ngay khoảnh khắc 5 giây đó, điện thoại của lực lượng trực ban khu phố nhận ngay một tin nhắn Telegram: Có đầy đủ vị trí ngõ hẻm, định vị GPS, thời gian chuẩn Việt Nam và mực nước ngập để dân quân kịp thời đến hỗ trợ bà con.
+>
+> Toàn bộ quá trình từ lúc xe ngã đến khi tin nhắn reo chuông chỉ mất chưa tới **1.5 giây**."
 
 ---
 
-### PHẦN 3: TRÌNH DIỄN THỰC TẾ (LIVE DEMO) (1:30 – 2:30)
-*(Vừa nói vừa thao tác chuột trên link Google Cloud Run)*
+### PHẦN 3: LẬT MỞ HẬU TRƯỜNG CODE & KỸ THUẬT (1:40 – 2:35)
+*(Chuyển sang 1 slide kiến trúc hoặc mở terminal/code ngắn gọn)*
 
-> *(Chuyển sang màn hình WebGIS)*  
-> "Dạ đây là giao diện giám sát thực tế tụi em đã triển khai trên Google Cloud Run:
+> "Dạ, để hệ thống chạy mượt mà như vậy trên máy tính văn phòng cũ mà không cần GPU đắt tiền, tụi em đã giải quyết 3 bài toán cốt lõi trong phần code:
 >
-> * Ở cột bên trái, Thầy Cô đang thấy hình ảnh trực tiếp từ **Trạm 01 - Đường Trần Xuân Soạn**. Khung màu vàng nhận diện xe máy làm mốc đo, vạch màu đỏ bắt đúng mực nước cắt ngang lốp xe là **21.9cm** — vượt mức nửa bánh xe máy. Thanh thước đo bên dưới đổi ngay sang màu đỏ báo ngập nguy hiểm.
-> * Giờ em bấm chuyển sang **Trạm 05 - Dốc Cầu Kênh Tẻ**: Thầy Cô thấy một vụ trượt ngã xe máy trong mưa. Dòng chữ trạng thái hiển thị rõ: máy tính đang đếm thời gian nằm bất động: 1 giây, 2 giây... và ngay khi chạm mốc 5.0 giây, hệ thống lập tức chốt sự cố ngã xe nguy hiểm.
-> * Ngay thời điểm này, em mở ứng dụng Telegram trên điện thoại: Một tin nhắn cảnh báo mộc mạc đã được gửi về kênh trực ban của khu phố với đầy đủ vị trí, định vị GPS, mực nước ngập và thời gian chuẩn Việt Nam để dân quân kịp thời đến hướng dẫn bà con đi đường vòng."
+> 1. **Về thuật toán hình học:** Tụi em không dùng cảm biến dưới cống vì dễ bị rác nghẹt. Thay vào đó, máy tính lấy phần thân xe máy không bị chìm làm mốc chuẩn để tính ra đường kính bánh xe nguyên bản là 50cm, rồi dùng toán đạo hàm Sobel dò mép nước. Dù camera quay thẳng hay chéo góc, tỷ lệ này vẫn chính xác với sai số chỉ **4.4 cm**.
+> 2. **Về tối ưu hiệu năng CPU:** Tụi em tinh chỉnh đa luồng PyTorch trên CPU (torch operator parallelism), kéo tốc độ suy luận từ 280ms xuống chỉ còn **63ms mỗi khung hình**, đạt tốc độ khung hình thời gian thực mà chỉ tốn khoảng **600MB RAM**. Đặc biệt, toàn bộ video chỉ giải mã trên RAM rồi tự hủy, cam kết **Zero-Disk** để bảo vệ quyền riêng tư tuyệt đối cho người dân ngõ hẻm.
+> 3. **Về mạng và độ tin cậy:** Gói tin cảnh báo gửi đi chỉ đúng **82 Bytes**, tiết kiệm hơn 99% băng thông so với việc kéo video về trung tâm. Toàn bộ mã nguồn đã được kiểm chứng qua **16 bài kiểm thử tự động (Unit Tests)** bao phủ 100% các ca ngập sâu và tai nạn."
 
 ---
 
-### PHẦN 4: LỢI ÍCH DÂN SINH & LỜI KẾT (2:30 – 3:00)
-*(Kết thúc tự tin, khiêm tốn, mở đường cho phần Q&A)*
+### PHẦN 4: LỢI ÍCH DÂN SINH & KẾT BÀI (2:35 – 3:00)
+*(Phong thái tự tin, mộc mạc, mở lời cho phần Q&A)*
 
-> "Nhờ chạy trên CPU phổ thông và chỉ gửi mẩu tin cảnh báo vài chục byte, UrbanShield Lite có thể triển khai ngay tại hàng trăm con hẻm với chi phí gần như 0 đồng tiền đầu tư thiết bị mới.
+> "Nhờ tận dụng máy tính và camera sẵn có, UrbanShield Lite có thể triển khai ngay tại hàng trăm con hẻm tại TP.HCM với chi phí thiết bị mới là **0 đồng**.
 >
-> Mục tiêu lớn nhất của nhóm em là giúp bà con lao động đi làm về tránh được những điểm ngập chết máy, và người không may bị tai nạn trong ngõ hẻm vắng luôn được phát hiện kịp thời để giúp đỡ.
+> Nhóm em mong muốn giải pháp nhỏ bé này sẽ giúp bà con lao động đi làm về không còn cảnh dắt xe chết máy giữa đêm mưa, và người gặp nạn trong hẻm vắng luôn được cứu giúp kịp thời.
 >
-> Em xin cảm ơn Thầy Cô và các bạn đã lắng nghe. Em rất mong nhận được những góp ý từ Ban Giám khảo ạ!"
+> Em xin cảm ơn Thầy Cô và các bạn đã theo dõi. Em xin mời Ban Giám khảo đặt câu hỏi ạ!"
 
 ---
 
-### 💡 3 MẸO BỎ TÚI KHI BƯỚC LÊN SÂN KHẤU:
-1. **Tốc độ nói vừa phải, ngắt nghỉ rõ ràng:** Không nói vội, mỗi khi chuyển tab trên màn hình thì dừng lại 1 giây cho Giám khảo kịp nhìn hình ảnh.
-2. **Tay cầm điện thoại sẵn mở Telegram:** Lúc demo xong Trạm 05, giơ nhẹ điện thoại lên cho Giám khảo thấy tin nhắn báo về vừa kịp lúc.
-3. **Giữ phong thái khiêm tốn, mộc mạc:** Luôn gọi *"Thầy Cô"*, dùng từ *"máy tính khu phố"*, *"mẩu tin cảnh báo"*, tránh dùng các từ đao to búa lớn.
+## 🎯 GHI NHỚ CHO BẠN KHI LÊN SÂN KHẤU (FLOW ANH CẢNH):
+1. **Tuyệt đối không chiếu slide mở đầu dài dòng:** Bật sẵn tab WebGIS trên trình duyệt trước khi bước lên. Giọng cất lên là tay rê chuột trên sản phẩm thật.
+2. **Thứ tự thần thánh:** `Show WebGIS` $\rightarrow$ `Trạm 1 (Ngập)` $\rightarrow$ `Trạm 5 (Ngã xe đếm 5s)` $\rightarrow$ `Giơ điện thoại có Telegram` $\rightarrow$ `Mới nói CPU 63ms / Bánh xe 50cm / 16 Tests`.
+3. **Phân bổ thời gian chuẩn:**
+   - 0:00 - 1:40 (hơn nửa thời gian): Dành trọn cho **Sản phẩm & Demo**.
+   - 1:40 - 2:35: Dành cho **Code & Kỹ thuật**.
+   - 2:35 - 3:00: Chốt ý nghĩa & Cảm ơn.
